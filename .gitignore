@@ -1,18 +1,4 @@
-<<<<<<< HEAD
 .idea
 .git
 vendor
-=======
-<<<<<<< HEAD
-.idea
-.git
-vendor
-=======
-<<<<<<< HEAD
-.idea
-.git
-=======
-.idea
->>>>>>> 4b04f829251fe6ae63162e461d422dbca51dab9b
->>>>>>> a07e79c6426232193ebb036ca1a959d05163d004
->>>>>>> 010f92959002a01ef6b4b031fcc5cdfa1dfc740a
+composer.lock
