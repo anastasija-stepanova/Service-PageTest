@@ -7,13 +7,21 @@ class WebPageTestClient
 
     const RUNTEST_METHOD_NAME = 'runtest';
     const RESULT_METHOD_NAME = 'jsonResult';
+    const STATUS_METHOD_NAME = 'testStatus';
 
     const HTTP_METHOD = 'GET';
 
     const RESPONSE_FORMAT = 'json';
-    const SUCCESSFUL_STATUS = 200;
 
     const FILE_EXTENSION = '.php?';
+
+    const NUMBER_RUNS = 1;
+
+    const PARAM_URL = 'url';
+    const PARAM_RUNS = 'runs';
+    const PARAM_FORMAT = 'f';
+    const PARAM_KEY = 'k';
+    const PARAM_TEST = 'test';
 
     private $apiKey;
     private $client;
@@ -26,75 +34,79 @@ class WebPageTestClient
 
     public function runNewTest($siteUrl)
     {
+        $testId = null;
+
         $params = [
-            'url' => $siteUrl,
-            'runs' => 1,
-            'f' => 'json'
+            self::PARAM_URL => $siteUrl,
+            self::PARAM_RUNS => self::NUMBER_RUNS,
+            self::PARAM_FORMAT => self::RESPONSE_FORMAT,
+            self::PARAM_KEY => $this->apiKey
         ];
-        $params['k'] = $this->apiKey;
 
-        $runTestUrl = self::BASE_URL . self::RUNTEST_METHOD_NAME . self::FILE_EXTENSION . $this->paramsToString($params);
-
+        $runTestUrl = $this->generateWPTUrl(self::RUNTEST_METHOD_NAME, $params);
         $decodeJsonResponse = $this->sendRequest(self::HTTP_METHOD, $runTestUrl);
-        $testId = $decodeJsonResponse['data']['testId'];
+
+        if ($decodeJsonResponse['data']['testId'])
+        {
+            $testId = $decodeJsonResponse['data']['testId'];
+        }
 
         return $testId;
     }
 
     public function checkStateTest($testId)
     {
-        $resultTestUrl = $resultTestUrl = $this->generateResultUrl($testId);
+        $params = [
+            self::PARAM_FORMAT => self::RESPONSE_FORMAT,
+            self::PARAM_TEST => $testId
+        ];
 
-        $decodeJsonContent = $this->sendRequest(self::HTTP_METHOD, $resultTestUrl);
-        $statusCode = $decodeJsonContent['data']['statusCode'];
+        $statusTestUrl = $this->generateWPTUrl(self::STATUS_METHOD_NAME, $params);
+        $decodeJsonContent = $this->sendRequest(self::HTTP_METHOD, $statusTestUrl);
 
-        if ($statusCode != self::SUCCESSFUL_STATUS)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return $decodeJsonContent;
     }
 
     public function getResult($testId)
     {
-        $resultTestUrl = $this->generateResultUrl($testId);
+        $param = [
+            self::PARAM_TEST => $testId
+        ];
 
+        $resultTestUrl = $this->generateWPTUrl(self::RESULT_METHOD_NAME, $param);
         $decodeJsonContent = $this->sendRequest(self::HTTP_METHOD, $resultTestUrl);
 
         return $decodeJsonContent;
     }
 
-    private function generateResultUrl($testId)
+    private function generateWPTUrl($methodName, $params)
     {
-        $params = [
-            'test' => $testId
-        ];
+        $wPTUrl = self::BASE_URL . $methodName . self::FILE_EXTENSION . $this->paramsToString($params);
 
-        $resultTestUrl = self::BASE_URL . self::RESULT_METHOD_NAME . self::FILE_EXTENSION . $this->paramsToString($params);
-
-        return $resultTestUrl;
+        return $wPTUrl;
     }
 
     private function paramsToString($params)
     {
         $paramsStr = '';
+        $paramsArray = [];
+
         foreach ($params as $key => $value)
         {
-            $paramsStr .= "$key=$value&";
+            $paramsArray[] = "$key=$value";
         }
 
-        return $paramsStr;
+        return $paramsStr.implode('&', $paramsArray);
     }
 
     private function sendRequest($methodName, $url)
     {
         $response = $this->client->request($methodName, $url);
         $contentResponse = $response->getBody()->getContents();
+
         $decodeContentResponse = json_decode($contentResponse, true);
         $jsonLastError = json_last_error();
+
         if ($jsonLastError == JSON_ERROR_NONE)
         {
             return $decodeContentResponse;

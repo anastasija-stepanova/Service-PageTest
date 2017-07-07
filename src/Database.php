@@ -4,61 +4,30 @@ class Database
 {
     private $pdo;
 
-    private function dbConnect()
+    public function __construct($host, $database, $userName, $password)
     {
         try
         {
-            $database = new Config();
-            $this->pdo = new PDO('mysql:host=' . $database::MYSQL_HOST . ';dbname=' . $database::MYSQL_DATABASE,
-                                  $database::MYSQL_USERNAME, $database::MYSQL_PASSWORD);
-            return $this->pdo;
-        } catch (PDOException $e)
+            $this->pdo = new PDO("mysql:host=" . $host . ';dbname=' . $database, $userName, $password);
+        }
+        catch (PDOException $e)
         {
-            $this->pdo = null;
-            return $this->pdo;
+            return null;
         }
     }
 
-    public function dbQuery($query)
+    public function executeQuery($query)
     {
-        $connect = $this->dbConnect();
-        if ($connect != null)
+        $data = [];
+        if ($this->pdo != null)
         {
-            $result = $connect->query($query);
-            $connect = null;
-        }
-        else
-        {
-            $result = null;
-        }
-        return $result;
-    }
-
-    public function dbQueryGetResult($query)
-    {
-        $connect = $this->dbConnect();
-        if ($connect != null)
-        {
-            $data = [];
-            $result = $connect->query($query);
-
-            if ($result)
+            $stn = $this->pdo->prepare($query);
+            $stn->execute();
+            while ($row = $stn->fetch(PDO::FETCH_ASSOC))
             {
-                $sth = $connect->prepare($query);
-                $sth->execute();
-                while ($row = $sth->fetch(PDO::FETCH_ASSOC))
-                {
-                    array_push($data, $row);
-                }
-                $sth->closeCursor();
+                array_push($data, $row);
             }
-
-            $connect = null;
-            return $data;
-        }
-        else
-        {
-            $data = null;
+            $stn->closeCursor();
         }
         return $data;
     }

@@ -8,15 +8,17 @@ class HandlerJson
         $this->client = new WebPageTestClient();
     }
 
-    public function handleResponse()
+    public function handleResponse($testId)
     {
-        $response = $this->client->getResult('170705_VG_15YX');
+        $response = $this->client->getResult($testId);
 
-        unset($response['data']['standardDeviation']);
+        if ($response['data'] && $response['data']['standardDeviation'])
+        {
+            unset($response['data']['standardDeviation']);
+        }
 
-        $database = new Database();
-        $json = json_encode($response);
-        $json2 = substr($json, 1, 200000); //606187
-        $database->dbQuery("INSERT INTO raw_data (json_data) VALUES ('$json2')");
+        $database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
+        $json = json_encode($response);//606187
+        $database->executeQuery("INSERT INTO raw_data (json_data) VALUES ('{$json}')");
     }
 }
