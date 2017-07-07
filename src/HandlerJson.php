@@ -12,10 +12,12 @@ class HandlerJson
     {
         $response = $this->client->getResult($testId);
 
-        if ($response['data'] && $response['data']['standardDeviation'])
+        if ($response['data']['standardDeviation'])
         {
             unset($response['data']['standardDeviation']);
         }
+
+
 
         $database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
         $json = json_encode($response);//606187

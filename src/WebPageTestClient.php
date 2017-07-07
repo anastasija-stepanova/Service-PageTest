@@ -75,8 +75,9 @@ class WebPageTestClient
 
         $resultTestUrl = $this->generateWPTUrl(self::RESULT_METHOD_NAME, $param);
         $decodeJsonContent = $this->sendRequest(self::HTTP_METHOD, $resultTestUrl);
+        $encodeJsonContent = json_encode($decodeJsonContent);
 
-        return $decodeJsonContent;
+        return $encodeJsonContent;
     }
 
     private function generateWPTUrl($methodName, $params)
