@@ -43,10 +43,10 @@ class WebPageTestClient
             self::PARAM_KEY => $this->apiKey
         ];
 
-        $runTestUrl = $this->generateWPTUrl(self::RUNTEST_METHOD_NAME, $params);
+        $runTestUrl = $this->generateWptUrl(self::RUNTEST_METHOD_NAME, $params);
         $decodeJsonResponse = $this->sendRequest(self::HTTP_METHOD, $runTestUrl);
 
-        if ($decodeJsonResponse['data']['testId'])
+        if ($decodeJsonResponse != null && !$decodeJsonResponse['data']['testId'])
         {
             $testId = $decodeJsonResponse['data']['testId'];
         }
@@ -61,10 +61,13 @@ class WebPageTestClient
             self::PARAM_TEST => $testId
         ];
 
-        $statusTestUrl = $this->generateWPTUrl(self::STATUS_METHOD_NAME, $params);
+        $statusTestUrl = $this->generateWptUrl(self::STATUS_METHOD_NAME, $params);
         $decodeJsonContent = $this->sendRequest(self::HTTP_METHOD, $statusTestUrl);
 
-        return $decodeJsonContent;
+        if ($decodeJsonContent != null)
+        {
+            return $decodeJsonContent;
+        }
     }
 
     public function getResult($testId)
@@ -73,18 +76,20 @@ class WebPageTestClient
             self::PARAM_TEST => $testId
         ];
 
-        $resultTestUrl = $this->generateWPTUrl(self::RESULT_METHOD_NAME, $param);
+        $resultTestUrl = $this->generateWptUrl(self::RESULT_METHOD_NAME, $param);
         $decodeJsonContent = $this->sendRequest(self::HTTP_METHOD, $resultTestUrl);
-        $encodeJsonContent = json_encode($decodeJsonContent);
 
-        return $encodeJsonContent;
+        if ($decodeJsonContent != null)
+        {
+            return $decodeJsonContent;
+        }
     }
 
-    private function generateWPTUrl($methodName, $params)
+    private function generateWptUrl($methodName, $params)
     {
-        $wPTUrl = self::BASE_URL . $methodName . self::FILE_EXTENSION . $this->paramsToString($params);
+        $wptUrl = self::BASE_URL . $methodName . self::FILE_EXTENSION . $this->paramsToString($params);
 
-        return $wPTUrl;
+        return $wptUrl;
     }
 
     private function paramsToString($params)

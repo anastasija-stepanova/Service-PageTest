@@ -6,29 +6,29 @@ class Database
 
     public function __construct($host, $database, $userName, $password)
     {
-        try
-        {
-            $this->pdo = new PDO("mysql:host=" . $host . ';dbname=' . $database, $userName, $password);
-        }
-        catch (PDOException $e)
-        {
-            return null;
-        }
+        $this->pdo = new PDO("mysql:host=" . $host . ';dbname=' . $database, $userName, $password);
     }
 
-    public function executeQuery($query)
+    public function executeQuery($query, $params = [])
     {
         $data = [];
-        if ($this->pdo != null)
+
+        $stm = $this->pdo->prepare($query);
+
+        if (!$stm)
         {
-            $stn = $this->pdo->prepare($query);
-            $stn->execute();
-            while ($row = $stn->fetch(PDO::FETCH_ASSOC))
-            {
-                array_push($data, $row);
-            }
-            $stn->closeCursor();
+            return $this->pdo->errorInfo();
         }
+
+        $stm->execute($params);
+
+        while ($row = $stm->fetch(PDO::FETCH_ASSOC))
+        {
+            array_push($data, $row);
+        }
+
+        $stm->closeCursor();
+
         return $data;
     }
 }
