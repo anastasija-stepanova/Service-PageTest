@@ -1,5 +1,5 @@
 <?php
-require_once '../src/autoloader.php';
+require_once '../src/autoloader.inc.php';
 
 $siteUrl = 'http://ispringsolutions.com';
 $client = new WebPageTestClient();
