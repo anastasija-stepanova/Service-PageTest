@@ -13,7 +13,7 @@ class WebPageTestClient
 
     const RESPONSE_FORMAT = 'json';
 
-    const FILE_EXTENSION = '.php?';
+    const FILE_EXTENSION = '.php';
 
     const NUMBER_RUNS = 1;
 
@@ -46,7 +46,7 @@ class WebPageTestClient
         $runTestUrl = $this->generateWptUrl(self::RUNTEST_METHOD_NAME, $params);
         $decodeJsonResponse = $this->sendRequest(self::HTTP_METHOD, $runTestUrl);
 
-        if ($decodeJsonResponse != null && !$decodeJsonResponse['data']['testId'])
+        if ($decodeJsonResponse != null && array_key_exists('data', $decodeJsonResponse) && array_key_exists('testId', $decodeJsonResponse['data']))
         {
             $testId = $decodeJsonResponse['data']['testId'];
         }
@@ -62,39 +62,37 @@ class WebPageTestClient
         ];
 
         $statusTestUrl = $this->generateWptUrl(self::STATUS_METHOD_NAME, $params);
-        $decodeJsonContent = $this->sendRequest(self::HTTP_METHOD, $statusTestUrl);
-
-        if ($decodeJsonContent != null)
-        {
-            return $decodeJsonContent;
-        }
+        return $this->sendRequest(self::HTTP_METHOD, $statusTestUrl);
     }
 
     public function getResult($testId)
     {
+        $arrayTestResults = null;
+
         $param = [
             self::PARAM_TEST => $testId
         ];
 
         $resultTestUrl = $this->generateWptUrl(self::RESULT_METHOD_NAME, $param);
-        $decodeJsonContent = $this->sendRequest(self::HTTP_METHOD, $resultTestUrl);
+        $decodeJsonResponse =  $this->sendRequest(self::HTTP_METHOD, $resultTestUrl);
 
-        if ($decodeJsonContent != null)
+        if ($decodeJsonResponse != null && array_key_exists('data', $decodeJsonResponse));
         {
-            return $decodeJsonContent;
+            $arrayTestResults = $decodeJsonResponse['data'];
         }
+
+        return $arrayTestResults;
     }
 
     private function generateWptUrl($methodName, $params)
     {
-        $wptUrl = self::BASE_URL . $methodName . self::FILE_EXTENSION . $this->paramsToString($params);
+        $wptUrl = self::BASE_URL . $methodName . self::FILE_EXTENSION . $this->generateGetParams($params);
 
         return $wptUrl;
     }
 
-    private function paramsToString($params)
+    private function generateGetParams($params)
     {
-        $paramsStr = '';
         $paramsArray = [];
 
         foreach ($params as $key => $value)
@@ -102,7 +100,7 @@ class WebPageTestClient
             $paramsArray[] = "$key=$value";
         }
 
-        return $paramsStr.implode('&', $paramsArray);
+        return '?' . implode('&', $paramsArray);
     }
 
     private function sendRequest($methodName, $url)
@@ -117,9 +115,7 @@ class WebPageTestClient
         {
             return $decodeContentResponse;
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 }

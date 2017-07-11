@@ -15,20 +15,22 @@ class Database
 
         $stm = $this->pdo->prepare($query);
 
-        if (!$stm)
+        if ($stm)
         {
-            return $this->pdo->errorInfo();
+            $stm->execute($params);
+
+            while ($row = $stm->fetch(PDO::FETCH_ASSOC))
+            {
+                array_push($data, $row);
+            }
+
+            $stm->closeCursor();
+
+            return $data;
         }
-
-        $stm->execute($params);
-
-        while ($row = $stm->fetch(PDO::FETCH_ASSOC))
+        else
         {
-            array_push($data, $row);
+            return null;
         }
-
-        $stm->closeCursor();
-
-        return $data;
     }
 }
