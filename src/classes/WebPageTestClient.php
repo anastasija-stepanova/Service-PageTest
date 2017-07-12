@@ -46,9 +46,12 @@ class WebPageTestClient
         $runTestUrl = $this->generateWptUrl(self::RUNTEST_METHOD_NAME, $params);
         $decodeJsonResponse = $this->sendRequest(self::HTTP_METHOD, $runTestUrl);
 
-        if ($decodeJsonResponse != null && array_key_exists('data', $decodeJsonResponse) && array_key_exists('testId', $decodeJsonResponse['data']))
+        if ($decodeJsonResponse != null)
         {
-            $testId = $decodeJsonResponse['data']['testId'];
+            if (array_key_exists('data', $decodeJsonResponse) && array_key_exists('testId', $decodeJsonResponse['data']))
+            {
+                $testId = $decodeJsonResponse['data']['testId'];
+            }
         }
 
         return $testId;

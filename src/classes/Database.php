@@ -25,12 +25,8 @@ class Database
             }
 
             $stm->closeCursor();
+        }
 
-            return $data;
-        }
-        else
-        {
-            return null;
-        }
+        return $data;
     }
 }
