@@ -2,116 +2,157 @@
 class WebPageTestResponseHandler
 {
     private $database;
+    private $data;
 
     public function __construct()
     {
         $this->database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
     }
 
-    public function writeRawData($response)
+    public function handle($response)
     {
-        $data = $response['data'];
-
-        if ($data['standardDeviation'])
+        if ($response && array_key_exists('data', $response))
         {
-            unset($data['standardDeviation']);
-        }
+            $this->data = $response['data'];
 
-        $json = json_encode($response);
-        $this->database->executeQuery("INSERT INTO " . DatabaseTablesConfig::RAW_DATA . "(json_data) VALUES (?)", [$json]);
+            $this->saveDataToDb($this->data);
+        }
     }
 
-    public function writeTestInfo($response)
+    private function saveDataToDb($data)
     {
-        $data = $response['data'];
+        $userId = '';
+        $dataArray = $this->database->executeQuery("SELECT id FROM " . DatabaseTable::USER);
 
-        if ($data)
+        if (array_key_exists(0, $dataArray) && array_key_exists('id', $dataArray[0]))
         {
-            $id = $data['id'];
+            $userId = $dataArray[0]['id'];
+        }
+
+        $siteUrl = $this->getTestedUrl($data);
+        $this->database->executeQuery("INSERT INTO " . DatabaseTable::USER_URLS . "(user_id, site_url) VALUES (?, ?)", [$userId, $siteUrl]);
+
+        $testInfoArray = $this->generateTestDataArray($data);
+        $wptTestId = $this->getArrayKey($testInfoArray, 'id');
+        $location = $this->getArrayKey($testInfoArray, 'location');
+        $fromPlace = $this->getArrayKey($testInfoArray, 'from');
+        $completedTime = $this->getArrayKey($testInfoArray, 'completed');
+        $testerDns = $this->getArrayKey($testInfoArray, 'testerDNS');
+        $this->database->executeQuery("INSERT INTO " . DatabaseTable::TEST_INFO .
+                                      "(user_id, test_url, test_id, location, from_place, completed_time, tester_dns)
+                                      VALUES (?, ?, ?, ?, ?, ?, ?)", [$userId, $siteUrl, $wptTestId, $location, $fromPlace, $completedTime, $testerDns]);
+
+        $testId = $this->database->executeQuery("SELECT id FROM " . DatabaseTable::RAW_DATA);
+        $jsonData = json_encode($data);
+        $this->database->executeQuery("INSERT INTO " . DatabaseTable::RAW_DATA . "(test_id, raw_data)
+                                      VALUES (?, ?)", [$testId, $jsonData]);
+
+        $testResultArray = $this->generateResultDataArray($data);
+        $loadTime = $this->getArrayKey($testResultArray, 'loadTime');
+        $ttfb = $this->getArrayKey($testResultArray, 'TTFB');
+        $bytesOut = $this->getArrayKey($testResultArray, 'bytesOut');
+        $bytesOutDoc = $this->getArrayKey($testResultArray, 'bytesOutDoc');
+        $bytesIn = $this->getArrayKey($testResultArray, 'bytesIn');
+        $bytesInDoc = $this->getArrayKey($testResultArray, 'bytesInDoc');
+        $connections = $this->getArrayKey($testResultArray, 'connections');
+        $requests = $this->getArrayKey($testResultArray, 'requests');
+        $requestsDoc = $this->getArrayKey($testResultArray, 'requestsDoc');
+        $responses200 = $this->getArrayKey($testResultArray, 'responses_200');
+        $responses404 = $this->getArrayKey($testResultArray, 'responses_404');
+        $responsesOther = $this->getArrayKey($testResultArray, 'responses_other');
+        $renderTime = $this->getArrayKey($testResultArray, 'render');
+        $fullyLoaded = $this->getArrayKey($testResultArray, 'fullyLoaded');
+        $docTime = $this->getArrayKey($testResultArray, 'docTime');
+        $imageTotal = $this->getArrayKey($testResultArray, 'image_total');
+        $basePageRedirects = $this->getArrayKey($testResultArray, 'base_page_redirects');
+        $domElements = $this->getArrayKey($testResultArray, 'domElements');
+        $titleTime = $this->getArrayKey($testResultArray, 'titleTime');
+        $loadEventStart = $this->getArrayKey($testResultArray, 'loadEventStart');
+        $loadEventEnd = $this->getArrayKey($testResultArray, 'loadEventEnd');
+        $domContentLoadedEventStart = $this->getArrayKey($testResultArray, 'domContentLoadedEventStart');
+        $domContentLoadedEventEnd = $this->getArrayKey($testResultArray, 'domContentLoadedEventEnd');
+        $firstPaint = $this->getArrayKey($testResultArray, 'firstPaint');
+        $domInteractive = $this->getArrayKey($testResultArray, 'domInteractive');
+        $domLoading = $this->getArrayKey($testResultArray, 'domLoading');
+        $visualComplete = $this->getArrayKey($testResultArray, 'visualComplete');
+        $speedIndex = $this->getArrayKey($testResultArray, 'SpeedIndex');
+        $certificateBytes = $this->getArrayKey($testResultArray, 'certificate_bytes');
+        $this->database->executeQuery("INSERT INTO " . DatabaseTable::AVERAGE_RESULT .
+                                      "(type_view, load_time, ttfb, bytes_out, bytes_out_doc, bytes_in,
+                                        bytes_in_doc, connections, requests, requests_doc, responses_200,
+                                        responses_404, response_other, render_time, fully_loaded, doc_time, image_total,
+                                        base_page_redirects, dom_elements, title_time, load_event_start, load_event_end,
+                                        dom_content_loaded_event_start, dom_content_loaded_event_end, first_paint,
+                                        dom_interactive, dom_loading, visual_complete, speed_index, certificate_bytes)
+                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                                        ?, ?, ?, ?, ?, ?)", [1, $loadTime, $ttfb, $bytesOut, $bytesOutDoc, $bytesIn,
+                                        $bytesInDoc, $connections, $requests, $requestsDoc, $responses200, $responses404,
+                                        $responsesOther, $renderTime, $fullyLoaded, $docTime, $imageTotal, $basePageRedirects,
+                                        $domElements, $titleTime, $loadEventStart, $loadEventEnd, $domContentLoadedEventStart,
+                                        $domContentLoadedEventEnd, $firstPaint, $domInteractive, $domLoading, $visualComplete,
+                                        $speedIndex, $certificateBytes]);
+    }
+
+    private function getArrayKey($array, $key)
+    {
+        if (array_key_exists($key, $array))
+        {
+            $key = $array[$key];
+        }
+        else
+        {
+            $key = '';
+        }
+
+        return $key;
+    }
+
+    private function getTestedUrl($data)
+    {
+        $url = '';
+
+        if (array_key_exists('url', $data))
+        {
             $url = $data['url'];
-            $location = $data['location'];
-            $from = $data['from'];
-            $completed = $data['completed'];
-            $testerDns = $data['testerDNS'];
-
-            $this->database->executeQuery("INSERT INTO " . DatabaseTablesConfig::TEST_INFO .
-                                          "(id, test_url, location, from_place, completed, tester_dns) 
-                                          VALUES (?, ?, ?, ?, ?, ?)", [$id, $url, $location, $from, $completed, $testerDns]);
         }
+
+        return $url;
     }
 
-    public function writeListUrls($response)
+    private function generateTestDataArray($data)
     {
-        $data = $response['data'];
+        $keys = ['id', 'location', 'from', 'completed', 'testerDNS'];
+        $dataArray = [];
 
-        if ($data)
+        foreach ($keys as $key)
         {
-            $site_url = $data['url'];
-
-            $this->database->executeQuery("INSERT INTO " . DatabaseTablesConfig::LIST_URL_SITES .
-                                          "(site_url) VALUES (?)", [$site_url]);
+            if (array_key_exists($key, $data))
+            {
+                $dataArray[] = $key;
+            }
         }
+
+        return $dataArray;
     }
 
-    public function writeAverageResult($response)
+    private function generateResultDataArray($data)
     {
-        $data = $response['data'];
+        $keys = ['loadTime', 'TTFB', 'bytesOut', 'bytesOutDoc', 'bytesIn', 'bytesInDoc', 'connections', 'requests',
+                 'requestsDoc', 'responses_200', 'responses_404', 'responses_other', 'render', 'fullyLoaded', 'docTime',
+                 'image_total', 'base_page_redirects', 'domElements', 'titleTime', 'loadEventStart', 'loadEventEnd',
+                 'domContentLoadedEventStart', 'domContentLoadedEventEnd', 'firstPaint', 'domInteractive', 'domLoading',
+                 'visualComplete', 'SpeedIndex', 'certificate_bytes'];
 
-        if ($data)
+        $dataArray = [];
+
+        foreach ($keys as $key)
         {
-            $firstView = $data['average']['firstView'];
-            $loadTime = $firstView['loadTime'];
-            $ttfb = $firstView['TTFB'];
-            $bytesOut = $firstView['bytesOut'];
-            $bytesOutDoc = $firstView['bytesOutDoc'];
-            $bytesIn = $firstView['bytesIn'];
-            $bytesInDoc = $firstView['bytesInDoc'];
-            $connections = $firstView['connections'];
-            $requests = $firstView['requests'];
-            $requestsFull = $firstView['requestsFull'];
-            $requestsDoc = $firstView['requestsDoc'];
-            $response200 = $firstView['responses_200'];
-            $response404 = $firstView['responses_404'];
-            $response_other = $firstView['responses_other'];
-            $render = $firstView['render'];
-            $fullyLoaded = $firstView['fullyLoaded'];
-            $docTime = $firstView['docTime'];
-            $imageTotal = $firstView['image_total'];
-            $basePageRedirects = $firstView['base_page_redirects'];
-            $optimizationChecked = $firstView['optimization_checked'];
-            $domElements = $firstView['domElements'];
-            $pageSpeedVersion = $firstView['pageSpeedVersion'];
-            $titleTime = $firstView['titleTime'];
-            $loadEventStart = $firstView['loadEventStart'];
-            $loadEventEnd = $firstView['loadEventEnd'];
-            $domContentLoadedEventStart = $firstView['domContentLoadedEventStart'];
-            $domContentLoadedEventEnd = $firstView['domContentLoadedEventEnd'];
-            $lastVisualChange = $firstView['lastVisualChange'];
-            $firstPaint = $firstView['firstPaint'];
-            $domInterective = $firstView['domInteractive'];
-            $domLoading = $firstView['domLoading'];
-            $basePageTtfb = $firstView['base_page_ttfb'];
-            $visualComplete = $firstView['visualComplete'];
-            $speedIndex = $firstView['SpeedIndex'];
-            $certificateBytes = $firstView['certificate_bytes'];
-
-            $this->database->executeQuery("INSERT INTO " . DatabaseTablesConfig::AVERAGE_RESULT .
-                                          "(type_view, load_time, ttfb, bytes_out, bytes_out_doc, bytes_in, 
-                                            bytes_in_doc, connections, requests, requests_full, requests_doc, response_200, 
-                                            response_400, response_other, render, fully_loaded, doc_time, image_total, 
-                                            base_page_redirects, optimization_checked, dom_elements, page_speed_version, 
-                                            title_time, load_event_start, load_event_end, dom_content_loaded_event_start, 
-                                            dom_content_loaded_event_end, last_visual_change, first_paint, dom_interactive, 
-                                            dom_loading, base_page_ttfb, visual_complete, speed_index, sertificate_bytes) 
-                                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
-                                            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                                            [1, $loadTime, $ttfb, $bytesOut, $bytesOutDoc, $bytesIn, $bytesInDoc,
-                                            $connections, $requests, $requestsFull, $requestsDoc, $response200, $response404,
-                                            $response_other, $render, $fullyLoaded, $docTime, $imageTotal, $basePageRedirects,
-                                            $optimizationChecked, $domElements, $pageSpeedVersion, $titleTime,
-                                            $loadEventStart, $loadEventEnd, $domContentLoadedEventStart, $domContentLoadedEventEnd,
-                                            $lastVisualChange, $firstPaint, $domInterective, $domLoading, $basePageTtfb,
-                                            $visualComplete, $speedIndex, $certificateBytes]);
+            if (array_key_exists($key, $data))
+            {
+                $dataArray[] = $key;
+            }
         }
+
+        return $dataArray;
     }
 }

@@ -6,6 +6,7 @@ const SUCCESSFUL_STATUS = 200;
 if ($argv && array_key_exists(Config::FIRST_PARAM_ARGV, $argv))
 {
     $client = new WebPageTestClient();
+    $webPageTestResponseHandler = new WebPageTestResponseHandler();
 
     $testId = $argv[Config::FIRST_PARAM_ARGV];
     $testStatus = $client->checkStateTest($testId);
@@ -13,7 +14,7 @@ if ($argv && array_key_exists(Config::FIRST_PARAM_ARGV, $argv))
     if ($testStatus != null && array_key_exists('statusCode', $testStatus) && $testStatus['statusCode'] == SUCCESSFUL_STATUS)
     {
         $result = $client->getResult($testId);
-        print_r($result);
+        $webPageTestResponseHandler->handle($result);
     }
     else
     {
