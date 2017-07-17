@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS sites_tests_result
+CREATE DATABASE IF NOT EXISTS page_load_test
   DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `user` (
@@ -9,10 +9,10 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS `user_urls` (
+CREATE TABLE IF NOT EXISTS `user_url` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL,
-  `site_url` VARCHAR(255) NOT NULL,
+  `url` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB;
@@ -20,20 +20,20 @@ CREATE TABLE IF NOT EXISTS `user_urls` (
 CREATE TABLE IF NOT EXISTS `test_info` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL,
-  `test_url` VARCHAR(255) NOT NULL,
+  `url_id` INT(11) DEFAULT NULL,
   `test_id` VARCHAR(255) NOT NULL,
-  `location` VARCHAR(255) NOT NULL,
-  `from_place` VARCHAR(255) NOT NULL,
-  `completed_time` INT(11) NOT NULL,
-  `tester_dns` VARCHAR(255) NOT NULL,
+  `location` VARCHAR(255) DEFAULT NULL,
+  `from_place` VARCHAR(255) DEFAULT NULL,
+  `completed_time` TIMESTAMP,
+  `tester_dns` VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`test_url`) REFERENCES `user_urls` (`site_url`) ON DELETE CASCADE
+  FOREIGN KEY (`url_id`) REFERENCES `user_url` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS `raw_data` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `test_id` iNT(11) NOT NULL,
+  `test_id` INT(11) NOT NULL,
   `json_data` MEDIUMTEXT NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`test_id`) REFERENCES `test_info` (`id`) ON DELETE CASCADE
@@ -73,5 +73,20 @@ CREATE TABLE IF NOT EXISTS `average_result` (
   `speed_index` INT(11) NOT NULL,
   `certificate_bytes` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (test_id) REFERENCES test_info(id) ON DELETE CASCADE
+  FOREIGN KEY (`test_id`) REFERENCES `test_info`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS `wpt_location` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `location` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS `user_location` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  `wpt_location_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`wpt_location_id`) REFERENCES `wpt_location`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB;

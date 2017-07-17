@@ -8,6 +8,7 @@ class WebPageTestClient
     const RUNTEST_METHOD_NAME = 'runtest';
     const RESULT_METHOD_NAME = 'jsonResult';
     const STATUS_METHOD_NAME = 'testStatus';
+    const LOCATIONS_METHOD_NAME = 'getLocations';
 
     const HTTP_METHOD = 'GET';
 
@@ -22,6 +23,7 @@ class WebPageTestClient
     const PARAM_FORMAT = 'f';
     const PARAM_KEY = 'k';
     const PARAM_TEST = 'test';
+    const PARAM_LOCATION = 'location';
 
     private $apiKey;
     private $client;
@@ -39,6 +41,7 @@ class WebPageTestClient
         $params = [
             self::PARAM_URL => $siteUrl,
             self::PARAM_RUNS => self::NUMBER_RUNS,
+            self::PARAM_LOCATION => 'ec2-eu-central-1:IE 11',
             self::PARAM_FORMAT => self::RESPONSE_FORMAT,
             self::PARAM_KEY => $this->apiKey
         ];
@@ -57,7 +60,7 @@ class WebPageTestClient
         return $testId;
     }
 
-    public function checkStateTest($testId)
+    public function checkTestState($testId)
     {
         $params = [
             self::PARAM_FORMAT => self::RESPONSE_FORMAT,
@@ -85,6 +88,24 @@ class WebPageTestClient
         }
 
         return $arrayTestResults;
+    }
+
+    public function getLocations()
+    {
+        $param = [
+            self::PARAM_FORMAT => self::RESPONSE_FORMAT,
+            self::PARAM_KEY => Config::APY_KEY
+        ];
+
+        $locationUrl = $this->generateWptUrl(self::LOCATIONS_METHOD_NAME, $param);
+        $decodeJsonResponse = $this->sendRequest(self::HTTP_METHOD, $locationUrl);
+
+        if ($decodeJsonResponse != null && array_key_exists('data', $decodeJsonResponse));
+        {
+            $arrayLocations = $decodeJsonResponse['data'];
+        }
+
+        return $arrayLocations;
     }
 
     private function generateWptUrl($methodName, $params)
