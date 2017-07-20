@@ -8,7 +8,9 @@ $listLocations = '';
 for ($i = 0; $i < count($locations); $i++)
 {
     $location = $locations[$i]['location'];
-    $listLocations .= "<div class='checkbox'><label><input type='checkbox' value=''>$location</label></div>";
+    $ids = $database->executeQuery("SELECT id FROM " . DatabaseTable::WPT_LOCATION);
+    $idLocations = $ids[$i]['id'];
+    $listLocations .= "<div class='checkbox'><label><input type='checkbox' name='location' value='$idLocations'>$location</label></div>";
 }
 
 $urls = $database->executeQuery("SELECT url FROM " . DatabaseTable::USER_URL);
@@ -17,13 +19,13 @@ $listUrls = '';
 for ($i = 0; $i < count($urls); $i++)
 {
     $url = $urls[$i]['url'];
-    $listUrls .= "<li>$url</li>";
+    $listUrls .= "<div>$url</div>";
 }
 
 $vars = [
-    '[[$listLocations]]' => $listLocations,
-    '[[$listUrls]]' => $listUrls
+    '$listLocations' => $listLocations,
+    '$listUrls' => $listUrls
 ];
 
 $templateLoader = new TemplateLoader();
-$templateLoader->loadTemplate('layout.tpl', $vars);
+$templateLoader->loadTemplate('layout_one.tpl', $vars);

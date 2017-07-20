@@ -41,7 +41,8 @@ class WebPageTestClient
         $params = [
             self::PARAM_URL => $siteUrl,
             self::PARAM_RUNS => self::NUMBER_RUNS,
-            self::PARAM_LOCATION => 'ec2-eu-central-1:IE 11',
+            //TODO Temporary default location
+            self::PARAM_LOCATION => 'Dulles:Chrome',
             self::PARAM_FORMAT => self::RESPONSE_FORMAT,
             self::PARAM_KEY => $this->apiKey
         ];

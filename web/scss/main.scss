@@ -1,0 +1,52 @@
+*
+{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+$font-stack-one: 'Roboto', sans-serif;
+
+.header
+{
+  background: #1b58a7;
+  font: 26px $font-stack-one;
+
+  & a
+  {
+    color: #ffffff;
+  }
+}
+
+.menu
+{
+  margin-top: 20px;
+  text-align: center;
+}
+
+.nav>li>a:hover,
+.nav>li>a:focus
+{
+  background: #1b58a7;
+}
+
+.main
+{
+  padding: 20px 0;
+}
+
+.block_locations
+{
+  max-height: 600px;
+  overflow: scroll;
+  margin-right: 20px;
+}
+
+.footer
+{
+  background: #1b58a7;
+  font: 18px $font-stack-one;
+  color: #ffffff;
+  padding: 20px 0;
+  text-align: center;
+}

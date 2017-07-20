@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `test_info` (
   `test_id` VARCHAR(255) NOT NULL,
   `location` VARCHAR(255) DEFAULT NULL,
   `from_place` VARCHAR(255) DEFAULT NULL,
-  `completed_time` TIMESTAMP,
+  `completed_time` DATETIME DEFAULT NULL,
   `tester_dns` VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
