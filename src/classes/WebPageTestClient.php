@@ -34,15 +34,14 @@ class WebPageTestClient
         $this->apiKey = $apiKey;
     }
 
-    public function runNewTest($siteUrl)
+    public function runNewTest($siteUrl, $location)
     {
         $testId = null;
 
         $params = [
             self::PARAM_URL => $siteUrl,
             self::PARAM_RUNS => self::NUMBER_RUNS,
-            //TODO Temporary default location
-            self::PARAM_LOCATION => 'Dulles:Chrome',
+            self::PARAM_LOCATION => $location,
             self::PARAM_FORMAT => self::RESPONSE_FORMAT,
             self::PARAM_KEY => $this->apiKey
         ];

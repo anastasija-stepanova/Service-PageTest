@@ -1,39 +1,83 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
-$database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
-$users = $database->executeQuery("SELECT id FROM " . DatabaseTable::USER);
-$urls = $database->executeQuery("SELECT url FROM " . DatabaseTable::USER_URL);
-$userLocations = $database->executeQuery("SELECT wpt_location_id FROM " . DatabaseTable::USER_LOCATION);
+const SUCCESSFUL_STATUS = 200;
 
+$database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
+
+$users = $database->executeQuery("SELECT * FROM " . DatabaseTable::USER);
 $listUsers = '';
 for ($i = 0; $i < count($users); $i++)
 {
-    $user = $users[$i]['id'];
+    $userId = $users[$i]['id'];
+    $user = $users[$i]['login'];
     $listUsers .= "<div>$user</div>";
 }
 
+$urls = $database->executeQuery("SELECT url FROM " . DatabaseTable::USER_URL . " WHERE user_id = ?", [Config::DEFAULT_USER_ID]);
 $listUserUrls = '';
+$urlsArray = [];
 for ($i = 0; $i < count($urls); $i++)
 {
     $url = $urls[$i]['url'];
+    $urlsArray[] = $url;
     $listUserUrls .= "<div>$url</div>";
 }
 
+$userLocations = $database->executeQuery("SELECT * FROM user_location LEFT JOIN wpt_location USING(id)");
 $listUserLocations = '';
+$locationsArray = [];
 for ($i = 0; $i < count($userLocations); $i++)
 {
-    $location = $userLocations[$i]['wpt_location_id'];
-    $ids = $database->executeQuery("SELECT id FROM " . DatabaseTable::WPT_LOCATION);
-    $idLocations = $ids[$i]['id'];
-    $listUserLocations .= "<div class='checkbox'><label><input type='checkbox' name='location' value='$idLocations'>$location</label></div>";
+    $location = $userLocations[$i]['location'];
+    $locationsArray[] = $location;
+    $listUserLocations .= "<div>$location</div>";
 }
 
-$vars = [
-    '$listUsers' => $listUsers,
-    '$listUserUrls' => $listUserUrls,
-    '$listUserLocations' => $listUserLocations
-];
+$templateLoader = new Twig_Loader_Filesystem('../src/templates/');
+$twig = new Twig_Environment($templateLoader);
+$template = $twig->loadTemplate('layout.tpl');
 
-$templateLoader = new TemplateLoader();
-$templateLoader->loadTemplate('layout_two.tpl', $vars);
+echo $template->render(array(
+    'listUsers' => $listUsers,
+    'listUserUrls' => $listUserUrls,
+    'listUserLocations' => $listUserLocations
+));
+
+$client = new WebPageTestClient();
+
+$testIdsArray = [];
+for ($i = 0; $i < count($urlsArray); $i++)
+{
+    for ($j = 0; $j < count($locationsArray); $j++)
+    {
+        $wptTestId = $client->runNewTest($urlsArray[$i], $locationsArray[$j]);
+        $database->executeQuery("INSERT INTO " . DatabaseTable::TEST_INFO . " (user_id, test_id) VALUES (?, ?)", [Config::DEFAULT_USER_ID, $wptTestId]);
+
+        $dataArray = $database->selectOneRowDatabase("SELECT id FROM " . DatabaseTable::TEST_INFO . " WHERE test_id = ?", [$wptTestId]);
+
+        if (array_key_exists('id', $dataArray))
+        {
+            $testId = $dataArray['id'];
+            $testIdsArray[] = $testId;
+        }
+    }
+}
+
+for ($i = 0; $i < count($testIdsArray); $i++)
+{
+    $dataArray = $database->selectOneRowDatabase("SELECT test_id FROM " . DatabaseTable::TEST_INFO . " WHERE id = ?", [$testIdsArray[$i]]);
+
+    if (array_key_exists('test_id', $dataArray))
+    {
+        $wptTestId = $dataArray['test_id'];
+        $testStatus = $client->checkTestState($wptTestId);
+
+        if ($testStatus != null && array_key_exists('statusCode', $testStatus) && $testStatus['statusCode'] == SUCCESSFUL_STATUS)
+        {
+            $result = $client->getResult($wptTestId);
+            $wptResponseHandler = new WebPageTestResponseHandler();
+            $wptResponseHandler->handle($result);
+        }
+    }
+}

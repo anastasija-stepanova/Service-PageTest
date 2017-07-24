@@ -6,14 +6,34 @@ if (array_key_exists('locations', $_GET))
     $database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
 
     $locations= $_GET['locations'];
-    echo $locations;
-//    $recordExists = $database->executeQuery("SELECT wpt_location_id FROM " . DatabaseTable::USER_LOCATION . " WHERE user_id = ?", [Config::DEFAULT_USER_ID]);
-//    if (array_key_exists(0, $recordExists))
-//    {
-//        $database->executeQuery("UPDATE " . DatabaseTable::USER_LOCATION . " SET wpt_location_id = ?", [$locations]);
-//    }
-//    else
-//    {
-        $database->executeQuery("INSERT INTO " . DatabaseTable::USER_LOCATION . " (user_id, wpt_location_id) VALUES (?, ?)", [Config::DEFAULT_USER_ID, $locations[0]]);
+    $jsonDecode = json_decode($locations, true);
+
+    if (array_key_exists('value', $jsonDecode))
+    {
+        $existingLocations = $database->executeQuery("SELECT wpt_location_id FROM " . DatabaseTable::USER_LOCATION . " WHERE user_id = ?", [Config::DEFAULT_USER_ID]);
+
+        $oldLocations = [];
+        for ($j = 0; $j < count($existingLocations); $j++)
+        {
+            $oldLocations[] = $existingLocations[$j]['wpt_location_id'];
+        }
+
+        $newLocations = [];
+        for ($i = 0; $i < count($jsonDecode['value']); $i++)
+        {
+            $newLocations[] = $jsonDecode['value'][$i];
+        }
+
+        $removableItems = array_diff($oldLocations, $newLocations);
+        foreach ($removableItems as $value)
+        {
+            $database->executeQuery("DELETE FROM " . DatabaseTable::USER_LOCATION . " WHERE user_id = ? and wpt_location_id = ?", [Config::DEFAULT_USER_ID, $value]);
+        }
+
+        $inlaysItems = array_diff($newLocations, $oldLocations);
+        foreach ($inlaysItems as $value)
+        {
+            $database->executeQuery("INSERT INTO  " . DatabaseTable::USER_LOCATION . "(user_id, wpt_location_id) VALUES (?, ?)", [Config::DEFAULT_USER_ID, $value]);
+        }
     }
-//}
+}

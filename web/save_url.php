@@ -6,7 +6,10 @@ if (array_key_exists('url', $_GET))
     $database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
 
     $newUrl= $_GET['url'];
-    $isUrl = preg_match('/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/', $newUrl);
+
+    $dataValidator = new DataValidator();
+
+    $isUrl = $dataValidator->validateUrl($newUrl);
     if (!$isUrl)
     {
         echo 'Невалидный URL';

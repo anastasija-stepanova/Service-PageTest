@@ -1,11 +1,12 @@
 <?php
-require_once __DIR__ . '/../autoloader.inc.php';
+require_once __DIR__ . '/../src/autoloader.inc.php';
 
 const SUCCESSFUL_STATUS = 200;
-const PRINT_RESULT_PARAM = 1;
-const SAVE_RESULT_PARAM = 2;
 
-if ($argc != Config::THREE_PARAMS_ARGC)
+const PRINT_RESULT_MODE= 1;
+const SAVE_RESULT_MODE = 2;
+
+if ($argc != 3)
 {
     echo 'Неверно переданы параметры!';
 
@@ -15,11 +16,11 @@ $database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYS
 
 $testId = $argv[1];
 
-$dataArray = $database->executeQuery("SELECT test_id FROM " . DatabaseTable::TEST_INFO . " WHERE id = ?", [$testId]);
+$dataArray = $database->selectOneRowDatabase("SELECT test_id FROM " . DatabaseTable::TEST_INFO . " WHERE id = ?", [$testId]);
 
-if ($dataArray && $dataArray[0] && $dataArray[0]['test_id'])
+if (array_key_exists('test_id', $dataArray))
 {
-    $wptTestId = $dataArray[0]['test_id'];
+    $wptTestId = $dataArray['test_id'];
     $testStatus = $client->checkTestState($wptTestId);
 
     if ($testStatus != null && array_key_exists('statusCode', $testStatus) && $testStatus['statusCode'] == SUCCESSFUL_STATUS)
@@ -28,10 +29,10 @@ if ($dataArray && $dataArray[0] && $dataArray[0]['test_id'])
 
         switch ($argv[2])
         {
-            case PRINT_RESULT_PARAM:
+            case PRINT_RESULT_MODE:
                 print_r($result);
                 break;
-            case SAVE_RESULT_PARAM:
+            case SAVE_RESULT_MODE:
                 $wptResponseHandler = new WebPageTestResponseHandler();
                 $wptResponseHandler->handle($result);
                 break;

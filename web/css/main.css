@@ -11,16 +11,17 @@
 
 .menu {
   margin-top: 20px;
-  text-align: center; }
+  float: right; }
 
 .nav > li > a:hover,
 .nav > li > a:focus {
   background: #1b58a7; }
 
 .main {
-  padding: 20px 0; }
+  padding: 20px 0;
+  min-height: 780px; }
 
-.block_locations {
+.list-locations {
   max-height: 600px;
   overflow: scroll;
   margin-right: 20px; }

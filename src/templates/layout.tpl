@@ -13,7 +13,7 @@
     <header class="header container-fluid">
       <div class="container">
         <div class="row">
-          <div class="col-xs-12 col-md-9">
+          <div class="col-xs-12">
             <nav class="navbar menu" role="navigation">
               <div class="navbar-header">
                 <button type="button" class="navbar-toggle hamburger-button" data-toggle="collapse"
@@ -36,29 +36,7 @@
       </div>
     </header>
     <main class="main container">
-      <div class="row">
-        <div class="block_locations col-xs-12 col-md-5">
-          <h2>Доступные местоположения</h2>
-          <div id="listLocations">
-            [[$listLocations]]
-          </div>
-          <button id="saveLocation" type="submit" class="btn btn-primary">Save location</button>
-        </div>
-        <div class="block_urls col-xs-12 col-md-3">
-          <h2>Список URLs</h2>
-          <div id="listUrls">
-            [[$listUrls]]
-            <div id="newUrl"></div>
-          </div>
-        </div>
-        <div class="block_add_url col-xs-12 col-md-3">
-          <h2>Добавить URL</h2>
-          <form>
-            <input id="inputUrl" type="text" value="" title="">
-            <button id="saveUrl" type="button" class="btn btn-success">Save url</button>
-          </form>
-        </div>
-      </div>
+      {% include 'main_page.tpl' %}
     </main>
     <footer class="footer container-fluid">
       <div class="container">

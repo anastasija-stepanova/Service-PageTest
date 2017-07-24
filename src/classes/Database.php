@@ -29,4 +29,18 @@ class Database
 
         return $data;
     }
+
+    public function selectOneRowDatabase($query, $params = [])
+    {
+        $result = $this->executeQuery($query, $params);
+
+        $oneRowResult = [];
+
+        if (array_key_exists(0, $result))
+        {
+            $oneRowResult = $result[0];
+        }
+
+        return $oneRowResult;
+    }
 }

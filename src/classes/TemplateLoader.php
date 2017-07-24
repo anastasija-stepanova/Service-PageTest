@@ -7,7 +7,7 @@ class TemplateLoader
 
         foreach ($vars as $key => $value)
         {
-            $key = "[[$key]]";
+            $key = "[[$$key]]";
             $content = str_replace($key, $value, $content);
         }
 

@@ -22,10 +22,13 @@ for ($i = 0; $i < count($urls); $i++)
     $listUrls .= "<div>$url</div>";
 }
 
-$vars = [
-    '$listLocations' => $listLocations,
-    '$listUrls' => $listUrls
-];
+$templateLoader = new Twig_Loader_Filesystem('../src/templates/');
 
-$templateLoader = new TemplateLoader();
-$templateLoader->loadTemplate('layout_one.tpl', $vars);
+$twig = new Twig_Environment($templateLoader);
+
+$template = $twig->loadTemplate('layout.tpl');
+
+echo $template->render(array(
+    'listLocations' => $listLocations,
+    'listUrls' => $listUrls
+));

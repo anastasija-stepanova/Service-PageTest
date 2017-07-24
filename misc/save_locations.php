@@ -6,6 +6,7 @@ $database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYS
 
 $locationsInfo = $client->getLocations();
 $locations = array_keys($locationsInfo);
+
 foreach ($locations as $location)
 {
     if (array_key_exists('Browsers', $locationsInfo[$location]))

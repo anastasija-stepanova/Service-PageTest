@@ -6,7 +6,6 @@
 })();
 
 function showResponse(xhr) {
-  console.log(xhr.responseText);
   let listUrls = document.getElementById('listUrls');
   let result = document.getElementById('newUrl').innerHTML = xhr.responseText;
   return listUrls + result;
@@ -30,7 +29,6 @@ function saveLocations(saveButton) {
     itemsListLocations[i].addEventListener('change', function(event) {
       let element = event.target;
       let value = element.value;
-
       if (element.checked) {
         checkedArray.push(value);
       } else {
@@ -42,9 +40,13 @@ function saveLocations(saveButton) {
 
     })
   }
+
   saveButton.addEventListener('click', function(event) {
     event.preventDefault();
-    let locationsParam = '?locations=' + checkedArray;
-    ajaxGet(FILE_SAVE_USER_LOCATIONS, locationsParam);
+    let keyValue = {
+      'value': checkedArray
+    };
+    let jsonString = '?locations=' + JSON.stringify(keyValue);
+    ajaxGet(FILE_SAVE_USER_LOCATIONS, jsonString);
   })
 }

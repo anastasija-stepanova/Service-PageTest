@@ -9,10 +9,7 @@ class Config
 
     const APY_KEY = 'A.7a90c9f8293c2f09d0ea68c78e19c1f6';
 
-    const TWO_PARAMS_ARGC = 2;
-    const THREE_PARAMS_ARGC = 3;
-
-    //TODO Temporary default user id
+    //TODO Temporary default
     const DEFAULT_USER_ID = 1;
 
     const TEMPLATE_ROOT = '../src/templates/';
