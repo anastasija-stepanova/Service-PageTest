@@ -9,14 +9,14 @@ const SAVE_RESULT_MODE = 2;
 if ($argc != 3)
 {
     echo 'Неверно переданы параметры!';
-
+    exit();
 }
 $client = new WebPageTestClient();
 $database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
 
 $testId = $argv[1];
 
-$dataArray = $database->selectOneRowDatabase("SELECT test_id FROM " . DatabaseTable::TEST_INFO . " WHERE id = ?", [$testId]);
+$dataArray = $database->selectOneRow("SELECT test_id FROM " . DatabaseTable::TEST_INFO . " WHERE id = ?", [$testId]);
 
 if (array_key_exists('test_id', $dataArray))
 {

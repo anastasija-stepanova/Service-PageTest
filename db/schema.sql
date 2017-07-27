@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `test_info` (
   `location` VARCHAR(255) DEFAULT NULL,
   `from_place` VARCHAR(255) DEFAULT NULL,
   `completed_time` DATETIME DEFAULT NULL,
-  `tester_dns` VARCHAR(255) DEFAULT NULL,
+  `tester` VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`url_id`) REFERENCES `user_url` (`id`) ON DELETE CASCADE
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `raw_data` (
   FOREIGN KEY (`test_id`) REFERENCES `test_info` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS `average_result` (
+CREATE TABLE IF NOT EXISTS `default_average_result` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `test_id` INT(11) NOT NULL,
   `type_view` TINYINT(1) NOT NULL,
@@ -79,6 +79,7 @@ CREATE TABLE IF NOT EXISTS `average_result` (
 CREATE TABLE IF NOT EXISTS `wpt_location` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `location` VARCHAR(255) NOT NULL,
+  `description` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
@@ -89,4 +90,78 @@ CREATE TABLE IF NOT EXISTS `user_location` (
   PRIMARY KEY (`id`),
   FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`wpt_location_id`) REFERENCES `wpt_location`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS `chrome_average_result` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `test_id` INT(11) NOT NULL,
+  `type_view` TINYINT(1) NOT NULL,
+  `load_time` INT(11) NOT NULL,
+  `ttfb` INT(11) NOT NULL,
+  `bytes_out` INT(11) NOT NULL,
+  `bytes_out_doc` INT(11) NOT NULL,
+  `bytes_in` INT(11) NOT NULL,
+  `bytes_in_doc` INT(11) NOT NULL,
+  `connections` INT(11) NOT NULL,
+  `requests` INT(11) NOT NULL,
+  `requests_doc` INT(11) NOT NULL,
+  `responses_200` INT(11) NOT NULL,
+  `responses_404` INT(11) NOT NULL,
+  `responses_other` INT(11) NOT NULL,
+  `fully_loaded` INT(11) NOT NULL,
+  `doc_time` INT(11) NOT NULL,
+  `image_total` INT(11) NOT NULL,
+  `final_base_page_request` INT(11) NOT NULL,
+  `dom_elements` INT(11) NOT NULL,
+  `load_event_start` INT(11) NOT NULL,
+  `load_event_end` INT(11) NOT NULL,
+  `dom_content_loaded_event_start` INT(11) NOT NULL,
+  `dom_content_loaded_event_end` INT(11) NOT NULL,
+  `first_paint` INT(11) NOT NULL,
+  `dom_interactive` INT(11) NOT NULL,
+  `test_start_offset` INT(11) NOT NULL,
+  `chrome_user_timing_fetch_start` INT(11) NOT NULL,
+  `chrome_user_timing_redirect_start` INT(11) NOT NULL,
+  `chrome_user_timing_redirect_end` INT(11) NOT NULL,
+  `chrome_user_timing_unload_event_start` INT(11) NOT NULL,
+  `chrome_user_timing_unload_event_end` INT(11) NOT NULL,
+  `chrome_user_timing_dom_loading` INT(11) NOT NULL,
+  `chrome_user_timing_response_end` INT(11) NOT NULL,
+  `chrome_user_timing_first_layout` INT(11) NOT NULL,
+  `chrome_user_timing_first_contentful_paint` INT(11) NOT NULL,
+  `chrome_user_timing_first_text_paint` INT(11) NOT NULL,
+  `chrome_user_timing_first_image_paint` INT(11) NOT NULL,
+  `chrome_user_timing_first_meaningful_paint` INT(11) NOT NULL,
+  `chrome_user_timing_dom_complete` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`test_id`) REFERENCES `test_info`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS `other_browser_average_result` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `test_id` INT(11) NOT NULL,
+  `type_view` TINYINT(1) NOT NULL,
+  `load_time` INT(11) NOT NULL,
+  `ttfb` INT(11) NOT NULL,
+  `bytes_out` INT(11) NOT NULL,
+  `bytes_out_doc` INT(11) NOT NULL,
+  `bytes_in` INT(11) NOT NULL,
+  `bytes_in_doc` INT(11) NOT NULL,
+  `render` INT(11) NOT NULL,
+  `fully_loaded` INT(11) NOT NULL,
+  `doc_time` INT(11) NOT NULL,
+  `load_event_start` INT(11) NOT NULL,
+  `load_event_end` INT(11) NOT NULL,
+  `dom_content_loaded_event_start` INT(11) NOT NULL,
+  `dom_content_loaded_event_end` INT(11) NOT NULL,
+  `first_paint` INT(11) NOT NULL,
+  `dom_interactive` INT(11) NOT NULL,
+  `dom_loading` INT(11) NOT NULL,
+  `pcap_bytes_in` INT(11) NOT NULL,
+  `pcap_bytes_in_dup` INT(11) NOT NULL,
+  `pcap_bytes_out` INT(11) NOT NULL,
+  `speed_index` INT(11) NOT NULL,
+  `visual_complete` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`test_id`) REFERENCES `test_info`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB;

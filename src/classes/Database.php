@@ -30,17 +30,10 @@ class Database
         return $data;
     }
 
-    public function selectOneRowDatabase($query, $params = [])
+    public function selectOneRow($query, $params = [])
     {
         $result = $this->executeQuery($query, $params);
 
-        $oneRowResult = [];
-
-        if (array_key_exists(0, $result))
-        {
-            $oneRowResult = $result[0];
-        }
-
-        return $oneRowResult;
+        return (array_key_exists(0, $result)) ? $result[0] : [];
     }
 }

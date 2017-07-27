@@ -41,7 +41,10 @@ class WebPageTestClient
         $params = [
             self::PARAM_URL => $siteUrl,
             self::PARAM_RUNS => self::NUMBER_RUNS,
+
+            //TODO Temporary default location
             self::PARAM_LOCATION => $location,
+
             self::PARAM_FORMAT => self::RESPONSE_FORMAT,
             self::PARAM_KEY => $this->apiKey
         ];

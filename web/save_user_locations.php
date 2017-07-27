@@ -10,7 +10,8 @@ if (array_key_exists('locations', $_GET))
 
     if (array_key_exists('value', $jsonDecode))
     {
-        $existingLocations = $database->executeQuery("SELECT wpt_location_id FROM " . DatabaseTable::USER_LOCATION . " WHERE user_id = ?", [Config::DEFAULT_USER_ID]);
+        $existingLocations = $database->executeQuery("SELECT wpt_location_id FROM " . DatabaseTable::USER_LOCATION .
+                                                     " WHERE user_id = ?", [Config::DEFAULT_USER_ID]);
 
         $oldLocations = [];
         for ($j = 0; $j < count($existingLocations); $j++)
@@ -27,13 +28,15 @@ if (array_key_exists('locations', $_GET))
         $removableItems = array_diff($oldLocations, $newLocations);
         foreach ($removableItems as $value)
         {
-            $database->executeQuery("DELETE FROM " . DatabaseTable::USER_LOCATION . " WHERE user_id = ? and wpt_location_id = ?", [Config::DEFAULT_USER_ID, $value]);
+            $database->executeQuery("DELETE FROM " . DatabaseTable::USER_LOCATION .
+                                    " WHERE user_id = ? and wpt_location_id = ?", [Config::DEFAULT_USER_ID, $value]);
         }
 
         $inlaysItems = array_diff($newLocations, $oldLocations);
         foreach ($inlaysItems as $value)
         {
-            $database->executeQuery("INSERT INTO  " . DatabaseTable::USER_LOCATION . "(user_id, wpt_location_id) VALUES (?, ?)", [Config::DEFAULT_USER_ID, $value]);
+            $database->executeQuery("INSERT INTO  " . DatabaseTable::USER_LOCATION .
+                                    "(user_id, wpt_location_id) VALUES (?, ?)", [Config::DEFAULT_USER_ID, $value]);
         }
     }
 }

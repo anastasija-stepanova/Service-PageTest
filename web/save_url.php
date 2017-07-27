@@ -16,10 +16,12 @@ if (array_key_exists('url', $_GET))
         exit();
     }
 
-    $urlExists = $database->executeQuery("SELECT id FROM " . DatabaseTable::USER_URL . " WHERE url = ? LIMIT 1", [$newUrl]);
+    $urlExists = $database->executeQuery("SELECT id FROM " . DatabaseTable::USER_URL .
+                                         " WHERE url = ? LIMIT 1", [$newUrl]);
     if (!$urlExists)
     {
-        $database->executeQuery("INSERT INTO " . DatabaseTable::USER_URL . " (user_id, url) VALUES (?, ?)", [Config::DEFAULT_USER_ID, $newUrl]);
+        $database->executeQuery("INSERT INTO " . DatabaseTable::USER_URL .
+                                " (user_id, url) VALUES (?, ?)", [Config::DEFAULT_USER_ID, $newUrl]);
         echo $newUrl;
     }
 }

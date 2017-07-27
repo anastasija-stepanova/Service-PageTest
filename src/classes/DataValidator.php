@@ -2,18 +2,10 @@
 
 class DataValidator
 {
-    public function validateUrl($url)
-    {
-        $regularExpression = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
-        $isUrl = preg_match($regularExpression, $url);
+    const REGULAR_EXPRESSION = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
 
-        if ($isUrl)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+    public static function validateUrl($url)
+    {
+        return preg_match(self::REGULAR_EXPRESSION, $url);
     }
 }
