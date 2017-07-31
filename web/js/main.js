@@ -1,8 +1,12 @@
 (function() {
   let saveUrlButton = document.getElementById('saveUrl');
   saveUrl(saveUrlButton);
+
   let saveLocationButton = document.getElementById('saveLocation');
   saveLocations(saveLocationButton);
+
+  let buildChartButton = document.getElementById('buildChart');
+  buildChart(buildChartButton);
 })();
 
 function showResponse(xhr) {
@@ -49,4 +53,25 @@ function saveLocations(saveButton) {
     let jsonString = '?locations=' + JSON.stringify(keyValue);
     ajaxGet(FILE_SAVE_USER_LOCATIONS, jsonString);
   })
+}
+
+function buildChart(buildChartButton) {
+  buildChartButton.addEventListener('click', function(event) {
+    event.preventDefault();
+    let keyValue = {
+      'key': 'ttfb'
+    };
+    let jsonString = '?data=' + JSON.stringify(keyValue);
+    ajaxGet(FILE_GET_DATA_FROM_DB, jsonString);
+  });
+
+  let data = {
+    labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+
+    series: [
+      []
+    ]
+  };
+
+  new Chartist.Line('.ct-chart', data);
 }

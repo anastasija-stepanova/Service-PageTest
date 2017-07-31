@@ -8,8 +8,12 @@ if ($argc != 2)
 }
 
 $siteUrl = $argv[1];
-$client = new WebPageTestClient();
+
 $database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
+$apiKey = $database->executeQuery("SELECT api_key FROM " . DatabaseTable::USER .
+                                  " WHERE id = ?", [Config::DEFAULT_USER_ID], PDO::FETCH_COLUMN);
+
+$client = new WebPageTestClient($apiKey);
 
 $wptTestId = $client->runNewTest($siteUrl);
 $database->executeQuery("INSERT INTO " . DatabaseTable::TEST_INFO . " (user_id, test_id) 

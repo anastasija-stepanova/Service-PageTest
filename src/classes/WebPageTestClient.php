@@ -28,7 +28,7 @@ class WebPageTestClient
     private $apiKey;
     private $client;
 
-    public function __construct($apiKey = Config::APY_KEY)
+    public function __construct($apiKey)
     {
         $this->client = new Client();
         $this->apiKey = $apiKey;
@@ -41,10 +41,7 @@ class WebPageTestClient
         $params = [
             self::PARAM_URL => $siteUrl,
             self::PARAM_RUNS => self::NUMBER_RUNS,
-
-            //TODO Temporary default location
             self::PARAM_LOCATION => $location,
-
             self::PARAM_FORMAT => self::RESPONSE_FORMAT,
             self::PARAM_KEY => $this->apiKey
         ];
@@ -97,7 +94,7 @@ class WebPageTestClient
     {
         $param = [
             self::PARAM_FORMAT => self::RESPONSE_FORMAT,
-            self::PARAM_KEY => Config::APY_KEY
+            self::PARAM_KEY => $this->apiKey
         ];
 
         $locationUrl = $this->generateWptUrl(self::LOCATIONS_METHOD_NAME, $param);

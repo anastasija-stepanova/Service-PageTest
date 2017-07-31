@@ -9,7 +9,7 @@ class Database
         $this->pdo = new PDO("mysql:host=" . $host . ';dbname=' . $database, $userName, $password);
     }
 
-    public function executeQuery($query, $params = [])
+    public function executeQuery($query, $params = [], $style = PDO::FETCH_ASSOC)
     {
         $data = [];
 
@@ -19,7 +19,7 @@ class Database
         {
             $stm->execute($params);
 
-            while ($row = $stm->fetch(PDO::FETCH_ASSOC))
+            while ($row = $stm->fetch($style))
             {
                 array_push($data, $row);
             }
@@ -34,6 +34,6 @@ class Database
     {
         $result = $this->executeQuery($query, $params);
 
-        return (array_key_exists(0, $result)) ? $result[0] : [];
+        return array_key_exists(0, $result) ? $result[0] : [];
     }
 }

@@ -3,45 +3,43 @@ require_once __DIR__ . '/../src/autoloader.inc.php';
 
 $database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
 
-$users = $database->executeQuery("SELECT * FROM " . DatabaseTable::USER);
-$usersArray = generateDataArray($users, 'id');
+$usersId = $database->executeQuery("SELECT id FROM " . DatabaseTable::USER, [], PDO::FETCH_COLUMN);
 
-$urls = $database->executeQuery("SELECT url FROM " . DatabaseTable::USER_URL . " WHERE user_id = ?", [Config::DEFAULT_USER_ID]);
-$urlsArray = generateDataArray($urls, 'url');
-
-$userLocations = $database->executeQuery("SELECT * FROM user_location LEFT JOIN wpt_location USING(id)");
-$locationsArray = generateDataArray($userLocations, 'location');
-
-$client = new WebPageTestClient();
-
-$testIdsArray = [];
-for ($i = 0; $i < count($urlsArray); $i++)
+for ($i = 0; $i < count($usersId); $i++)
 {
-    for ($j = 0; $j < count($locationsArray); $j++)
+    $userUrls = $database->executeQuery("SELECT url FROM " . DatabaseTable::USER_URL .
+                                        " WHERE user_id = ?", [Config::DEFAULT_USER_ID], PDO::FETCH_COLUMN);
+
+    $userLocations = $database->executeQuery("SELECT * FROM " . DatabaseTable::USER_LOCATION .
+                                             " LEFT JOIN " .DatabaseTable::WPT_LOCATION .
+                                             " ON " . DatabaseTable::USER_LOCATION . ". wpt_location_id = "
+                                              . DatabaseTable::WPT_LOCATION . ".id");
+
+    $apiKey = $database->executeQuery("SELECT api_key FROM " . DatabaseTable::USER .
+                                      " WHERE id = ?", [Config::DEFAULT_USER_ID], PDO::FETCH_COLUMN);
+
+    $client = new WebPageTestClient($apiKey[0]);
+
+    for ($j = 0; $j < count($userUrls); $j++)
     {
-        $wptTestId = $client->runNewTest($urlsArray[$i], $locationsArray[$j]);
-        $database->executeQuery("INSERT INTO " . DatabaseTable::TEST_INFO . " (user_id, test_id)
-                                 VALUES (?, ?)", [Config::DEFAULT_USER_ID, $wptTestId]);
+        $urlsId = $database->executeQuery("SELECT id FROM " . DatabaseTable::USER_URL, [], PDO::FETCH_COLUMN);
 
-        $dataArray = $database->selectOneRow("SELECT id FROM " . DatabaseTable::TEST_INFO . " WHERE test_id = ?", [$wptTestId]);
-
-        if (array_key_exists('id', $dataArray))
+        for ($k = 0; $k < count($userLocations); $k++)
         {
-            $testId = $dataArray['id'];
-            $testIdsArray[] = $testId;
-            print_r($testIdsArray);
+            $wptTestId = $client->runNewTest($userUrls[$j], $userLocations[$k]['location']);
+
+            $locationsId = $database->executeQuery("SELECT id FROM " . DatabaseTable::WPT_LOCATION, [], PDO::FETCH_COLUMN);
+
+            $data = [];
+            $data[] = $usersId[$i];
+            $data[] = $urlsId[$j];
+            $data[] = $locationsId[$k];
+            $data[] = $wptTestId;
+            $data[] = 0;
+
+            $database->executeQuery("INSERT INTO " . DatabaseTable::TEST_INFO . " (user_id, url_id, location_id, test_id, is_completed)
+                                     VALUES (?, ?, ?, ?, ?)", [$usersId[$i], $urlsId[$j], $locationsId[$k],  $wptTestId, 0]);
+            print_r($data);
         }
     }
-}
-
-function generateDataArray($responseData, $index)
-{
-    $dataArray = [];
-    for ($i = 0; $i < count($responseData); $i++)
-    {
-        $item = $responseData[$i][$index];
-        $dataArray[] = $item;
-    }
-
-    return $dataArray;
 }

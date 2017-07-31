@@ -17,7 +17,8 @@ if (array_key_exists('url', $_GET))
     }
 
     $urlExists = $database->executeQuery("SELECT id FROM " . DatabaseTable::USER_URL .
-                                         " WHERE url = ? LIMIT 1", [$newUrl]);
+                                         " WHERE url = ? LIMIT 1", [$newUrl], PDO::FETCH_COLUMN);
+
     if (!$urlExists)
     {
         $database->executeQuery("INSERT INTO " . DatabaseTable::USER_URL .
