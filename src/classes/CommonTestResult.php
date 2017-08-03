@@ -17,7 +17,6 @@ class CommonTestResult
     private $renderTime = 0;
     private $fullyLoaded = 0;
     private $docTime = 0;
-    private $basePageRedirects = 0;
     private $domElements = 0;
     private $titleTime = 0;
     private $loadEventStart = 0;
@@ -179,16 +178,6 @@ class CommonTestResult
         return $this->docTime;
     }
 
-    public function setBasePageRedirects($value)
-    {
-        $this->basePageRedirects = $value;
-    }
-
-    public function getBasePageRedirects()
-    {
-        return $this->basePageRedirects;
-    }
-
     public function setDomElements($value)
     {
         $this->domElements = $value;
@@ -287,5 +276,38 @@ class CommonTestResult
     public function getVisualComplete()
     {
         return $this->visualComplete;
+    }
+
+    public function getAsArray()
+    {
+        $dataArray = [];
+
+        $dataArray[] = $this->loadTime;
+        $dataArray[] = $this->ttfb;
+        $dataArray[] = $this->bytesOut;
+        $dataArray[] = $this->bytesOutDoc;
+        $dataArray[] = $this->bytesIn;
+        $dataArray[] = $this->bytesInDoc;
+        $dataArray[] = $this->connections;
+        $dataArray[] = $this->requests;
+        $dataArray[] = $this->requestsDoc;
+        $dataArray[] = $this->responses200;
+        $dataArray[] = $this->responses404;
+        $dataArray[] = $this->responsesOther;
+        $dataArray[] = $this->renderTime;
+        $dataArray[] = $this->fullyLoaded;
+        $dataArray[] = $this->docTime;
+        $dataArray[] = $this->domElements;
+        $dataArray[] = $this->titleTime;
+        $dataArray[] = $this->loadEventStart;
+        $dataArray[] = $this->loadEventEnd;
+        $dataArray[] = $this->domContentLoadedEventStart;
+        $dataArray[] = $this->domContentLoadedEventEnd;
+        $dataArray[] = $this->firstPaint;
+        $dataArray[] = $this->domInteractive;
+        $dataArray[] = $this->domLoading;
+        $dataArray[] = $this->visualComplete;
+
+        return $dataArray;
     }
 }

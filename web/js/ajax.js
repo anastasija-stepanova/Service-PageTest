@@ -1,13 +1,17 @@
 const doneState = 4;
 
-let ajaxGet = function(path, param) {
+let ajaxPost = function(path, param, callbackFunction) {
   let xhr = new XMLHttpRequest();
-  xhr.open('GET', path + param, true);
-  xhr.send();
+  xhr.open('POST', path, true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.send(param);
   xhr.onreadystatechange = function() {
     if (xhr.readyState == doneState) {
       if (xhr.responseText) {
-        showResponse(xhr);
+        if (callbackFunction)
+        {
+          callbackFunction(xhr);
+        }
       }
     }
   }

@@ -6,343 +6,215 @@ class CommonTestResultCreator
     {
         $commonTestResult = new CommonTestResult();
 
-        $dataArray = [];
-        $commonTestResult->setLoadTime($response['loadTime']);
-        $dataArray[] = $commonTestResult->getLoadTime();
+        if (array_key_exists('loadTime', $response))
+        {
+            $commonTestResult->setLoadTime($response['loadTime']);
+        }
+        if (array_key_exists('TTFB', $response))
+        {
+            $commonTestResult->setTtfb($response['TTFB']);
+        }
+        if (array_key_exists('bytesOut', $response))
+        {
+            $commonTestResult->setBytesOut($response['bytesOut']);
+        }
+        if (array_key_exists('bytesOutDoc', $response))
+        {
+            $commonTestResult->setBytesOutDoc($response['bytesOutDoc']);
+        }
+        if (array_key_exists('bytesIn', $response))
+        {
+            $commonTestResult->setBytesIn($response['bytesIn']);
+        }
+        if (array_key_exists('bytesInDoc', $response))
+        {
+            $commonTestResult->setBytesInDoc($response['bytesInDoc']);
+        }
+        if (array_key_exists('connections', $response))
+        {
+            $commonTestResult->setConnections($response['connections']);
+        }
+        if (array_key_exists('requests', $response))
+        {
+            $commonTestResult->setRequests($response['requests']);
+        }
+        if (array_key_exists('requestsDoc', $response))
+        {
+            $commonTestResult->setRequestsDoc($response['requestsDoc']);
+        }
+        if (array_key_exists('responses_200', $response))
+        {
+            $commonTestResult->setResponses200($response['responses_200']);
+        }
+        if (array_key_exists('responses_404', $response))
+        {
+            $commonTestResult->setResponses404($response['responses_404']);
+        }
+        if (array_key_exists('responses_other', $response))
+        {
+            $commonTestResult->setResponsesOther($response['responses_other']);
+        }
+        if (array_key_exists('render', $response))
+        {
+            $commonTestResult->setRenderTime($response['render']);
+        }
+        if (array_key_exists('fullyLoaded', $response))
+        {
+            $commonTestResult->setFullyLoaded($response['fullyLoaded']);
+        }
+        if (array_key_exists('docTime', $response))
+        {
+            $commonTestResult->setDocTime($response['docTime']);
+        }
+        if (array_key_exists('domElements', $response))
+        {
+            $commonTestResult->setDomElements($response['domElements']);
+        }
+        if (array_key_exists('titleTime', $response))
+        {
+            $commonTestResult->setTitleTime($response['titleTime']);
+        }
+        if (array_key_exists('loadEventStart', $response))
+        {
+            $commonTestResult->setLoadEventStart($response['loadEventStart']);
+        }
+        if (array_key_exists('loadEventEnd', $response))
+        {
+            $commonTestResult->setLoadEventEnd($response['loadEventEnd']);
+        }
+        if (array_key_exists('domContentLoadedEventStart', $response))
+        {
+            $commonTestResult->setDomContentLoadedEventStart($response['domContentLoadedEventStart']);
+        }
+        if (array_key_exists('domContentLoadedEventEnd', $response))
+        {
+            $commonTestResult->setDomContentLoadedEventEnd($response['domContentLoadedEventEnd']);
+        }
+        if (array_key_exists('firstPaint', $response))
+        {
+            $commonTestResult->setFirstPaint($response['firstPaint']);
+        }
+        if (array_key_exists('domInteractive', $response))
+        {
+            $commonTestResult->setDomInteractive($response['domInteractive']);
+        }
+        if (array_key_exists('chromeUserTiming.domLoading', $response))
+        {
+            $commonTestResult->setDomLoading($response['chromeUserTiming.domLoading']);
+        }
+        if (array_key_exists('chromeUserTiming.domComplete', $response))
+        {
+            $commonTestResult->setVisualComplete($response['chromeUserTiming.domComplete']);
+        }
 
-        $commonTestResult->setTtfb($response['TTFB']);
-        $dataArray[] = $commonTestResult->getTtfb();
-
-        $commonTestResult->setBytesOut($response['bytesOut']);
-        $dataArray[] = $commonTestResult->getBytesOut();
-
-        $commonTestResult->setBytesOutDoc($response['bytesOutDoc']);
-        $dataArray[] = $commonTestResult->getBytesOutDoc();
-
-        $commonTestResult->setBytesIn($response['bytesIn']);
-        $dataArray[] = $commonTestResult->getBytesIn();
-
-        $commonTestResult->setBytesInDoc($response['bytesInDoc']);
-        $dataArray[] = $commonTestResult->getBytesInDoc();
-
-        $commonTestResult->setConnections($response['connections']);
-        $dataArray[] = $commonTestResult->getConnections();
-
-        $commonTestResult->setRequests($response['requests']);
-        $dataArray[] = $commonTestResult->getRequests();
-
-        $commonTestResult->setRequestsDoc($response['requestsDoc']);
-        $dataArray[] = $commonTestResult->getRequestsDoc();
-
-        $commonTestResult->setResponses200($response['responses_200']);
-        $dataArray[] = $commonTestResult->getResponses200();
-
-        $commonTestResult->setResponses404($response['responses_404']);
-        $dataArray[] = $commonTestResult->getResponses404();
-
-        $commonTestResult->setResponsesOther($response['responses_other']);
-        $dataArray[] = $commonTestResult->getResponsesOther();
-
-        $commonTestResult->setRenderTime($response['render']);
-        $dataArray[] = $commonTestResult->getRenderTime();
-
-        $commonTestResult->setFullyLoaded($response['fullyLoaded']);
-        $dataArray[] = $commonTestResult->getFullyLoaded();
-
-        $commonTestResult->setDocTime($response['docTime']);
-        $dataArray[] = $commonTestResult->getDocTime();
-
-        $commonTestResult->setBasePageRedirects($response['final_base_page_request']);
-        $dataArray[] = $commonTestResult->getBasePageRedirects();
-
-        $commonTestResult->setDomElements($response['domElements']);
-        $dataArray[] = $commonTestResult->getDomElements();
-
-        $commonTestResult->setTitleTime($response['titleTime']);
-        $dataArray[] = $commonTestResult->getTitleTime();
-
-        $commonTestResult->setLoadEventStart($response['loadEventStart']);
-        $dataArray[] = $commonTestResult->getLoadEventStart();
-
-        $commonTestResult->setLoadEventEnd($response['loadEventEnd']);
-        $dataArray[] = $commonTestResult->getLoadEventEnd();
-
-        $commonTestResult->setDomContentLoadedEventStart($response['domContentLoadedEventStart']);
-        $dataArray[] = $commonTestResult->getDomContentLoadedEventStart();
-
-        $commonTestResult->setDomContentLoadedEventEnd($response['domContentLoadedEventEnd']);
-        $dataArray[] = $commonTestResult->getDomContentLoadedEventEnd();
-
-        $commonTestResult->setFirstPaint($response['firstPaint']);
-        $dataArray[] = $commonTestResult->getFirstPaint();
-
-        $commonTestResult->setDomInteractive($response['domInteractive']);
-        $dataArray[] = $commonTestResult->getDomInteractive();
-
-        $commonTestResult->setDomLoading($response['chromeUserTiming.domLoading']);
-        $dataArray[] = $commonTestResult->getDomLoading();
-
-        $commonTestResult->setVisualComplete($response['chromeUserTiming.domComplete']);
-        $dataArray[] = $commonTestResult->getVisualComplete();
-
-        return $dataArray;
+        return $commonTestResult;
     }
 
     public static function createFromDesktopBrowser($response)
     {
         $commonTestResult = new CommonTestResult();
 
-        $dataArray = [];
-        $commonTestResult->setLoadTime($response['loadTime']);
-        $dataArray[] = $commonTestResult->getLoadTime();
-
-        $commonTestResult->setTtfb($response['TTFB']);
-        $dataArray[] = $commonTestResult->getTtfb();
-
-        $commonTestResult->setBytesOut($response['bytesOut']);
-        $dataArray[] = $commonTestResult->getBytesOut();
-
-        $commonTestResult->setBytesOutDoc($response['bytesOutDoc']);
-        $dataArray[] = $commonTestResult->getBytesOutDoc();
-
-        $commonTestResult->setBytesIn($response['bytesIn']);
-        $dataArray[] = $commonTestResult->getBytesIn();
-
-        $commonTestResult->setBytesInDoc($response['bytesInDoc']);
-        $dataArray[] = $commonTestResult->getBytesInDoc();
-
-        $commonTestResult->setConnections($response['connections']);
-        $dataArray[] = $commonTestResult->getConnections();
-
-        $commonTestResult->setRequests($response['requests']);
-        $dataArray[] = $commonTestResult->getRequests();
-
-        $commonTestResult->setRequestsDoc($response['requestsDoc']);
-        $dataArray[] = $commonTestResult->getRequestsDoc();
-
-        $commonTestResult->setResponses200($response['responses_200']);
-        $dataArray[] = $commonTestResult->getResponses200();
-
-        $commonTestResult->setResponses404($response['responses_404']);
-        $dataArray[] = $commonTestResult->getResponses404();
-
-        $commonTestResult->setResponsesOther($response['responses_other']);
-        $dataArray[] = $commonTestResult->getResponsesOther();
-
-        $commonTestResult->setRenderTime($response['render']);
-        $dataArray[] = $commonTestResult->getRenderTime();
-
-        $commonTestResult->setFullyLoaded($response['fullyLoaded']);
-        $dataArray[] = $commonTestResult->getFullyLoaded();
-
-        $commonTestResult->setDocTime($response['docTime']);
-        $dataArray[] = $commonTestResult->getDocTime();
-
-        $commonTestResult->setBasePageRedirects($response['base_page_redirects']);
-        $dataArray[] = $commonTestResult->getBasePageRedirects();
-
-        $commonTestResult->setDomElements($response['domElements']);
-        $dataArray[] = $commonTestResult->getDomElements();
-
-        $commonTestResult->setTitleTime($response['titleTime']);
-        $dataArray[] = $commonTestResult->getTitleTime();
-
-        $commonTestResult->setLoadEventStart($response['loadEventStart']);
-        $dataArray[] = $commonTestResult->getLoadEventStart();
-
-        $commonTestResult->setLoadEventEnd($response['loadEventEnd']);
-        $dataArray[] = $commonTestResult->getLoadEventEnd();
-
-        $commonTestResult->setDomContentLoadedEventStart($response['domContentLoadedEventStart']);
-        $dataArray[] = $commonTestResult->getDomContentLoadedEventStart();
-
-        $commonTestResult->setDomContentLoadedEventEnd($response['domContentLoadedEventEnd']);
-        $dataArray[] = $commonTestResult->getDomContentLoadedEventEnd();
-
-        $commonTestResult->setFirstPaint($response['firstPaint']);
-        $dataArray[] = $commonTestResult->getFirstPaint();
-
-        $commonTestResult->setDomInteractive($response['domInteractive']);
-        $dataArray[] = $commonTestResult->getDomInteractive();
-
-        $commonTestResult->setDomLoading($response['domLoading']);
-        $dataArray[] = $commonTestResult->getDomLoading();
-
-        $commonTestResult->setVisualComplete($response['visualComplete']);
-        $dataArray[] = $commonTestResult->getVisualComplete();
-
-        return $dataArray;
-    }
-
-    public static function createFromDullesLinuxChrome($response)
-    {
-        $commonTestResult = new CommonTestResult();
-
-        $dataArray = [];
-        $commonTestResult->setLoadTime($response['loadTime']);
-        $dataArray[] = $commonTestResult->getLoadTime();
-
-        $commonTestResult->setTtfb($response['TTFB']);
-        $dataArray[] = $commonTestResult->getTtfb();
-
-        $commonTestResult->setBytesOut($response['bytesOut']);
-        $dataArray[] = $commonTestResult->getBytesOut();
-
-        $commonTestResult->setBytesOutDoc($response['bytesOutDoc']);
-        $dataArray[] = $commonTestResult->getBytesOutDoc();
-
-        $commonTestResult->setBytesIn($response['bytesIn']);
-        $dataArray[] = $commonTestResult->getBytesIn();
-
-        $commonTestResult->setBytesInDoc($response['bytesInDoc']);
-        $dataArray[] = $commonTestResult->getBytesInDoc();
-
-        $commonTestResult->setConnections($response['connections']);
-        $dataArray[] = $commonTestResult->getConnections();
-
-        $commonTestResult->setRequests($response['requests']);
-        $dataArray[] = $commonTestResult->getRequests();
-
-        $commonTestResult->setRequestsDoc($response['requestsDoc']);
-        $dataArray[] = $commonTestResult->getRequestsDoc();
-
-        $commonTestResult->setResponses200($response['responses_200']);
-        $dataArray[] = $commonTestResult->getResponses200();
-
-        $commonTestResult->setResponses404($response['responses_404']);
-        $dataArray[] = $commonTestResult->getResponses404();
-
-        $commonTestResult->setResponsesOther($response['responses_other']);
-        $dataArray[] = $commonTestResult->getResponsesOther();
-
-        $commonTestResult->setRenderTime($response['render']);
-        $dataArray[] = $commonTestResult->getRenderTime();
-
-        $commonTestResult->setFullyLoaded($response['fullyLoaded']);
-        $dataArray[] = $commonTestResult->getFullyLoaded();
-
-        $commonTestResult->setDocTime($response['docTime']);
-        $dataArray[] = $commonTestResult->getDocTime();
-
-        $commonTestResult->setBasePageRedirects(0);
-        $dataArray[] = $commonTestResult->getBasePageRedirects();
-
-        $commonTestResult->setDomElements($response['domElements']);
-        $dataArray[] = $commonTestResult->getDomElements();
-
-        $commonTestResult->setTitleTime($response['titleTime']);
-        $dataArray[] = $commonTestResult->getTitleTime();
-
-        $commonTestResult->setLoadEventStart($response['loadEventStart']);
-        $dataArray[] = $commonTestResult->getLoadEventStart();
-
-        $commonTestResult->setLoadEventEnd($response['loadEventEnd']);
-        $dataArray[] = $commonTestResult->getLoadEventEnd();
-
-        $commonTestResult->setDomContentLoadedEventStart($response['domContentLoadedEventStart']);
-        $dataArray[] = $commonTestResult->getDomContentLoadedEventStart();
-
-        $commonTestResult->setDomContentLoadedEventEnd($response['domContentLoadedEventEnd']);
-        $dataArray[] = $commonTestResult->getDomContentLoadedEventEnd();
-
-        $commonTestResult->setFirstPaint($response['firstPaint']);
-        $dataArray[] = $commonTestResult->getFirstPaint();
-
-        $commonTestResult->setDomInteractive($response['domInteractive']);
-        $dataArray[] = $commonTestResult->getDomInteractive();
-
-        $commonTestResult->setDomLoading($response['domLoading']);
-        $dataArray[] = $commonTestResult->getDomLoading();
-
-        $commonTestResult->setVisualComplete($response['visualComplete']);
-        $dataArray[] = $commonTestResult->getVisualComplete();
-
-        return $dataArray;
-    }
-
-    public static function createFromDullesLinuxFirefox($response)
-    {
-        $commonTestResult = new CommonTestResult();
-
-        $dataArray = [];
-        $commonTestResult->setLoadTime($response['loadTime']);
-        $dataArray[] = $commonTestResult->getLoadTime();
-
-        $commonTestResult->setTtfb($response['TTFB']);
-        $dataArray[] = $commonTestResult->getTtfb();
-
-        $commonTestResult->setBytesOut($response['bytesOut']);
-        $dataArray[] = $commonTestResult->getBytesOut();
-
-        $commonTestResult->setBytesOutDoc($response['bytesOutDoc']);
-        $dataArray[] = $commonTestResult->getBytesOutDoc();
-
-        $commonTestResult->setBytesIn($response['bytesIn']);
-        $dataArray[] = $commonTestResult->getBytesIn();
-
-        $commonTestResult->setBytesInDoc($response['bytesInDoc']);
-        $dataArray[] = $commonTestResult->getBytesInDoc();
-
-        $commonTestResult->setConnections(0);
-        $dataArray[] = $commonTestResult->getConnections();
-
-        $commonTestResult->setRequests($response['requests']);
-        $dataArray[] = $commonTestResult->getRequests();
-
-        $commonTestResult->setRequestsDoc($response['requestsDoc']);
-        $dataArray[] = $commonTestResult->getRequestsDoc();
-
-        $commonTestResult->setResponses200($response['responses_200']);
-        $dataArray[] = $commonTestResult->getResponses200();
-
-        $commonTestResult->setResponses404($response['responses_404']);
-        $dataArray[] = $commonTestResult->getResponses404();
-
-        $commonTestResult->setResponsesOther($response['responses_other']);
-        $dataArray[] = $commonTestResult->getResponsesOther();
-
-        $commonTestResult->setRenderTime($response['render']);
-        $dataArray[] = $commonTestResult->getRenderTime();
-
-        $commonTestResult->setFullyLoaded($response['fullyLoaded']);
-        $dataArray[] = $commonTestResult->getFullyLoaded();
-
-        $commonTestResult->setDocTime($response['docTime']);
-        $dataArray[] = $commonTestResult->getDocTime();
-
-        $commonTestResult->setBasePageRedirects(0);
-        $dataArray[] = $commonTestResult->getBasePageRedirects();
-
-        $commonTestResult->setDomElements($response['domElements']);
-        $dataArray[] = $commonTestResult->getDomElements();
-
-        $commonTestResult->setTitleTime($response['titleTime']);
-        $dataArray[] = $commonTestResult->getTitleTime();
-
-        $commonTestResult->setLoadEventStart($response['loadEventStart']);
-        $dataArray[] = $commonTestResult->getLoadEventStart();
-
-        $commonTestResult->setLoadEventEnd($response['loadEventEnd']);
-        $dataArray[] = $commonTestResult->getLoadEventEnd();
-
-        $commonTestResult->setDomContentLoadedEventStart($response['domContentLoadedEventStart']);
-        $dataArray[] = $commonTestResult->getDomContentLoadedEventStart();
-
-        $commonTestResult->setDomContentLoadedEventEnd($response['domContentLoadedEventEnd']);
-        $dataArray[] = $commonTestResult->getDomContentLoadedEventEnd();
-
-        $commonTestResult->setFirstPaint($response['firstPaint']);
-        $dataArray[] = $commonTestResult->getFirstPaint();
-
-        $commonTestResult->setDomInteractive($response['domInteractive']);
-        $dataArray[] = $commonTestResult->getDomInteractive();
-
-        $commonTestResult->setDomLoading($response['domLoading']);
-        $dataArray[] = $commonTestResult->getDomLoading();
-
-        $commonTestResult->setVisualComplete($response['visualComplete']);
-        $dataArray[] = $commonTestResult->getVisualComplete();
-
-        return $dataArray;
+        if (array_key_exists('loadTime', $response))
+        {
+            $commonTestResult->setLoadTime($response['loadTime']);
+        }
+        if (array_key_exists('TTFB', $response))
+        {
+            $commonTestResult->setTtfb($response['TTFB']);
+        }
+        if (array_key_exists('bytesOut', $response))
+        {
+            $commonTestResult->setBytesOut($response['bytesOut']);
+        }
+        if (array_key_exists('bytesOutDoc', $response))
+        {
+            $commonTestResult->setBytesOutDoc($response['bytesOutDoc']);
+        }
+        if (array_key_exists('bytesIn', $response))
+        {
+            $commonTestResult->setBytesIn($response['bytesIn']);
+        }
+        if (array_key_exists('bytesInDoc', $response))
+        {
+            $commonTestResult->setBytesInDoc($response['bytesInDoc']);
+        }
+        if (array_key_exists('connections', $response))
+        {
+            $commonTestResult->setConnections($response['connections']);
+        }
+        if (array_key_exists('requests', $response))
+        {
+            $commonTestResult->setRequests($response['requests']);
+        }
+        if (array_key_exists('requestsDoc', $response))
+        {
+            $commonTestResult->setRequestsDoc($response['requestsDoc']);
+        }
+        if (array_key_exists('responses_200', $response))
+        {
+            $commonTestResult->setResponses200($response['responses_200']);
+        }
+        if (array_key_exists('responses_404', $response))
+        {
+            $commonTestResult->setResponses404($response['responses_404']);
+        }
+        if (array_key_exists('responses_other', $response))
+        {
+            $commonTestResult->setResponsesOther($response['responses_other']);
+        }
+        if (array_key_exists('render', $response))
+        {
+            $commonTestResult->setRenderTime($response['render']);
+        }
+        if (array_key_exists('fullyLoaded', $response))
+        {
+            $commonTestResult->setFullyLoaded($response['fullyLoaded']);
+        }
+        if (array_key_exists('docTime', $response))
+        {
+            $commonTestResult->setDocTime($response['docTime']);
+        }
+        if (array_key_exists('domElements', $response))
+        {
+            $commonTestResult->setDomElements($response['domElements']);
+        }
+        if (array_key_exists('titleTime', $response))
+        {
+            $commonTestResult->setTitleTime($response['titleTime']);
+        }
+        if (array_key_exists('loadEventStart', $response))
+        {
+            $commonTestResult->setLoadEventStart($response['loadEventStart']);
+        }
+        if (array_key_exists('loadEventEnd', $response))
+        {
+            $commonTestResult->setLoadEventEnd($response['loadEventEnd']);
+        }
+        if (array_key_exists('domContentLoadedEventStart', $response))
+        {
+            $commonTestResult->setDomContentLoadedEventStart($response['domContentLoadedEventStart']);
+        }
+        if (array_key_exists('domContentLoadedEventEnd', $response))
+        {
+            $commonTestResult->setDomContentLoadedEventEnd($response['domContentLoadedEventEnd']);
+        }
+        if (array_key_exists('firstPaint', $response))
+        {
+            $commonTestResult->setFirstPaint($response['firstPaint']);
+        }
+        if (array_key_exists('domInteractive', $response))
+        {
+            $commonTestResult->setDomInteractive($response['domInteractive']);
+        }
+        if (array_key_exists('domLoading', $response))
+        {
+            $commonTestResult->setDomLoading($response['domLoading']);
+        }
+        if (array_key_exists('visualComplete', $response))
+        {
+            $commonTestResult->setVisualComplete($response['visualComplete']);
+        }
+
+        return $commonTestResult;
     }
 }

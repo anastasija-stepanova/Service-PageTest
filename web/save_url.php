@@ -1,11 +1,11 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
-if (array_key_exists('url', $_GET))
+if (array_key_exists('url', $_POST))
 {
     $database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
 
-    $newUrl= $_GET['url'];
+    $newUrl= $_POST['url'];
 
     $dataValidator = new DataValidator();
 

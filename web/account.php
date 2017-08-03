@@ -24,10 +24,11 @@ for ($i = 0; $i < count($urls); $i++)
 
 $templateLoader = new Twig_Loader_Filesystem('../src/templates/');
 $twig = new Twig_Environment($templateLoader);
-$template = $twig->load('layout.tpl');
 
-echo $template->render(array(
-    'content' => $twig->load('account.tpl'),
+$layout = $twig->load('layout.tpl');
+
+$twig->display('account.tpl', array(
+    'layout' => $layout,
     'listLocations' => $listLocations,
     'listUrls' => $listUrls
 ));

@@ -1,11 +1,14 @@
 <?php
 class WebPageTestResponseHandler
 {
+    private const MOBILE_BROWSERS = ['Dulles_MotoG4:Moto G4 - Chrome', 'Dulles_MotoG4:Moto G4 - Chrome Canary',
+                                     'Dulles_MotoG4:Moto G4 - Chrome Beta', 'Dulles_MotoG4:Moto G4 - Chrome Dev',
+                                     'Dulles_MotoG:Moto G - Chrome', 'Dulles_MotoG:Moto G - Chrome Canary',
+                                     'Dulles_MotoG:Moto G - Chrome Beta', 'Dulles_MotoG:Moto G - Chrome Dev',
+                                     'Dulles_Linux:Chrome', 'Dulles_Linux:Chrome Beta', 'Dulles_Linux:Chrome Canary',
+                                     'Dulles_Linux:Firefox'];
+
     private const TOTAL_NUM_TEST_RECORD = 2;
-
-    private const COMPETED_STATUS = 1;
-
-    private const FIRST_LOCATION_ID_DESKTOP_BROWSER = 13;
 
     private const FIRST_VIEW = 'firstView';
     private const REPEAT_VIEW = 'firstView';
@@ -28,7 +31,7 @@ class WebPageTestResponseHandler
             if ($tableEntryTestInfo && array_key_exists('completed', $response))
             {
                 $testInfo[] = $response['completed'];
-                $testInfo[] = self::COMPETED_STATUS;
+                $testInfo[] = TestStatus::COMPLETED;
                 $testInfo[] = $wptTestId;
                 $this->database->executeQuery("UPDATE " . DatabaseTable::TEST_INFO .
                                               " SET completed_time = FROM_UNIXTIME(?), is_completed = ?
@@ -62,24 +65,22 @@ class WebPageTestResponseHandler
         {
             $commonTestResultCreator = new CommonTestResultCreator();
 
-            $wptLocationId= $this->database->executeQuery("SELECT location_id FROM " . DatabaseTable::TEST_INFO .
-                                                            " WHERE id = ?", [$testId], PDO::FETCH_COLUMN);
+            $wptLocation = $this->database->executeQuery("SELECT location FROM " . DatabaseTable::WPT_LOCATION .
+                                                          " LEFT JOIN " . DatabaseTable::TEST_INFO .
+                                                          " ON " . DatabaseTable::WPT_LOCATION .
+                                                          ".id = " . DatabaseTable::TEST_INFO .
+                                                          ".location_id WHERE " . DatabaseTable::TEST_INFO .
+                                                          ".id = ?", [$testId], PDO::FETCH_COLUMN);
 
-            if ($wptLocationId[0] > 26 && $wptLocationId[0] < 30)
+            if (!in_array($wptLocation[0], self::MOBILE_BROWSERS))
             {
-                $averageResult = $commonTestResultCreator->createFromDullesLinuxChrome($data['average'][$wptTypeView]);
-            }
-            elseif ($wptLocationId[0] == 30)
-            {
-                $averageResult = $commonTestResultCreator->createFromDullesLinuxFirefox($data['average'][$wptTypeView]);
-            }
-            elseif ($wptLocationId[0] > self::FIRST_LOCATION_ID_DESKTOP_BROWSER)
-            {
-                $averageResult = $commonTestResultCreator->createFromDesktopBrowser($data['average'][$wptTypeView]);
+                $commonTestResult = $commonTestResultCreator->createFromDesktopBrowser($data['average'][$wptTypeView]);
+                $averageResult = $commonTestResult->getAsArray();
             }
             else
             {
-                $averageResult = $commonTestResultCreator->createFromMobileBrowser($data['average'][$wptTypeView]);
+                $commonTestResult = $commonTestResultCreator->createFromMobileBrowser($data['average'][$wptTypeView]);
+                $averageResult = $commonTestResult->getAsArray();
             }
 
             $averageResult[] = $testId;
@@ -93,12 +94,12 @@ class WebPageTestResponseHandler
                                               (load_time, ttfb, bytes_out, bytes_out_doc,
                                                bytes_in, bytes_in_doc, connections, requests, requests_doc,
                                                responses_200, responses_404, responses_other, render_time,
-                                               fully_loaded, doc_time, base_page_redirects, dom_elements, title_time,
+                                               fully_loaded, doc_time, dom_elements, title_time,
                                                load_event_start, load_event_end, dom_content_loaded_event_start,
                                                dom_content_loaded_event_end, first_paint, dom_interactive,  dom_loading,
                                                visual_complete, test_id, type_view)
                                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-                                               ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", $averageResult);
+                                               ?, ?, ?, ?, ?, ?, ?, ?, ?)", $averageResult);
             }
         }
     }

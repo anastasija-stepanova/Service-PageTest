@@ -58,7 +58,6 @@ CREATE TABLE IF NOT EXISTS `average_result` (
   `render_time` INT(11) NOT NULL,
   `fully_loaded` INT(11) NOT NULL,
   `doc_time` INT(11) NOT NULL,
-  `base_page_redirects` INT(11) NOT NULL,
   `dom_elements` INT(11) NOT NULL,
   `title_time` INT(11) NOT NULL,
   `load_event_start` INT(11) NOT NULL,

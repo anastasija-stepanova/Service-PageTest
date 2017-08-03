@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>PageLoadTest</title>
+    <title>{% block title %}{% endblock %}</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400" rel="stylesheet">
@@ -26,9 +26,8 @@
               </div>
               <div class="collapse navbar-collapse" id="mobileMenu">
                 <ul class="nav navbar-nav">
-                  <li><a class="menu_item" title="Главная" href="#">Главная</a></li>
-                  <li><a class="menu_item" title="История тестов" href="#">История тестов</a></li>
-                  <li><a class="menu_item" title="Личный кабинет" href="index.php">Личный кабинет</a></li>
+                  <li><a id="manePage" class="menu_item" title="Главная" href="/Service-PageTest/web/index.php">Главная</a></li>
+                  <li><a id="account" class="menu_item" title="Личный кабинет" href="/Service-PageTest/web/account.php">Личный кабинет</a></li>
                 </ul>
               </div>
             </nav>
@@ -37,9 +36,7 @@
       </div>
     </header>
     <main class="main container">
-      {% autoescape false %}
-        {{ content }}
-      {% endautoescape %}
+      {% block content %}{% endblock %}
     </main>
     <footer class="footer container-fluid">
       <div class="container">
