@@ -5,28 +5,35 @@ const SUCCESSFUL_STATUS = 200;
 const STATUS_CODE_INDEX = 'statusCode';
 
 $database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
+$databaseDataProvider = new DatabaseDataProvider();
 
-$testIdsArray = $database->executeQuery("SELECT test_id FROM " . DatabaseTable::TEST_INFO .
-                                        " WHERE is_completed = ?", [TestStatus::NOT_COMPLETED], PDO::FETCH_COLUMN);
+$userIds = $databaseDataProvider->getUsersId();
 
-for ($i = 0; $i < count($testIdsArray); $i++)
+$pendingTestIds = $databaseDataProvider->getPendingTestIds();
+
+foreach ($userIds as $userId)
 {
-    $wptTestId = $testIdsArray[$i];
+    $apiKey = $databaseDataProvider->getUserApiKey($userId);
 
-    $apiKey = $database->executeQuery("SELECT api_key FROM " . DatabaseTable::USER .
-                                      " WHERE id = ?", [Config::DEFAULT_USER_ID], PDO::FETCH_COLUMN);
-
-    $client = new WebPageTestClient($apiKey);
-
-    $testStatus = $client->checkTestState($wptTestId);
-
-    if ($testStatus != null && array_key_exists(STATUS_CODE_INDEX, $testStatus))
+    foreach ($pendingTestIds as $pendingTestId)
     {
-        if ($testStatus[STATUS_CODE_INDEX] == SUCCESSFUL_STATUS)
+        $wptTestId = $pendingTestId;
+
+        $client = new WebPageTestClient($apiKey);
+
+        $testStatus = $client->checkTestState($wptTestId);
+
+        if ($testStatus != null && array_key_exists(STATUS_CODE_INDEX, $testStatus))
         {
-            $result = $client->getResult($wptTestId);
-            $wptResponseHandler = new WebPageTestResponseHandler();
-            $wptResponseHandler->handle($result);
+            if ($testStatus[STATUS_CODE_INDEX] == SUCCESSFUL_STATUS)
+            {
+                $database->executeQuery("UPDATE " . DatabaseTable::TEST_INFO . " SET test_status = ? WHERE test_id = ?",
+                                        [TestStatus::PROCESSED, $wptTestId]);
+
+                $result = $client->getResult($wptTestId);
+                $wptResponseHandler = new WebPageTestResponseHandler();
+                $wptResponseHandler->handle($result);
+            }
         }
     }
 }

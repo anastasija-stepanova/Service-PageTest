@@ -26,8 +26,8 @@
               </div>
               <div class="collapse navbar-collapse" id="mobileMenu">
                 <ul class="nav navbar-nav">
-                  <li><a id="manePage" class="menu_item" title="Главная" href="/Service-PageTest/web/index.php">Главная</a></li>
-                  <li><a id="account" class="menu_item" title="Личный кабинет" href="/Service-PageTest/web/account.php">Личный кабинет</a></li>
+                  <li><a class="menu_item" title="Главная" href="index.php">Главная</a></li>
+                  <li><a class="menu_item" title="Личный кабинет" href="account.php">Личный кабинет</a></li>
                 </ul>
               </div>
             </nav>
@@ -45,10 +45,10 @@
           <p>2017</p>
         </div>
       </div>
-      <script src="../bower_components/chartist/dist/chartist.min.js"></script>
+      {% block chartistJs %}{% endblock %}
       <script src="../web/js/config.js"></script>
       <script src="../web/js/ajax.js"></script>
-      <script src="../web/js/main.js"></script>
+      {% block fileJs %}{% endblock %}
     </footer>
   </body>
 </html>

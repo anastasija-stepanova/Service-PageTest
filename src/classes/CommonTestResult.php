@@ -280,34 +280,32 @@ class CommonTestResult
 
     public function getAsArray()
     {
-        $dataArray = [];
-
-        $dataArray[] = $this->loadTime;
-        $dataArray[] = $this->ttfb;
-        $dataArray[] = $this->bytesOut;
-        $dataArray[] = $this->bytesOutDoc;
-        $dataArray[] = $this->bytesIn;
-        $dataArray[] = $this->bytesInDoc;
-        $dataArray[] = $this->connections;
-        $dataArray[] = $this->requests;
-        $dataArray[] = $this->requestsDoc;
-        $dataArray[] = $this->responses200;
-        $dataArray[] = $this->responses404;
-        $dataArray[] = $this->responsesOther;
-        $dataArray[] = $this->renderTime;
-        $dataArray[] = $this->fullyLoaded;
-        $dataArray[] = $this->docTime;
-        $dataArray[] = $this->domElements;
-        $dataArray[] = $this->titleTime;
-        $dataArray[] = $this->loadEventStart;
-        $dataArray[] = $this->loadEventEnd;
-        $dataArray[] = $this->domContentLoadedEventStart;
-        $dataArray[] = $this->domContentLoadedEventEnd;
-        $dataArray[] = $this->firstPaint;
-        $dataArray[] = $this->domInteractive;
-        $dataArray[] = $this->domLoading;
-        $dataArray[] = $this->visualComplete;
-
-        return $dataArray;
+        return [
+            $this->loadTime,
+            $this->ttfb,
+            $this->bytesOut,
+            $this->bytesOutDoc,
+            $this->bytesIn,
+            $this->bytesInDoc,
+            $this->connections,
+            $this->requests,
+            $this->requestsDoc,
+            $this->responses200,
+            $this->responses404,
+            $this->responsesOther,
+            $this->renderTime,
+            $this->fullyLoaded,
+            $this->docTime,
+            $this->domElements,
+            $this->titleTime,
+            $this->loadEventStart,
+            $this->loadEventEnd,
+            $this->domContentLoadedEventStart,
+            $this->domContentLoadedEventEnd,
+            $this->firstPaint,
+            $this->domInteractive,
+            $this->domLoading,
+            $this->visualComplete,
+        ];
     }
 }

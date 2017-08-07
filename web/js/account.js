@@ -1,21 +1,9 @@
 (function() {
   let saveUrlButton = document.getElementById('saveUrl');
-  if (saveUrlButton)
-  {
-    saveUrl(saveUrlButton);
-  }
+  saveUrl(saveUrlButton);
 
   let saveLocationButton = document.getElementById('saveLocation');
-  if (saveLocationButton)
-  {
-    saveLocations(saveLocationButton);
-  }
-
-  let buildChartButton = document.getElementById('buildChart');
-  if (buildChartButton)
-  {
-    buildChart(buildChartButton);
-  }
+  saveLocations(saveLocationButton);
 })();
 
 function saveUrl(saveButton) {
@@ -67,29 +55,4 @@ function formDataArray(list) {
   }
 
   return checkedArray;
-}
-
-function buildChart(buildChartButton) {
-  buildChartButton.addEventListener('click', function(event) {
-    event.preventDefault();
-    let keyValue = {
-      'result': 'ttfb'
-    };
-    let jsonString = 'data=' + JSON.stringify(keyValue);
-    ajaxPost(FILE_GET_DATA_FROM_DB, jsonString, function(response) {
-      if ('response' in response)
-      {
-        let jsonDecode = JSON.parse(response['response']);
-        let ttfb = jsonDecode['ttfb'];
-        let time = jsonDecode['time'];
-        let data = {
-          labels: [],
-          series: [ttfb
-            ]
-        };
-
-        new Chartist.Line('.ct-chart', data);
-      }
-    });
-  });
 }

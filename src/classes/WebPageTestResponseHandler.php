@@ -1,23 +1,20 @@
 <?php
 class WebPageTestResponseHandler
 {
-    private const MOBILE_BROWSERS = ['Dulles_MotoG4:Moto G4 - Chrome', 'Dulles_MotoG4:Moto G4 - Chrome Canary',
-                                     'Dulles_MotoG4:Moto G4 - Chrome Beta', 'Dulles_MotoG4:Moto G4 - Chrome Dev',
-                                     'Dulles_MotoG:Moto G - Chrome', 'Dulles_MotoG:Moto G - Chrome Canary',
-                                     'Dulles_MotoG:Moto G - Chrome Beta', 'Dulles_MotoG:Moto G - Chrome Dev',
-                                     'Dulles_Linux:Chrome', 'Dulles_Linux:Chrome Beta', 'Dulles_Linux:Chrome Canary',
-                                     'Dulles_Linux:Firefox'];
-
     private const TOTAL_NUM_TEST_RECORD = 2;
 
     private const FIRST_VIEW = 'firstView';
-    private const REPEAT_VIEW = 'firstView';
+    private const REPEAT_VIEW = 'repeatView';
+
+    private const BASIC_BROWSER_TYPE = 0;
 
     private $database;
+    private $databaseDataProvider;
 
     public function __construct()
     {
         $this->database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
+        $this->databaseDataProvider = new DatabaseDataProvider();
     }
 
     public function handle($response)
@@ -25,26 +22,24 @@ class WebPageTestResponseHandler
         if ($response && array_key_exists('id', $response))
         {
             $wptTestId = $response['id'];
-            $tableEntryTestInfo = $this->database->selectOneRow("SELECT * FROM " . DatabaseTable::TEST_INFO .
-                                                                " WHERE test_id = ?", [$wptTestId]);
+            $recordTestInfo = $this->databaseDataProvider->getTableEntry(DatabaseTable::TEST_INFO, $wptTestId);
 
-            if ($tableEntryTestInfo && array_key_exists('completed', $response))
+            if ($recordTestInfo && array_key_exists('completed', $response))
             {
                 $testInfo[] = $response['completed'];
                 $testInfo[] = TestStatus::COMPLETED;
                 $testInfo[] = $wptTestId;
                 $this->database->executeQuery("UPDATE " . DatabaseTable::TEST_INFO .
-                                              " SET completed_time = FROM_UNIXTIME(?), is_completed = ?
+                                              " SET completed_time = FROM_UNIXTIME(?), test_status = ?
                                               WHERE test_id = ?", $testInfo);
 
-                if (array_key_exists('id', $tableEntryTestInfo))
+                if (array_key_exists('id', $recordTestInfo))
                 {
-                    $testId = $tableEntryTestInfo['id'];
+                    $testId = $recordTestInfo['id'];
 
-                    $tableEntryRawData = $this->database->selectOneRow("SELECT * FROM " . DatabaseTable::RAW_DATA .
-                                                                       " WHERE test_id = ?", [$testId]);
+                    $recordRawData = $this->databaseDataProvider->getTableEntry(DatabaseTable::RAW_DATA, $testId);
 
-                    if (!$tableEntryRawData)
+                    if (!$recordRawData)
                     {
                         $jsonData = json_encode($response);
 
@@ -65,14 +60,9 @@ class WebPageTestResponseHandler
         {
             $commonTestResultCreator = new CommonTestResultCreator();
 
-            $wptLocation = $this->database->executeQuery("SELECT location FROM " . DatabaseTable::WPT_LOCATION .
-                                                          " LEFT JOIN " . DatabaseTable::TEST_INFO .
-                                                          " ON " . DatabaseTable::WPT_LOCATION .
-                                                          ".id = " . DatabaseTable::TEST_INFO .
-                                                          ".location_id WHERE " . DatabaseTable::TEST_INFO .
-                                                          ".id = ?", [$testId], PDO::FETCH_COLUMN);
+            $typeBrowser = $this->databaseDataProvider->getBrowserType($testId);
 
-            if (!in_array($wptLocation[0], self::MOBILE_BROWSERS))
+            if ($typeBrowser == self::BASIC_BROWSER_TYPE)
             {
                 $commonTestResult = $commonTestResultCreator->createFromDesktopBrowser($data['average'][$wptTypeView]);
                 $averageResult = $commonTestResult->getAsArray();
@@ -85,8 +75,8 @@ class WebPageTestResponseHandler
 
             $averageResult[] = $testId;
             $averageResult[] = $typeView;
-            $recordExists = $this->database->executeQuery("SELECT type_view FROM " . DatabaseTable::AVERAGE_RESULT .
-                                                          " WHERE test_id = ?", [$testId]);
+            $averageResult[] = $data['completed'];
+            $recordExists = $this->databaseDataProvider->checkExistenceRecord($testId);
 
             if (count($recordExists) < self::TOTAL_NUM_TEST_RECORD)
             {
@@ -97,9 +87,9 @@ class WebPageTestResponseHandler
                                                fully_loaded, doc_time, dom_elements, title_time,
                                                load_event_start, load_event_end, dom_content_loaded_event_start,
                                                dom_content_loaded_event_end, first_paint, dom_interactive,  dom_loading,
-                                               visual_complete, test_id, type_view)
+                                               visual_complete, test_id, type_view, completed_time)
                                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-                                               ?, ?, ?, ?, ?, ?, ?, ?, ?)", $averageResult);
+                                               ?, ?, ?, ?, ?, ?, ?, ?, ?, FROM_UNIXTIME(?))", $averageResult);
             }
         }
     }

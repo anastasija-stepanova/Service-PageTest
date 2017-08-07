@@ -1,43 +1,35 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
+const INDEX_LOCATION = 'location';
+const INDEX_URL = 'url';
+const INDEX_ID = 'id';
+const INDEX_WPT_LOCATION_ID = 'wpt_location_id';
+
+$databaseDataProvider = new DatabaseDataProvider();
 $database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
+$userIds = $databaseDataProvider->getUsersId();
 
-$usersId = $database->executeQuery("SELECT id FROM " . DatabaseTable::USER, [], PDO::FETCH_COLUMN);
-
-for ($i = 0; $i < count($usersId); $i++)
+foreach ($userIds as $userId)
 {
-    $userUrls = $database->executeQuery("SELECT url FROM " . DatabaseTable::USER_URL .
-                                        " WHERE user_id = ?", [Config::DEFAULT_USER_ID], PDO::FETCH_COLUMN);
+    $userUrls = $databaseDataProvider->getUserUrls($userId);
+    $userLocations = $databaseDataProvider->getUserLocations($userId);
+    $apiKey = $databaseDataProvider->getUserApiKey($userId);
 
-    $userLocations = $database->executeQuery("SELECT location FROM " . DatabaseTable::USER_LOCATION .
-                                             " LEFT JOIN " .DatabaseTable::WPT_LOCATION .
-                                             " ON " . DatabaseTable::USER_LOCATION . ". wpt_location_id = "
-                                              . DatabaseTable::WPT_LOCATION . ".id", [], PDO::FETCH_COLUMN);
+    runNewTest($database, $apiKey, $userId, $userUrls, $userLocations);
+}
 
-    $apiKey = $database->executeQuery("SELECT api_key FROM " . DatabaseTable::USER .
-                                      " WHERE id = ?", [Config::DEFAULT_USER_ID], PDO::FETCH_COLUMN);
+function runNewTest($database, $apiKey, $userId, $userUrls, $userLocations)
+{
+    $client = new WebPageTestClient($apiKey);
 
-    $client = new WebPageTestClient($apiKey[0]);
-
-    for ($j = 0; $j < count($userUrls); $j++)
+    foreach ($userUrls as $userUrl)
     {
-        $urlsId = $database->executeQuery("SELECT id FROM " . DatabaseTable::USER_URL, [], PDO::FETCH_COLUMN);
-
-        for ($k = 0; $k < count($userLocations); $k++)
+        foreach ($userLocations as $userLocation)
         {
-            $wptTestId = $client->runNewTest($userUrls[$j], $userLocations[$k]);
-
-            if (!$wptTestId)
-            {
-                echo 'The number of requests exceeds the daily limit';
-                exit();
-            }
-
-            $locationsId = $database->executeQuery("SELECT id FROM " . DatabaseTable::WPT_LOCATION, [], PDO::FETCH_COLUMN);
-
-            $database->executeQuery("INSERT INTO " . DatabaseTable::TEST_INFO . " (user_id, url_id, location_id, test_id, is_completed)
-                                     VALUES (?, ?, ?, ?, ?)", [$usersId[$i], $urlsId[$j], $locationsId[$k],  $wptTestId, 0]);
+            $wptTestId = $client->runNewTest($userUrl[INDEX_URL], $userLocation[INDEX_LOCATION]);
+            $database->executeQuery("INSERT INTO " . DatabaseTable::TEST_INFO . " (user_id, url_id, location_id, test_id, test_status)
+                                     VALUES (?, ?, ?, ?, ?)", [$userId, $userUrl[INDEX_ID], $userLocation[INDEX_WPT_LOCATION_ID],  $wptTestId, TestStatus::NOT_COMPLETED]);
         }
     }
 }

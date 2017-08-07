@@ -32,3 +32,6 @@
     </div>
   </div>
 {% endblock %}
+{% block fileJs %}
+  <script src="../web/js/account.js"></script>
+{% endblock %}

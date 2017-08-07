@@ -1,0 +1,21 @@
+{
+  "name": "chartist.js",
+  "description": "Library for build charts",
+  "main": "chartist/dist/chartist.js, chartist/dist/chartist.css",
+  "authors": [
+    "anastasija-stepanova <nastyaaa19980@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "chart",
+    "graph"
+  ],
+  "homepage": "https://github.com/anastasija-stepanova/Servise-PageLoadTest",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

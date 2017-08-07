@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `test_info` (
   `location_id` INT(11) NOT NULL,
   `test_id` VARCHAR(255) NOT NULL,
   `completed_time` DATETIME DEFAULT NULL,
-  `is_completed` TINYINT(1) NOT NULL,
+  `test_status` TINYINT(1) NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`url_id`) REFERENCES `user_url` (`id`) ON DELETE CASCADE,
@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS `average_result` (
   `dom_interactive` INT(11) NOT NULL,
   `dom_loading` INT(11) NOT NULL,
   `visual_complete` INT(11) NOT NULL,
+  `completed_time` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`test_id`) REFERENCES `test_info`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB;
@@ -76,6 +77,7 @@ CREATE TABLE IF NOT EXISTS `wpt_location` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `location` VARCHAR(255) NOT NULL,
   `description` VARCHAR(255) NOT NULL,
+  `type_browser` TINYINT(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
