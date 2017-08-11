@@ -28,7 +28,7 @@ class WebPageTestClient
     private $apiKey;
     private $client;
 
-    public function __construct($apiKey = 'A.7a90c9f8293c2f09d0ea68c78e19c1f6')
+    public function __construct($apiKey)
     {
         $this->client = new Client();
         $this->apiKey = $apiKey;

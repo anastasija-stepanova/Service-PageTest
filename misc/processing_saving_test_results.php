@@ -4,8 +4,7 @@ require_once __DIR__ . '/../src/autoloader.inc.php';
 const SUCCESSFUL_STATUS = 200;
 const STATUS_CODE_INDEX = 'statusCode';
 
-$database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
-$databaseDataProvider = new DatabaseDataProvider();
+$databaseDataProvider = new DatabaseDataManager();
 
 $userIds = $databaseDataProvider->getUsersId();
 
@@ -27,9 +26,7 @@ foreach ($userIds as $userId)
         {
             if ($testStatus[STATUS_CODE_INDEX] == SUCCESSFUL_STATUS)
             {
-                $database->executeQuery("UPDATE " . DatabaseTable::TEST_INFO . " SET test_status = ? WHERE test_id = ?",
-                                        [TestStatus::PROCESSED, $wptTestId]);
-
+                $databaseDataProvider->updateTestInfoStatus($wptTestId);
                 $result = $client->getResult($wptTestId);
                 $wptResponseHandler = new WebPageTestResponseHandler();
                 $wptResponseHandler->handle($result);

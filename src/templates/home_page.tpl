@@ -14,26 +14,29 @@
     <main class="home_page container-fluid">
       <div class="container">
         <div class="row">
-          <div class="button_block">
-            <button id="authorization" type="submit" class="home_page_button">Authorization</button>
-            <button id="registration" type="submit" class="home_page_button">Registration</button>
+          <div class="block_auth">
+            <h3 class="form_title">Войти в личный кабинет</h3>
+            <form action="../../web/auth.php" method="post" class="form_auth">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Логин</label>
+                <input name="userLogin" type="text" class="form-control" id="login" placeholder="Введите логин">
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Пароль</label>
+                <input name="userPassword" type="password" class="form-control" id="password" placeholder="Введите пароль">
+              </div>
+              <button id="sendFormButton" type="submit" class="btn btn-info">Войти</button>
+            </form>
           </div>
-          <div class="background_modal" id="modalWindow">
-            <div id="modalAuth" class="modal_auth">
-              <h3 class="modal_title">Authorization</h3>
-              <a class="close_button" id="closeButton"></a>
-              <form>
-                <div class="form-group">
-                  <label for="exampleInputEmail1">Login</label>
-                  <input type="text" class="form-control" id="login" placeholder="Enter login">
-                </div>
-                <div class="form-group">
-                  <label for="exampleInputPassword1">Password</label>
-                  <input type="password" class="form-control" id="password" placeholder="Password">
-                </div>
-                <button id="sendFormButton" type="submit" class="btn btn-primary">Enter</button>
-              </form>
-            </div>
+          <div id="responseAuth">
+            {% autoescape false %}
+              {{ response }}
+            {% endautoescape %}
+          </div>
+          <div class="registration_link_block">
+            <p>Еще не зарегистрированы?
+              <a href="#" title="Создать аккаунт">Создать аккаунт</a>
+            </p>
           </div>
         </div>
       </div>
@@ -41,7 +44,7 @@
     <script src="../web/js/config.js"></script>
     <script src="../web/js/ajax.js"></script>
     {% block fileJs %}
-      <script src="../web/js/home_page.js"></script>
+    <script src="../web/js/home_page.js"></script>
     {% endblock %}
   </body>
 </html>

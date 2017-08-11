@@ -89,3 +89,36 @@ CREATE TABLE IF NOT EXISTS `user_location` (
   FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`wpt_location_id`) REFERENCES `wpt_location`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS `domain` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `domain_name` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS `user_domain` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  `domain_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`domain_id`) REFERENCES `domain`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+
+CREATE TABLE IF NOT EXISTS `user_domain_url` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `domain_id` INT(11) NOT NULL,
+  `url` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`domain_id`) REFERENCES `domain`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS `user_domain_location` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `domain_id` INT(11) NOT NULL,
+  `wpt_location_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`domain_id`) REFERENCES `domain`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`wpt_location_id`) REFERENCES `wpt_location`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB;

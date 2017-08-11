@@ -1,25 +1,42 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
-$database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
-$locations = $database->executeQuery("SELECT description FROM " . DatabaseTable::WPT_LOCATION, [], PDO::FETCH_COLUMN);
+session_start();
 
-$listLocations = '';
-for ($i = 0; $i < count($locations); $i++)
+if (!isset($_SESSION['userId']))
 {
-    $location = $locations[$i];
-    $ids = $database->executeQuery("SELECT id FROM " . DatabaseTable::WPT_LOCATION, [], PDO::FETCH_COLUMN);
-    $idLocations = $ids[$i];
-    $listLocations .= "<div class='checkbox'><label><input type='checkbox' name='location' value='$idLocations'>$location</label></div>";
+    header('Location: auth.php?url=account.php');
+    exit();
 }
 
-$urls = $database->executeQuery("SELECT url FROM " . DatabaseTable::USER_URL, [], PDO::FETCH_COLUMN);
+$databaseDataProvider = new DatabaseDataManager(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
 
-$listUrls = '';
-for ($i = 0; $i < count($urls); $i++)
+$locationsData = $databaseDataProvider->getLocationData();
+
+$listLocations = '';
+foreach ($locationsData as $locationData)
 {
-    $url = $urls[$i];
-    $listUrls .= "<div>$url</div>";
+    $location = $locationData['description'];
+    $idLocation = $locationData['id'];
+    $listLocations .= "<div class='checkbox'><label><input type='checkbox' name='location' value='$idLocation'>$location</label></div>";
+}
+
+$domainsData = $databaseDataProvider->getUserDomainsData($_SESSION['userId']);
+$listDomains = '';
+$domain = '';
+$listUrls = '';
+foreach ($domainsData as $domainData)
+{
+     $domain = $domainData;
+     $listDomains .= "<div>$domain</div>";
+
+     $urlsData = $databaseDataProvider->getUserUrlsData($_SESSION['userId']);
+
+     $listUrls = '';
+     foreach ($urlsData as $urlData)
+     {
+         $listUrls .= "<div>$urlData</div>";
+     }
 }
 
 $templateLoader = new Twig_Loader_Filesystem('../src/templates/');
@@ -30,5 +47,6 @@ $layout = $twig->load('layout.tpl');
 $twig->display('account.tpl', array(
     'layout' => $layout,
     'listLocations' => $listLocations,
+    'domain' => $domain,
     'listUrls' => $listUrls
 ));

@@ -1,27 +1,35 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
+session_start();
+
+if (!isset($_SESSION['userId']))
+{
+    header('Location: auth.php');
+    exit();
+}
+
 if (array_key_exists('data', $_POST))
 {
-    $database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
+    $databaseDataProvider = new DatabaseDataManager(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
 
     $ttfbParam = $_POST['data'];
     $jsonDecode = json_decode($ttfbParam, true);
 
     if (array_key_exists('result', $jsonDecode))
     {
-        $dataArray = $database->executeQuery("SELECT ttfb, load_time, requests, completed_time FROM " . DatabaseTable::AVERAGE_RESULT);
+        $dataArray = $databaseDataProvider->getTestResult($_SESSION['userId']);
 
         $ttfbArray = [];
-        $loadTimeArray = [];
-        $requestsArray = [];
+        $docTimeArray = [];
+        $fullyLoadedArray = [];
         $timeArray = [];
 
         foreach ($dataArray as $item)
         {
             $ttfbArray[] = $item['ttfb'];
-            $loadTimeArray[] = $item['load_time'];
-            $requestsArray[] = $item['requests'];
+            $docTimeArray[] = $item['doc_time'];
+            $fullyLoadedArray[] = $item['fully_loaded'];
             $date = new DateTime($item['completed_time']);
             $time = $date->format('m/d');
             $timeArray[] = $time;
@@ -29,8 +37,8 @@ if (array_key_exists('data', $_POST))
 
         $readyDataArray = [
             'ttfb' =>$ttfbArray,
-            'loadTime' => $loadTimeArray,
-            'requests' => $requestsArray,
+            'docTime' => $docTimeArray,
+            'fullyLoaded' => $fullyLoadedArray,
             'time' => $timeArray
         ];
 

@@ -8,13 +8,11 @@ class WebPageTestResponseHandler
 
     private const BASIC_BROWSER_TYPE = 0;
 
-    private $database;
     private $databaseDataProvider;
 
     public function __construct()
     {
-        $this->database = new Database(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
-        $this->databaseDataProvider = new DatabaseDataProvider();
+        $this->databaseDataProvider = new DatabaseDataManager();
     }
 
     public function handle($response)
@@ -26,12 +24,7 @@ class WebPageTestResponseHandler
 
             if ($recordTestInfo && array_key_exists('completed', $response))
             {
-                $testInfo[] = $response['completed'];
-                $testInfo[] = TestStatus::COMPLETED;
-                $testInfo[] = $wptTestId;
-                $this->database->executeQuery("UPDATE " . DatabaseTable::TEST_INFO .
-                                              " SET completed_time = FROM_UNIXTIME(?), test_status = ?
-                                              WHERE test_id = ?", $testInfo);
+                $this->databaseDataProvider->updateTestInfoCompletedTime($response['completed'], $wptTestId);
 
                 if (array_key_exists('id', $recordTestInfo))
                 {
@@ -43,8 +36,7 @@ class WebPageTestResponseHandler
                     {
                         $jsonData = json_encode($response);
 
-                        $this->database->executeQuery("INSERT INTO " . DatabaseTable::RAW_DATA .
-                                                      " (test_id, json_data) VALUES (?, ?)", [$testId, $jsonData]);
+                        $this->databaseDataProvider->saveRawData($testId, $jsonData);
                     }
 
                     $this->insertIntoAverageResult($response, self::FIRST_VIEW, $testId, ViewType::FIRST);
@@ -76,20 +68,11 @@ class WebPageTestResponseHandler
             $averageResult[] = $testId;
             $averageResult[] = $typeView;
             $averageResult[] = $data['completed'];
-            $recordExists = $this->databaseDataProvider->checkExistenceRecord($testId);
+            $recordExists = $this->databaseDataProvider->testIsExists($testId);
 
             if (count($recordExists) < self::TOTAL_NUM_TEST_RECORD)
             {
-                $this->database->executeQuery("INSERT INTO " . DatabaseTable::AVERAGE_RESULT . "
-                                              (load_time, ttfb, bytes_out, bytes_out_doc,
-                                               bytes_in, bytes_in_doc, connections, requests, requests_doc,
-                                               responses_200, responses_404, responses_other, render_time,
-                                               fully_loaded, doc_time, dom_elements, title_time,
-                                               load_event_start, load_event_end, dom_content_loaded_event_start,
-                                               dom_content_loaded_event_end, first_paint, dom_interactive,  dom_loading,
-                                               visual_complete, test_id, type_view, completed_time)
-                                               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-                                               ?, ?, ?, ?, ?, ?, ?, ?, ?, FROM_UNIXTIME(?))", $averageResult);
+                $this->databaseDataProvider->saveAverageResult($averageResult);
             }
         }
     }

@@ -1,7 +1,5 @@
 (function() {
-  showModalWindow();
-  closeModalWindow();
-  sendFormData();
+
 })();
 
 let classToggler = function(elementId, opacity) {
@@ -59,7 +57,7 @@ function sendFormData() {
       'password': password
     };
     let jsonString = 'dataForm=' + JSON.stringify(keyValue);
-    ajaxPost('home_page.php', jsonString, function(response) {
+    ajaxPost('auth.php', jsonString, function(response) {
       modalWindow.hide();
       document.getElementById('login').value = '';
       document.getElementById('password').value = '';

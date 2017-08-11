@@ -36,11 +36,63 @@ $font-stack-one: 'Roboto', sans-serif;
   min-height: 780px;
 }
 
-.list-locations
+.list_locations
 {
-  max-height: 600px;
+  max-height: 150px;
   overflow: scroll;
-  margin-right: 20px;
+  margin-bottom: 20px;
+  margin-right: 10px;
+}
+
+.list_domains
+{
+  margin-bottom: 20px;
+}
+
+.block_settings
+{
+  border: solid 1px rgba(0, 0, 0, 0.13);
+  border-radius: 5px;
+  padding: 15px;
+}
+
+.add_button
+{
+  float: right;
+  margin-top: 20px;
+}
+
+.block_locations,
+.block_domains
+{
+  margin-right: 10px;
+  border-right: solid 1px rgba(0, 0, 0, 0.13);
+}
+
+button
+{
+  outline: none;
+}
+
+.block_settings
+{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.ct-chart1,
+.ct-chart2,
+.ct-chart3
+{
+  background: #453D3F;
+  padding: 10px;
+}
+
+.ct-axis-title,
+.ct-label
+{
+  fill: #94878a;
+  color: #94878a;
 }
 
 .footer
@@ -54,87 +106,38 @@ $font-stack-one: 'Roboto', sans-serif;
 
 .home_page
 {
-  background: url('../img/background.jpg');
   background-size: cover;
   height: 100vh;
 }
 
-.home_page_button
-{
-  display: inline-block;
-  padding: 10px 20px;
-  background: rgba(0, 0, 0, 0);
-  border: solid 2px #ffffff;
-  margin: 400px 20px 0 20px;
-  min-width: 230px;
-  color: #ffffff;
-  font: 26px $font-stack-one;
-  transition: 0.5s;
-  outline: none;
-
-
-  &:hover
-  {
-    background: #ffffff;
-    color: #000000;
-  }
-}
-
-.button_block
-{
-  text-align: center;
-  min-height: 100vh;
-  background: rgba(0, 0, 0, 0.32);
-}
-
-.modal_auth
+.block_auth
 {
   max-width: 500px;
-  min-height: 300px;
-  padding: 30px 50px;
-  border-radius: 10px;
-  background-color: #ffffff;
-  position: relative;
-  display: inline-block;
-  vertical-align: middle;
-  margin: 0 auto;
-  z-index: 1045;
-  text-align: left;
-  width: 100%;
+  border: solid 1px rgba(0, 0, 0, 0.11);
+  margin: 210px auto 0 auto;
+  border-radius: 5px;
+  background: #d4dedf;
 }
 
-.background_modal
+.form_auth
 {
-  background: rgba(0, 0, 0, 0.64);
+  padding: 0 35px 25px 35px;
+}
+
+.form_title
+{
+  background: rgba(0, 0, 0, 0.07);
   width: 100%;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 5;
-  display: none;
-  transition: 0.3s;
+  padding: 5px 0;
+  line-height: 40px;
   text-align: center;
-  opacity: 0;
+  margin-top: 0;
+  border-bottom: solid 1px rgba(0, 0, 0, 0.11);;
 }
 
-.close_button
+.registration_link_block
 {
-  width: 25px;
-  height: 26px;
-  background: url('../img/close_button.png');
-  position: absolute;
-  top: 35px;
-  right: 35px;
-  cursor: pointer;
-}
-
-.opacity_1
-{
-  opacity: 1;
-}
-
-.visible
-{
-  display: block;
+  text-align: center;
+  margin-top: 20px;
+  color: rgba(0, 0, 0, 0.5);;
 }

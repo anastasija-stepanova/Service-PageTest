@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400" rel="stylesheet">
-    <link rel="stylesheet" href="../bower_components/chartist/dist/chartist.min.css">
+    <link rel="stylesheet" href="../bower_components/chartist/dist/chartist.css">
+    <link rel="stylesheet" href="../bower_components/chartist-plugin-tooltip/dist/chartist-plugin-tooltip.css">
     <link rel="stylesheet" href="../web/css/bootstrap.min.css">
     <link rel="stylesheet" href="../web/css/main.css">
   </head>
@@ -28,6 +29,7 @@
                 <ul class="nav navbar-nav">
                   <li><a class="menu_item" title="Главная" href="index.php">Главная</a></li>
                   <li><a class="menu_item" title="Личный кабинет" href="account.php">Личный кабинет</a></li>
+                  <li><a class="menu_item" title="Выход" href="close_session.php">Выход</a></li>
                 </ul>
               </div>
             </nav>
