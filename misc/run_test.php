@@ -6,9 +6,9 @@ const INDEX_URL = 'url';
 const INDEX_WPT_LOCATION_ID = 'wpt_location_id';
 
 $databaseDataProvider = new DatabaseDataManager();
-$userIds = $databaseDataProvider->getUsersId();
+$usersId = $databaseDataProvider->getUsersId();
 
-foreach ($userIds as $userId)
+foreach ($usersId as $userId)
 {
     $userDomains = $databaseDataProvider->getUserDomains($userId);
     $userUrls = $databaseDataProvider->getUserUrlsData($userId);
@@ -17,14 +17,12 @@ foreach ($userIds as $userId)
 
     foreach ($userDomains as $userDomain)
     {
-        runNewTest($apiKey, $userId, $userUrls, $userLocations, $userDomain);
+        runNewTest($databaseDataProvider, $apiKey, $userId, $userUrls, $userLocations, $userDomain);
     }
 }
 
-function runNewTest($apiKey, $userId, $userUrls, $userLocations, $userDomain)
+function runNewTest($databaseDataProvider, $apiKey, $userId, $userUrls, $userLocations, $userDomain)
 {
-    $databaseDataProvider = new DatabaseDataManager();
-
     foreach ($userUrls as $userUrl)
     {
         $fullUrl = $userDomain . $userUrl[INDEX_URL];

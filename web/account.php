@@ -3,15 +3,15 @@ require_once __DIR__ . '/../src/autoloader.inc.php';
 
 session_start();
 
-if (!isset($_SESSION['userId']))
+if (!array_key_exists('userId', $_SESSION))
 {
     header('Location: auth.php?url=account.php');
     exit();
 }
 
-$databaseDataProvider = new DatabaseDataManager(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
+$databaseDataManager = new DatabaseDataManager(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
 
-$locationsData = $databaseDataProvider->getLocationData();
+$locationsData = $databaseDataManager->getLocationData();
 
 $listLocations = '';
 foreach ($locationsData as $locationData)
@@ -21,7 +21,7 @@ foreach ($locationsData as $locationData)
     $listLocations .= "<div class='checkbox'><label><input type='checkbox' name='location' value='$idLocation'>$location</label></div>";
 }
 
-$domainsData = $databaseDataProvider->getUserDomainsData($_SESSION['userId']);
+$domainsData = $databaseDataManager->getUserDomainsData($_SESSION['userId']);
 $listDomains = '';
 $domain = '';
 $listUrls = '';
@@ -30,12 +30,16 @@ foreach ($domainsData as $domainData)
      $domain = $domainData;
      $listDomains .= "<div>$domain</div>";
 
-     $urlsData = $databaseDataProvider->getUserUrlsData($_SESSION['userId']);
+     $urlsData = $databaseDataManager->getUserUrlsData($_SESSION['userId']);
 
      $listUrls = '';
      foreach ($urlsData as $urlData)
      {
-         $listUrls .= "<div>$urlData</div>";
+         if (array_key_exists('url', $urlData))
+         {
+             $url = $urlData['url'];
+             $listUrls .= "<div>$url</div>";
+         }
      }
 }
 

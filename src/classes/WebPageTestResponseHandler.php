@@ -8,11 +8,11 @@ class WebPageTestResponseHandler
 
     private const BASIC_BROWSER_TYPE = 0;
 
-    private $databaseDataProvider;
+    private $databaseDataManager;
 
     public function __construct()
     {
-        $this->databaseDataProvider = new DatabaseDataManager();
+        $this->databaseDataManager = new DatabaseDataManager();
     }
 
     public function handle($response)
@@ -20,23 +20,23 @@ class WebPageTestResponseHandler
         if ($response && array_key_exists('id', $response))
         {
             $wptTestId = $response['id'];
-            $recordTestInfo = $this->databaseDataProvider->getTableEntry(DatabaseTable::TEST_INFO, $wptTestId);
+            $recordTestInfo = $this->databaseDataManager->getTableEntry(DatabaseTable::TEST_INFO, $wptTestId);
 
             if ($recordTestInfo && array_key_exists('completed', $response))
             {
-                $this->databaseDataProvider->updateTestInfoCompletedTime($response['completed'], $wptTestId);
+                $this->databaseDataManager->updateTestInfoCompletedTime($response['completed'], $wptTestId);
 
                 if (array_key_exists('id', $recordTestInfo))
                 {
                     $testId = $recordTestInfo['id'];
 
-                    $recordRawData = $this->databaseDataProvider->getTableEntry(DatabaseTable::RAW_DATA, $testId);
+                    $recordRawData = $this->databaseDataManager->getTableEntry(DatabaseTable::RAW_DATA, $testId);
 
                     if (!$recordRawData)
                     {
                         $jsonData = json_encode($response);
 
-                        $this->databaseDataProvider->saveRawData($testId, $jsonData);
+                        $this->databaseDataManager->saveRawData($testId, $jsonData);
                     }
 
                     $this->insertIntoAverageResult($response, self::FIRST_VIEW, $testId, ViewType::FIRST);
@@ -52,7 +52,7 @@ class WebPageTestResponseHandler
         {
             $commonTestResultCreator = new CommonTestResultCreator();
 
-            $typeBrowser = $this->databaseDataProvider->getBrowserType($testId);
+            $typeBrowser = $this->databaseDataManager->getBrowserType($testId);
 
             if ($typeBrowser == self::BASIC_BROWSER_TYPE)
             {
@@ -68,11 +68,11 @@ class WebPageTestResponseHandler
             $averageResult[] = $testId;
             $averageResult[] = $typeView;
             $averageResult[] = $data['completed'];
-            $recordExists = $this->databaseDataProvider->testIsExists($testId);
+            $recordExists = $this->databaseDataManager->testIsExists($testId);
 
             if (count($recordExists) < self::TOTAL_NUM_TEST_RECORD)
             {
-                $this->databaseDataProvider->saveAverageResult($averageResult);
+                $this->databaseDataManager->saveAverageResult($averageResult);
             }
         }
     }

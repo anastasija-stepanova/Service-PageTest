@@ -6,16 +6,16 @@ ini_set('session.cookie_lifetime', 1800);
 
 session_start();
 
-if (isset($_SESSION['userId']))
+if (array_key_exists('userId', $_SESSION))
 {
-    if (isset($_GET['url']))
+    if (array_key_exists('url', $_GET))
     {
         $url = $_GET['url'];
         header("Location: $url");
     }
     else
     {
-        header('Location: account.php');
+        header('Location: index.php');
     }
 }
 
@@ -30,9 +30,9 @@ if (array_key_exists('userLogin', $_POST))
     {
         $newUserPassword = $_POST['userPassword'];
 
-        $databaseDataProvider = new DatabaseDataManager(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
-
-        $currentUserData = $databaseDataProvider->getUserData($newUserLogin, $newUserPassword);
+        $databaseDataManager = new DatabaseDataManager(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
+        $hash = md5($newUserPassword);
+        $currentUserData = $databaseDataManager->getUserData($newUserLogin, $hash);
 
         if ($currentUserData && array_key_exists(0, $currentUserData))
         {
@@ -43,9 +43,9 @@ if (array_key_exists('userLogin', $_POST))
                 $currentUserLogin = $currentUserData[0]['login'];
                 $currentUserPassword = $currentUserData[0]['password'];
 
-                if ($newUserLogin == $currentUserLogin && $newUserPassword == $currentUserPassword)
+                if ($newUserLogin == $currentUserLogin && $hash == $currentUserPassword)
                 {
-                    if (isset($_GET['url']))
+                    if (array_key_exists('url', $_GET))
                     {
                         $url = $_GET['url'];
                         header("Location: $url");
@@ -60,4 +60,12 @@ if (array_key_exists('userLogin', $_POST))
     }
 }
 
-echo $twig->render('home_page.tpl');
+if (!array_key_exists('url', $_GET))
+{
+    echo $twig->render('home_page.tpl');
+    exit();
+}
+
+echo $twig->render('home_page.tpl', array(
+    'url' => $_GET['url']
+));

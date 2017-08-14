@@ -16,7 +16,7 @@
         <div class="row">
           <div class="block_auth">
             <h3 class="form_title">Войти в личный кабинет</h3>
-            <form action="../../web/auth.php" method="post" class="form_auth">
+            <form action="auth.php?url={{url}}" method="post" class="form_auth">
               <div class="form-group">
                 <label for="exampleInputEmail1">Логин</label>
                 <input name="userLogin" type="text" class="form-control" id="login" placeholder="Введите логин">
@@ -27,11 +27,6 @@
               </div>
               <button id="sendFormButton" type="submit" class="btn btn-info">Войти</button>
             </form>
-          </div>
-          <div id="responseAuth">
-            {% autoescape false %}
-              {{ response }}
-            {% endautoescape %}
           </div>
           <div class="registration_link_block">
             <p>Еще не зарегистрированы?

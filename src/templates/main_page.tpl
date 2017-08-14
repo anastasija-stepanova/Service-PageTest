@@ -18,7 +18,9 @@
   <script src="../bower_components/chartist-plugin-tooltip/dist/chartist-plugin-tooltip.js"></script>
   <script src="../bower_components/chartist-plugin-zoom/dist/chartist-plugin-zoom.js"></script>
   <script src="../bower_components/chartist-plugin-axistitle/dist/chartist-plugin-axistitle.js"></script>
+  <script src="../bower_components/chartist-plugin-legend/chartist-plugin-legend.js"></script>
 {% endblock %}
 {% block fileJs %}
-  <script src="../web/js/main_page.js"></script>
+  <script src="../web/js/build_chart.js"></script>
+  <script src="../web/js/main.js"></script>
 {% endblock %}

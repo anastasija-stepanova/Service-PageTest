@@ -3,7 +3,7 @@ require_once __DIR__ . '/../src/autoloader.inc.php';
 
 session_start();
 
-if (!isset($_SESSION['userId']))
+if (!array_key_exists('userId', $_SESSION))
 {
     header('Location: auth.php');
     exit();
@@ -11,7 +11,7 @@ if (!isset($_SESSION['userId']))
 
 if (array_key_exists('url', $_POST))
 {
-    $databaseDataProvider = new DatabaseDataManager(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
+    $databaseDataManager = new DatabaseDataManager(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
 
     $json = $_POST['url'];
     $jsonDecode = json_decode($json, true);
@@ -26,15 +26,15 @@ if (array_key_exists('url', $_POST))
         exit();
     }
 
-    $urlExists = $databaseDataProvider->getDomainId($newUrl);
+    $urlExists = $databaseDataManager->getDomainId($newUrl);
 
     if (!$urlExists)
     {
-        $domainsId = $databaseDataProvider->getDomainsId();
+        $domainsId = $databaseDataManager->getDomainsId();
 
         foreach ($domainsId as $domainId)
         {
-            $databaseDataProvider->saveUserDomainUrl($domainId, $newUrl);
+            $databaseDataManager->saveUserDomainUrl($domainId, $newUrl);
             echo $newUrl;
         }
     }

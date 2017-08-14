@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (isset($_SESSION['userId']))
+if (array_key_exists('userId', $_SESSION))
 {
     session_unset();
     header('Location: auth.php');

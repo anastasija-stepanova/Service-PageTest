@@ -3,7 +3,7 @@ require_once __DIR__ . '/../src/autoloader.inc.php';
 
 session_start();
 
-if (!isset($_SESSION['userId']))
+if (!array_key_exists('userId', $_SESSION))
 {
     header('Location: auth.php?url=index.php');
     exit();
