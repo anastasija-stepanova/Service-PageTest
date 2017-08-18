@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400" rel="stylesheet">
     <link rel="stylesheet" href="../bower_components/chartist/dist/chartist.min.css">
-    <link rel="stylesheet" href="../web/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../web/css/main.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/main.css">
   </head>
   <body>
     <main class="home_page container-fluid">
@@ -36,10 +36,7 @@
         </div>
       </div>
     </main>
-    <script src="../web/js/config.js"></script>
-    <script src="../web/js/ajax.js"></script>
-    {% block fileJs %}
-    <script src="../web/js/home_page.js"></script>
-    {% endblock %}
+    <script src="../js/config.js"></script>
+    <script src="../js/ajax.js"></script>
   </body>
 </html>

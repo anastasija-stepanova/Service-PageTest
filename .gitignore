@@ -2,5 +2,4 @@
 .git
 vendor
 composer.lock
-dist
-tasks
+web/bower_components

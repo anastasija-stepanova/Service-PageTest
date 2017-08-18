@@ -1,21 +1,18 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
-session_start();
+$sessionClient = new SessionClient();
 
-if (!array_key_exists('userId', $_SESSION))
-{
-    header('Location: auth.php');
-    exit();
-}
+$sessionClient->checkArraySession();
 
-if (array_key_exists('url', $_POST))
+if (array_key_exists('data', $_POST))
 {
     $databaseDataManager = new DatabaseDataManager(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
 
-    $json = $_POST['url'];
+    $json = $_POST['data'];
     $jsonDecode = json_decode($json, true);
-    $newUrl = $jsonDecode['value'];
+    $domain = $jsonDecode['domain'];
+    $newUrl = $jsonDecode['url'];
 
     $dataValidator = new DataValidator();
 
@@ -26,16 +23,18 @@ if (array_key_exists('url', $_POST))
         exit();
     }
 
-    $urlExists = $databaseDataManager->getDomainId($newUrl);
+    $domainId = $databaseDataManager->getUserDomain($domain);
+
+    if (array_key_exists(0, $domainId))
+    {
+        $domainId = $domainId[0];
+    }
+
+    $urlExists = $databaseDataManager->doesUserUrlExists($domainId, $newUrl);
 
     if (!$urlExists)
     {
-        $domainsId = $databaseDataManager->getDomainsId();
-
-        foreach ($domainsId as $domainId)
-        {
-            $databaseDataManager->saveUserDomainUrl($domainId, $newUrl);
-            echo $newUrl;
-        }
+        $databaseDataManager->saveUserDomainUrl($domainId, $newUrl);
+        echo $newUrl;
     }
 }

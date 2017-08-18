@@ -5,19 +5,28 @@ const INDEX_LOCATION = 'location';
 const INDEX_URL = 'url';
 const INDEX_WPT_LOCATION_ID = 'wpt_location_id';
 
-$databaseDataProvider = new DatabaseDataManager();
-$usersId = $databaseDataProvider->getUsersId();
+$databaseDataManager = new DatabaseDataManager();
+$usersId = $databaseDataManager->getUsersId();
 
 foreach ($usersId as $userId)
 {
-    $userDomains = $databaseDataProvider->getUserDomains($userId);
-    $userUrls = $databaseDataProvider->getUserUrlsData($userId);
-    $userLocations = $databaseDataProvider->getUserLocations($userId);
-    $apiKey = $databaseDataProvider->getUserApiKey($userId);
+    $userDomainsData = $databaseDataManager->getUserDomains($userId);
+    $apiKey = $databaseDataManager->getUserApiKey($userId);
 
-    foreach ($userDomains as $userDomain)
+    foreach ($userDomainsData as $userDomain)
     {
-        runNewTest($databaseDataProvider, $apiKey, $userId, $userUrls, $userLocations, $userDomain);
+        if (array_key_exists('id', $userDomain))
+        {
+            $domainId = $userDomain['id'];
+            $userUrls = $databaseDataManager->getUserUrlsData($userId, $domainId);
+            $userLocations = $databaseDataManager->getUserLocations($userId, $domainId);
+
+            if (array_key_exists('domain_name', $userDomain))
+            {
+                $domainName = $userDomain['domain_name'];
+                print_r(runNewTest($databaseDataManager, $apiKey, $userId, $userUrls, $userLocations, $domainName));
+            }
+        }
     }
 }
 
@@ -32,6 +41,7 @@ function runNewTest($databaseDataProvider, $apiKey, $userId, $userUrls, $userLoc
         foreach ($userLocations as $userLocation)
         {
             $wptTestId = $client->runNewTest($fullUrl, $userLocation[INDEX_LOCATION]);
+            echo $wptTestId;
             $databaseDataProvider->saveTestInfo($userId, $userUrl, $userLocation, $wptTestId);
         }
     }

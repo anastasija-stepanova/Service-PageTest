@@ -1,13 +1,9 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
-session_start();
+$sessionClient = new SessionClient();
 
-if (!array_key_exists('userId', $_SESSION))
-{
-    header('Location: auth.php');
-    exit();
-}
+$sessionClient->checkArraySession();
 
 if (array_key_exists('domain', $_POST))
 {

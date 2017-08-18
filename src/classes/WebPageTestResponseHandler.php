@@ -1,11 +1,6 @@
 <?php
 class WebPageTestResponseHandler
 {
-    private const TOTAL_NUM_TEST_RECORD = 2;
-
-    private const FIRST_VIEW = 'firstView';
-    private const REPEAT_VIEW = 'repeatView';
-
     private const BASIC_BROWSER_TYPE = 0;
 
     private $databaseDataManager;
@@ -17,38 +12,47 @@ class WebPageTestResponseHandler
 
     public function handle($response)
     {
-        if ($response && array_key_exists('id', $response))
+        if ($response && array_key_exists(WptKeys::ID, $response))
         {
-            $wptTestId = $response['id'];
-            $recordTestInfo = $this->databaseDataManager->getTableEntry(DatabaseTable::TEST_INFO, $wptTestId);
+            $wptTestId = $response[WptKeys::ID];
+            $recordTestInfo = $this->databaseDataManager->getTableRowByTestId(DatabaseTable::TEST_INFO, $wptTestId);
+            $this->saveTestResult($response, $recordTestInfo, $wptTestId);
+        }
+    }
 
-            if ($recordTestInfo && array_key_exists('completed', $response))
+    private function saveTestResult($response, $recordTestInfo, $wptTestId)
+    {
+        if ($recordTestInfo && array_key_exists(WptKeys::COMPLETED, $response))
+        {
+            $this->databaseDataManager->updateTestInfoCompletedTime($response[WptKeys::COMPLETED], $wptTestId);
+
+            if (array_key_exists(WptKeys::ID, $recordTestInfo))
             {
-                $this->databaseDataManager->updateTestInfoCompletedTime($response['completed'], $wptTestId);
+                $testId = $recordTestInfo[WptKeys::ID];
 
-                if (array_key_exists('id', $recordTestInfo))
-                {
-                    $testId = $recordTestInfo['id'];
+                $this->saveRawData($response, $testId);
 
-                    $recordRawData = $this->databaseDataManager->getTableEntry(DatabaseTable::RAW_DATA, $testId);
-
-                    if (!$recordRawData)
-                    {
-                        $jsonData = json_encode($response);
-
-                        $this->databaseDataManager->saveRawData($testId, $jsonData);
-                    }
-
-                    $this->insertIntoAverageResult($response, self::FIRST_VIEW, $testId, ViewType::FIRST);
-                    $this->insertIntoAverageResult($response, self::REPEAT_VIEW, $testId, ViewType::REPEAT);
-                }
+                $this->insertIntoAverageResult($response, WptKeys::FIRST_VIEW, $testId, ViewType::FIRST);
+                $this->insertIntoAverageResult($response, WptKeys::REPEAT_VIEW, $testId, ViewType::REPEAT);
             }
+        }
+    }
+
+    private function saveRawData($response, $testId)
+    {
+        $recordRawData = $this->databaseDataManager->getTableRowByTestId(DatabaseTable::RAW_DATA, $testId);
+
+        if (!$recordRawData)
+        {
+            $jsonData = json_encode($response);
+
+            $this->databaseDataManager->saveRawData($testId, $jsonData);
         }
     }
 
     private function insertIntoAverageResult($data, $wptTypeView, $testId, $typeView)
     {
-        if (array_key_exists($wptTypeView, $data['average']))
+        if (array_key_exists($wptTypeView, $data[WptKeys::AVERAGE]))
         {
             $commonTestResultCreator = new CommonTestResultCreator();
 
@@ -56,21 +60,21 @@ class WebPageTestResponseHandler
 
             if ($typeBrowser == self::BASIC_BROWSER_TYPE)
             {
-                $commonTestResult = $commonTestResultCreator->createFromDesktopBrowser($data['average'][$wptTypeView]);
+                $commonTestResult = $commonTestResultCreator->createFromDesktopBrowser($data[WptKeys::AVERAGE][$wptTypeView]);
                 $averageResult = $commonTestResult->getAsArray();
             }
             else
             {
-                $commonTestResult = $commonTestResultCreator->createFromMobileBrowser($data['average'][$wptTypeView]);
+                $commonTestResult = $commonTestResultCreator->createFromMobileBrowser($data[WptKeys::AVERAGE][$wptTypeView]);
                 $averageResult = $commonTestResult->getAsArray();
             }
 
             $averageResult[] = $testId;
             $averageResult[] = $typeView;
-            $averageResult[] = $data['completed'];
-            $recordExists = $this->databaseDataManager->testIsExists($testId);
+            $averageResult[] = $data[WptKeys::COMPLETED];
+            $recordExists = $this->databaseDataManager->doesTestExists($testId);
 
-            if (count($recordExists) < self::TOTAL_NUM_TEST_RECORD)
+            if ($recordExists)
             {
                 $this->databaseDataManager->saveAverageResult($averageResult);
             }

@@ -1,34 +1,26 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
-session_start();
+$sessionClient = new SessionClient();
 
-if (!array_key_exists('userId', $_SESSION))
-{
-    header('Location: auth.php');
-    exit();
-}
+$sessionClient->checkArraySession();
 
 if (array_key_exists('data', $_POST))
 {
     $databaseDataManager = new DatabaseDataManager(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
 
-    $ttfbParam = $_POST['data'];
-    $jsonDecode = json_decode($ttfbParam, true);
+    $testResultParam = $_POST['data'];
+    $jsonDecode = json_decode($testResultParam, true);
 
     if (array_key_exists('result', $jsonDecode))
     {
         $dataArray = $databaseDataManager->getTestResult($_SESSION['userId']);
-        $testTime = $databaseDataManager->getTestTime($_SESSION['userId']);
-        $uniqueTime = array_unique($testTime);
-        $uniqueTime = array_values($uniqueTime);
 
         $array = [
-            'testResult' => $dataArray,
-            'time' => $uniqueTime
+            'testResult' => $dataArray
         ];
 
         $json = json_encode($array, true);
-        print_r($json);
+        echo $json;
     }
 }

@@ -8,14 +8,18 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:400" rel="stylesheet">
     <link rel="stylesheet" href="../bower_components/chartist/dist/chartist.css">
     <link rel="stylesheet" href="../bower_components/chartist-plugin-tooltip/dist/chartist-plugin-tooltip.css">
-    <link rel="stylesheet" href="../web/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../web/css/main.css">
+    <link rel="stylesheet" href="../bower_components/chartist-plugin-legend/css/chartist-plugin-legend.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/main.css">
   </head>
   <body>
     <header class="header container-fluid">
       <div class="container">
         <div class="row">
-          <div class="col-xs-12">
+          <div class="col-xs-12 col-sm-6 logo">
+            <a href="/" title="PageLoadTest"><img class="img-responsive" src="../../img/logo.png" title="Logo" alt="Logo"></a>
+          </div>
+          <div class="col-xs-12 col-sm-6">
             <nav class="navbar menu" role="navigation">
               <div class="navbar-header">
                 <button type="button" class="navbar-toggle hamburger-button" data-toggle="collapse"
@@ -29,7 +33,7 @@
                 <ul class="nav navbar-nav">
                   <li><a class="menu_item" title="Главная" href="index.php">Главная</a></li>
                   <li><a class="menu_item" title="Личный кабинет" href="account.php">Личный кабинет</a></li>
-                  <li><a class="menu_item" title="Выход" href="close_session.php">Выход</a></li>
+                  <li><a class="menu_item" title="Выход" href="logout.php">Выход</a></li>
                 </ul>
               </div>
             </nav>
@@ -48,8 +52,8 @@
         </div>
       </div>
       {% block chartistJs %}{% endblock %}
-      <script src="../web/js/config.js"></script>
-      <script src="../web/js/ajax.js"></script>
+      <script src="../js/config.js"></script>
+      <script src="../js/ajax.js"></script>
       {% block fileJs %}{% endblock %}
     </footer>
   </body>

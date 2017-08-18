@@ -1,49 +1,63 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
-
 session_start();
-
 if (!array_key_exists('userId', $_SESSION))
 {
     header('Location: auth.php');
     exit();
 }
-
-if (array_key_exists('locations', $_POST))
+if (array_key_exists('data', $_POST))
 {
     $databaseDataManager = new DatabaseDataManager(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
 
-    $locations = $_POST['locations'];
-    $jsonDecode = json_decode($locations, true);
+    $json = $_POST['data'];
+    $jsonDecode = json_decode($json, true);
+    $domain = $jsonDecode['domain'];
+    $locations = $jsonDecode['locations'];
 
-    if (array_key_exists('value', $jsonDecode))
+    $domainId = $databaseDataManager->getUserDomain($domain);
+
+    if (array_key_exists(0, $domainId))
     {
-        $existingLocations = $databaseDataManager->getExistingLocations($_SESSION['userId']);
+        $domainId = $domainId[0];
+    }
+
+    $existingLocations = $databaseDataManager->getExistingLocations($_SESSION['userId'], $domainId);
+
+    if ($existingLocations)
+    {
+        $oldLocations = [];
+        $existingDomainId = null;
+
         foreach ($existingLocations as $existingLocation)
         {
-            $oldLocations = [];
-            foreach ($oldLocations as $oldLocation)
-            {
-                $oldLocations[] = $oldLocation;
-            }
+            $oldLocations[] = $existingLocation['wpt_location_id'];
+            $existingDomainId = $existingLocation['user_domain_id'];
+        }
 
-            $newLocations = [];
-            foreach ($jsonDecode['value'] as $newLocation)
-            {
-                $newLocations[] = $newLocation;
-            }
+        $newLocations = [];
+        foreach ($locations as $newLocation)
+        {
+            $newLocations[] = $newLocation;
+        }
 
-            $removableItems = array_diff($oldLocations, $newLocations);
-            foreach ($removableItems as $value)
-            {
-                $databaseDataManager->deleteUserDomainLocation($existingLocation['domain_id'], $value);
-            }
+        $removableItems = array_diff($oldLocations, $newLocations);
+        foreach ($removableItems as $value)
+        {
+            $databaseDataManager->deleteUserDomainLocation($existingDomainId, $value);
+        }
 
-            $inlaysItems = array_diff($newLocations, $oldLocations);
-            foreach ($inlaysItems as $value)
-            {
-                $databaseDataManager->saveUserDomainLocation($existingLocation['domain_id'], $value);
-            }
+        $inlaysItems = array_diff($newLocations, $oldLocations);
+        foreach ($inlaysItems as $value)
+        {
+            $databaseDataManager->saveUserDomainLocation($existingDomainId, $value);
+        }
+    }
+    else
+    {
+        foreach ($locations as $location)
+        {
+            $databaseDataManager->saveUserDomainLocation($domainId, $location);
         }
     }
 }

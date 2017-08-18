@@ -36,18 +36,18 @@ CREATE TABLE IF NOT EXISTS `user_domain` (
 
 CREATE TABLE IF NOT EXISTS `user_domain_url` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `domain_id` INT(11) NOT NULL,
+  `user_domain_id` INT(11) NOT NULL,
   `url` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`domain_id`) REFERENCES `user_domain`(`id`) ON DELETE CASCADE
+  FOREIGN KEY (`user_domain_id`) REFERENCES `user_domain`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS `user_domain_location` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
-  `domain_id` INT(11) NOT NULL,
+  `user_domain_id` INT(11) NOT NULL,
   `wpt_location_id` INT(11) NOT NULL,
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`domain_id`) REFERENCES `user_domain`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_domain_id`) REFERENCES `user_domain`(`id`) ON DELETE CASCADE,
   FOREIGN KEY (`wpt_location_id`) REFERENCES `wpt_location`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
