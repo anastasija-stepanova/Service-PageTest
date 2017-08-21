@@ -97,7 +97,7 @@ class DatabaseDataManager
                                          SELECT type_view 
                                          FROM $averageResult 
                                          WHERE test_id = ?", [$testId]);
-        return $testExists == self::TOTAL_NUM_TEST_RECORD ? true : false;
+        return count($testExists) < self::TOTAL_NUM_TEST_RECORD ? true : false;
     }
 
     public function getUserData($userLogin, $userPassword):array
@@ -238,15 +238,17 @@ class DatabaseDataManager
                            WHERE test_id = ?", [$response, TestStatus::COMPLETED, $wptTestId]);
     }
 
-    public function getTestResult($userId)
+    public function getTestResult($userId, $domainId = 1, $locationId = 27, $typeView = 1)
     {
         $averageResult = DatabaseTable::AVERAGE_RESULT;
         $testInfo = DatabaseTable::TEST_INFO;
         return $this->database->executeQuery("
                                   SELECT ttfb, doc_time, fully_loaded, url_id, DATE_FORMAT(ar.completed_time, '%e %M')
-                                  FROM $averageResult AS ar 
-                                    LEFT JOIN $testInfo AS ti ON ar.test_id = ti.id 
-                                  WHERE user_id = ?", [$userId]);
+                                  FROM $averageResult AS ar
+                                    LEFT JOIN $testInfo AS ti ON ar.test_id = ti.id
+                                    LEFT JOIN user_domain_url AS udu ON udu.id = ti.url_id
+                                  WHERE user_id = ? AND udu.user_domain_id = ? AND location_id = ? AND type_view = ?",
+                                 [$userId, $domainId, $locationId, $typeView]);
     }
 
     public function getTestTime($userId)
@@ -296,5 +298,54 @@ class DatabaseDataManager
         $this->database->executeQuery("
                            INSERT INTO $userDomainLocation (user_domain_id, wpt_location_id) 
                            VALUES (?, ?)", [$existingLocation, $value]);
+    }
+
+    public function getDomainUrls($domainId = 1)
+    {
+        $userDomainUrl = DatabaseTable::USER_DOMAIN_URL;
+        return $this->database->executeQuery("
+                                  SELECT url
+                                  FROM $userDomainUrl
+                                  WHERE user_domain_id = ?", [$domainId], PDO::FETCH_COLUMN);
+    }
+
+    public function inisializeDefaultParam()
+    {
+        $defaultDomain = $this->getDefaultUserDomain();
+        $defaultLocation = $this->getDefaultUserDomainLocation();
+    }
+
+    private function getDefaultUserDomain()
+    {
+        $userDomain = DatabaseTable::USER_DOMAIN;
+        $domain = DatabaseTable::DOMAIN;
+        $domainName = $this->database->selectOneRow("
+                                  SELECT domain_name
+                                  FROM $domain AS d
+                                    LEFT JOIN $userDomain AS ud ON domain_id = d.id");
+
+        if (array_key_exists('domain_name', $domainName))
+        {
+            $domainName = $domainName['domain_name'];
+        }
+
+        return $domainName;
+    }
+
+    private function getDefaultUserDomainLocation()
+    {
+        $userDomainLocation = DatabaseTable::USER_DOMAIN_LOCATION;
+        $wptLocation = DatabaseTable::WPT_LOCATION;
+        $locationName = $this->database->selectOneRow("
+                                           SELECT location
+                                           FROM $wptLocation AS wl
+                                             LEFT JOIN $userDomainLocation AS udl ON wpt_location_id = wl.id");
+
+        if (array_key_exists('domain_name', $locationName))
+        {
+            $locationName = $locationName['domain_name'];
+        }
+
+        return $locationName;
     }
 }

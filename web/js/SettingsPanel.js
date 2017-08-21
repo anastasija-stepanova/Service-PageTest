@@ -7,7 +7,6 @@ class SettingsPanel {
       this.hideAdditionBlock('domain_addition_block');
     } else {
       this.showAdditionBlock('domain_addition_block');
-      this.initializeSaveDomainButton();
     }
 
     let _this = this;
@@ -18,26 +17,30 @@ class SettingsPanel {
       _this.container.getElementsByClassName('available_locations_block')[0].classList.remove('hidden');
     });
 
-    let saveLocationButton = this.container.getElementsByClassName('save_location_button')[0];
-    let availableLocations = this.container.getElementsByClassName('available_locations')[0];
-    let checkedArray = this.formDataArray(availableLocations);
-    saveLocationButton.addEventListener('click', function(event) {
-      event.preventDefault();
-      _this.saveLocations(_this, checkedArray);
-    });
-
     let addNewUrlButton = this.container.getElementsByClassName('add_new_url')[0];
     addNewUrlButton.addEventListener('click', function(event) {
       event.preventDefault();
       _this.showAdditionBlock('url_addition_block');
-      let saveButton = _this.container.getElementsByClassName('save_new_url')[0];
-      saveButton.addEventListener('click', function(event) {
-        event.preventDefault();
-        _this.saveUrl(_this);
-        _this.hideAdditionBlock('url_addition_block');
-        _this.container.getElementsByClassName('url_addition_input')[0].value = '';
-      });
     });
+
+
+    let availableLocations = _this.container.getElementsByClassName('available_locations')[0];
+    let checkedArray = _this.formDataArray(availableLocations);
+    let saveSettingsButton = this.container.getElementsByClassName('save_settings_button')[0];
+    saveSettingsButton.addEventListener('click', function(event) {
+      event.preventDefault();
+      _this.saveLocations(_this, checkedArray);
+      _this.initializeSaveDomainButton();
+      _this.saveUrl(_this);
+      _this.hideAdditionBlock('url_addition_block');
+      _this.container.getElementsByClassName('url_addition_input')[0].value = '';
+    })
+  }
+
+  initializeSaveDomainButton() {
+      this.saveDomain();
+      this.hideAdditionBlock('domain_addition_block');
+      this.container.getElementsByClassName('domain_addition_input').value = '';
   }
 
   saveUrl(_this) {
@@ -96,26 +99,14 @@ class SettingsPanel {
   }
 
   saveDomain() {
+    let _this = this;
     let newDomain = this.container.getElementsByClassName('domain_addition_input')[0].value;
     let keyValue = {
       'value': newDomain
     };
     let jsonString = 'domain=' + JSON.stringify(keyValue);
-    console.log(newDomain);
     ajaxPost(FILE_SAVE_USER_DOMAIN, jsonString, function(response) {
-      return this.container.getElementsByClassName('domain_container')[0].innerHTML = response.responseText;
-    });
-  }
-
-  initializeSaveDomainButton()
-  {
-    let saveButton = this.container.getElementsByClassName('save_new_domain')[0];
-    let _this = this;
-    saveButton.addEventListener('click', function(event) {
-      event.preventDefault();
-      _this.saveDomain();
-      _this.hideAdditionBlock('domain_addition_block');
-      _this.container.getElementsByClassName('domain_addition_input').value = '';
+      return _this.container.getElementsByClassName('domain_container')[0].innerHTML = response.responseText;
     });
   }
 }

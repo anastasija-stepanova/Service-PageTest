@@ -2,7 +2,6 @@
   buildChart();
 })();
 
-
 function buildChart() {
   let keyValue = {
     'result': 'testResult'
@@ -60,9 +59,20 @@ function buildChart() {
   });
 }
 
+function unique(array) {
+  let obj = {};
+
+  for (let i = 0; i < array.length; i++) {
+    let str = array[i];
+    obj[str] = true;
+  }
+
+  return Object.keys(obj);
+}
+
 function buildChartTtfb(time, ttfbMainPage, ttfbIspringSuite, ttfbPricing, ttfbCompany) {
   new Chartist.Line('.ct-chart1', {
-    labels: time,
+    labels: unique(time),
     series: [
       ttfbMainPage,
       ttfbIspringSuite,
@@ -79,6 +89,7 @@ function buildChartTtfb(time, ttfbMainPage, ttfbIspringSuite, ttfbPricing, ttfbC
     plugins: [
       Chartist.plugins.legend({
         legendNames: ['/', '/ispring-suite', '/pricing.html', '/company.html'],
+        removeAll: true
       }),
       Chartist.plugins.tooltip({
         anchorToPoint: true,
@@ -111,7 +122,7 @@ function buildChartTtfb(time, ttfbMainPage, ttfbIspringSuite, ttfbPricing, ttfbC
 
 function buildChartDocTime(time, docTimeMainPage, docTimeIspringSuite, docTimePricing, docTimeCompany) {
   new Chartist.Line('.ct-chart2', {
-    labels: time,
+    labels: unique(time),
     series: [
       docTimeMainPage,
       docTimeIspringSuite,
@@ -127,6 +138,7 @@ function buildChartDocTime(time, docTimeMainPage, docTimeIspringSuite, docTimePr
     plugins: [
       Chartist.plugins.legend({
         legendNames: ['/', '/ispring-suite', '/pricing.html', '/company.html'],
+        removeAll: true
       }),
       Chartist.plugins.tooltip({}),
       Chartist.plugins.ctAxisTitle({
@@ -154,7 +166,7 @@ function buildChartDocTime(time, docTimeMainPage, docTimeIspringSuite, docTimePr
 
 function buildChartFullyLoaded(time, fullyLoadedMainPage, fullyLoadedIspringSuite, fullyLoadedPricing, fullyLoadedCompany) {
   new Chartist.Line('.ct-chart3', {
-    labels: time,
+    labels: unique(time),
     series: [
       fullyLoadedMainPage,
       fullyLoadedIspringSuite,
@@ -170,6 +182,7 @@ function buildChartFullyLoaded(time, fullyLoadedMainPage, fullyLoadedIspringSuit
     plugins: [
       Chartist.plugins.legend({
         legendNames: ['/', '/ispring-suite', '/pricing.html', '/company.html'],
+        removeAll: true
       }),
       Chartist.plugins.tooltip({}),
       Chartist.plugins.ctAxisTitle({

@@ -16,24 +16,20 @@ class WebPageTestResponseHandler
         {
             $wptTestId = $response[WptKeys::ID];
             $recordTestInfo = $this->databaseDataManager->getTableRowByTestId(DatabaseTable::TEST_INFO, $wptTestId);
-            $this->saveTestResult($response, $recordTestInfo, $wptTestId);
-        }
-    }
 
-    private function saveTestResult($response, $recordTestInfo, $wptTestId)
-    {
-        if ($recordTestInfo && array_key_exists(WptKeys::COMPLETED, $response))
-        {
-            $this->databaseDataManager->updateTestInfoCompletedTime($response[WptKeys::COMPLETED], $wptTestId);
-
-            if (array_key_exists(WptKeys::ID, $recordTestInfo))
+            if ($recordTestInfo && array_key_exists(WptKeys::COMPLETED, $response))
             {
-                $testId = $recordTestInfo[WptKeys::ID];
+                $this->databaseDataManager->updateTestInfoCompletedTime($response[WptKeys::COMPLETED], $wptTestId);
 
-                $this->saveRawData($response, $testId);
+                if (array_key_exists(WptKeys::ID, $recordTestInfo))
+                {
+                    $testId = $recordTestInfo[WptKeys::ID];
 
-                $this->insertIntoAverageResult($response, WptKeys::FIRST_VIEW, $testId, ViewType::FIRST);
-                $this->insertIntoAverageResult($response, WptKeys::REPEAT_VIEW, $testId, ViewType::REPEAT);
+                    $this->saveRawData($response, $testId);
+
+                    $this->insertIntoAverageResult($response, WptKeys::FIRST_VIEW, $testId, ViewType::FIRST);
+                    $this->insertIntoAverageResult($response, WptKeys::REPEAT_VIEW, $testId, ViewType::REPEAT);
+                }
             }
         }
     }

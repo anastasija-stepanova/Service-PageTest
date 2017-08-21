@@ -4,30 +4,70 @@
 Index
 {% endblock %}
 {% block content %}
-<div class="row settings">
-  {% for key, domain in userSettings %}
-  <div class="list_domains_block col-xs-12 col-sm-6">
-    <div class="radio">
-      <label>
-        <input type='radio' name='domain' value="{{ key }}">{{ key }}
-      </label>
-    </div>
-  </div>
-  <div class="list_locations_block col-xs-12 col-sm-6">
-    {% for location in domain.locations %}
-    <div class="list_locations">
-      <div class="radio">
-        <label>
-          <input type='radio' name='location' value="{{ location.description }}">{{ location.description }}
-        </label>
+<button type="button" class="btn btn-primary options_button" data-toggle="modal" data-target="#modalSettingDashboard">Настройки</button>
+<div class="modal fade" tabindex="-1" role="dialog" id="modalSettingDashboard">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Настройки</h4>
+      </div>
+      <div class="modal-body">
+        <div class="list_domains_block panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+          {% for key, domain in userSettings %}
+            <div class="panel panel-default">
+              <div class="panel-heading" role="tab" id="heading{{ domain.domain_id }}">
+                <h4 class="panel-title">
+                  <a role="button" aria-expanded="true" aria-controls="collapse{{ domain.domain_id }}" class="domain"
+                     data-toggle="collapse" data-parent="#accordion" href="#collapse{{ domain.domain_id }}" data-value="{{ domain.domain_id }}">
+                    {{ key }}
+                  </a>
+                </h4>
+              </div>
+              <div id="collapse{{ domain.domain_id }}" class="panel-collapse
+                                                         {% if loop.first %} in
+                                                         {% else %} collapsing
+                                                         {% endif %} " role="tabpanel" aria-labelledby="heading{{ domain.domain_id }}">
+                <div class="panel-body">
+                  <div class="list_locations_block col-xs-12 col-md-6">
+                    {% for location in domain.locations %}
+                    <div class="list_locations">
+                      <div class="radio">
+                        <label>
+                          <input {% if loop.first %} checked {% endif %} class="location"
+                                 name="location{{ domain.domain_id }}" type='radio' data-value="{{ location.id }}">{{ location.description }}
+                        </label>
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                    <div class="list_type_view col-xs-12 col-md-6">
+                      <div class="radio">
+                        <label>
+                          <input checked class="view" type='radio' name="view{{ domain.domain_id }}" data-value="1">First View
+                        </label>
+                      </div>
+                      <div class="radio">
+                        <label>
+                          <input class="view"  type='radio' name="view{{ domain.domain_id }}" data-value="2">Repeat View
+                        </label>
+                      </div>
+                    </div>
+                  <button type="button" id="saveOptions" class="btn btn-primary save_options_button">Показать</button>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
       </div>
     </div>
-    {% endfor %}
   </div>
-  {% endfor %}
 </div>
 <div class="row">
-  <h2>TTFB</h2>
+  <h2>Time To First Byte</h2>
   <div class="ct-chart1 ct-major-tenth"></div>
   <h2>Document Complete Time</h2>
   <div class="ct-chart2 ct-major-tenth"></div>
@@ -43,6 +83,7 @@ Index
 <script src="../bower_components/chartist-plugin-legend/dist/chartist-plugin-legend.js"></script>
 {% endblock %}
 {% block fileJs %}
+<script src="../js/DomainDashboardSettings.js"></script>
 <script src="../js/build_chart.js"></script>
 <script src="../js/main.js"></script>
 {% endblock %}

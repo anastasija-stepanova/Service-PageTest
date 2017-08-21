@@ -18,6 +18,7 @@ foreach ($domainsData as $domainData)
 
         if (array_key_exists('domain_name', $domainData))
         {
+            $userSettings[$domainData['domain_name']]['domain_id'] = $domainData['id'];
             $userSettings[$domainData['domain_name']]['locations'] = $userLocations;
         }
     }

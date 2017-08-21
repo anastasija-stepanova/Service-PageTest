@@ -24,7 +24,7 @@ foreach ($usersId as $userId)
             if (array_key_exists('domain_name', $userDomain))
             {
                 $domainName = $userDomain['domain_name'];
-                print_r(runNewTest($databaseDataManager, $apiKey, $userId, $userUrls, $userLocations, $domainName));
+                runNewTest($databaseDataManager, $apiKey, $userId, $userUrls, $userLocations, $domainName);
             }
         }
     }
@@ -41,7 +41,6 @@ function runNewTest($databaseDataProvider, $apiKey, $userId, $userUrls, $userLoc
         foreach ($userLocations as $userLocation)
         {
             $wptTestId = $client->runNewTest($fullUrl, $userLocation[INDEX_LOCATION]);
-            echo $wptTestId;
             $databaseDataProvider->saveTestInfo($userId, $userUrl, $userLocation, $wptTestId);
         }
     }

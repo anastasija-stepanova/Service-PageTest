@@ -2,7 +2,7 @@
 
 class CommonTestResultCreator
 {
-    private const DEFAULT_VALUE = null;
+    private const DEFAULT_VALUE = 0;
 
     public static function createFromMobileBrowser($response)
     {

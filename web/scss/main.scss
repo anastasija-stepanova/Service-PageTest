@@ -199,14 +199,38 @@ html {
   margin-right: 5px;
 }
 
-.settings
-{
-  border: solid 1px rgba(0, 0, 0, 0.13);
-  border-radius: 5px;
-}
-
 .list_domains_block,
 .list_locations_block
 {
   margin-bottom: 10px;
+}
+
+.save_settings_button
+{
+  float: right;
+  font: bold 18px $font-stack-one;
+  margin: 20px 0;
+}
+
+.block_domains h2
+{
+  float: left;
+  margin-right: 10px;
+}
+
+input
+{
+  padding: 10px;
+  border-radius: 5px;
+  border: solid 1px rgba(0, 0, 0, 0.13);
+}
+
+.options_button
+{
+  float: right;
+}
+
+.save_options_button
+{
+  float: right;
 }

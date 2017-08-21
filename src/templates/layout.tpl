@@ -51,6 +51,8 @@
           <p>2017</p>
         </div>
       </div>
+      <script src="../js/jquery.min.js"></script>
+      <script src="../js/bootstrap.min.js"></script>
       {% block chartistJs %}{% endblock %}
       <script src="../js/config.js"></script>
       <script src="../js/ajax.js"></script>
