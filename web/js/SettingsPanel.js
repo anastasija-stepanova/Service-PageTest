@@ -11,30 +11,36 @@ class SettingsPanel {
 
     let _this = this;
 
-    let addNewLocationButton = this.container.getElementsByClassName('add_new_location')[0];
-    addNewLocationButton.addEventListener('click', function(event) {
+    let editSettingsPanelButton = this.container.getElementsByClassName('edit_settings_button')[0];
+    editSettingsPanelButton.addEventListener('click', function(event) {
       event.preventDefault();
-      _this.container.getElementsByClassName('available_locations_block')[0].classList.remove('hidden');
+      editSettingsPanelButton.classList.add('hidden');
+      let addNewLocationButton = _this.container.getElementsByClassName('add_new_location')[0];
+      addNewLocationButton.classList.remove('hidden');
+      let addNewUrlButton = _this.container.getElementsByClassName('add_new_url')[0];
+      addNewUrlButton.classList.remove('hidden');
+      addNewLocationButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        _this.container.getElementsByClassName('available_locations_block')[0].classList.remove('hidden');
+      });
+
+      addNewUrlButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        _this.showAdditionBlock('url_addition_block');
+      });
+
+      let availableLocations = _this.container.getElementsByClassName('available_locations')[0];
+      let checkedArray = _this.formDataArray(availableLocations);
+      let saveSettingsButton = _this.container.getElementsByClassName('save_settings_button')[0];
+      saveSettingsButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        _this.saveLocations(_this, checkedArray);
+        _this.initializeSaveDomainButton();
+        _this.saveUrl(_this);
+        _this.hideAdditionBlock('url_addition_block');
+        _this.container.getElementsByClassName('url_addition_input')[0].value = '';
+      })
     });
-
-    let addNewUrlButton = this.container.getElementsByClassName('add_new_url')[0];
-    addNewUrlButton.addEventListener('click', function(event) {
-      event.preventDefault();
-      _this.showAdditionBlock('url_addition_block');
-    });
-
-
-    let availableLocations = _this.container.getElementsByClassName('available_locations')[0];
-    let checkedArray = _this.formDataArray(availableLocations);
-    let saveSettingsButton = this.container.getElementsByClassName('save_settings_button')[0];
-    saveSettingsButton.addEventListener('click', function(event) {
-      event.preventDefault();
-      _this.saveLocations(_this, checkedArray);
-      _this.initializeSaveDomainButton();
-      _this.saveUrl(_this);
-      _this.hideAdditionBlock('url_addition_block');
-      _this.container.getElementsByClassName('url_addition_input')[0].value = '';
-    })
   }
 
   initializeSaveDomainButton() {

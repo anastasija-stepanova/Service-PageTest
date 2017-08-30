@@ -13,38 +13,45 @@
     <link rel="stylesheet" href="../css/main.css">
   </head>
   <body>
-    <header class="header container-fluid">
-      <div class="container">
-        <div class="row">
-          <div class="col-xs-12 col-sm-6 logo">
-            <a href="/" title="PageLoadTest"><img class="img-responsive" src="../../img/logo.png" title="Logo" alt="Logo"></a>
-          </div>
-          <div class="col-xs-12 col-sm-6">
-            <nav class="navbar menu" role="navigation">
-              <div class="navbar-header">
-                <button type="button" class="navbar-toggle hamburger-button" data-toggle="collapse"
-                        data-target="#mobileMenu">
-                  <span class="icon_bar nav-icon"></span>
-                  <span class="icon_bar nav-icon"></span>
-                  <span class="icon_bar nav-icon"></span>
-                </button>
-              </div>
-              <div class="collapse navbar-collapse" id="mobileMenu">
-                <ul class="nav navbar-nav">
-                  <li><a class="menu_item" title="Главная" href="index.php">Главная</a></li>
-                  <li><a class="menu_item" title="Личный кабинет" href="account.php">Личный кабинет</a></li>
-                  <li><a class="menu_item" title="Выход" href="logout.php">Выход</a></li>
-                </ul>
-              </div>
-            </nav>
+    <div class="page-wrapper">
+      <header class="header container-fluid">
+        <div class="container">
+          <div class="row">
+            <div class="col-xs-12 col-sm-6 logo">
+              <a href="/" title="PageLoadTest"><img class="img-responsive" src="../../img/logo.png" title="Logo"
+                                                    alt="Logo"></a>
+            </div>
+            <div class="col-xs-12 col-sm-6">
+              <nav class="navbar menu" role="navigation">
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle hamburger-button" data-toggle="collapse"
+                          data-target="#mobileMenu">
+                    <span class="icon_bar nav-icon"></span>
+                    <span class="icon_bar nav-icon"></span>
+                    <span class="icon_bar nav-icon"></span>
+                  </button>
+                </div>
+                <div class="collapse navbar-collapse" id="mobileMenu">
+                  <ul class="nav navbar-nav">
+                    <li><a class="menu_item" title="Главная" href="index.php">Главная</a></li>
+                    <li><a class="menu_item" title="Личный кабинет" href="account.php">Личный кабинет</a></li>
+                    <li><a class="menu_item" title="Выход" href="logout.php">Выход</a></li>
+                  </ul>
+                </div>
+              </nav>
+            </div>
           </div>
         </div>
+      </header>
+      <div class="clear"></div>
+      <div class="page-buffer">
+        <main class="main container">
+          {% block content %}{% endblock %}
+        </main>
       </div>
-    </header>
-    <main class="main container">
-      {% block content %}{% endblock %}
-    </main>
-    <footer class="footer container-fluid">
+      <div class="clear"></div>
+    </div>
+    <footer class="footer container-fluid page-footer clear">
       <div class="container">
         <div class="row">
           <p>Copyright</p>

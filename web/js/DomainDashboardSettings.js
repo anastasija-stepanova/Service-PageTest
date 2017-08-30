@@ -4,6 +4,7 @@ class DomainDashboardSettings {
     let domainId = item.getElementsByClassName('domain')[0].getAttribute('data-value');
     let locationId = null;
     let typeView = null;
+    let presetId = null;
     showButton.addEventListener('click', function() {
       [].forEach.call(item.getElementsByClassName('location'), function(item) {
         if (item.checked) {
@@ -18,15 +19,23 @@ class DomainDashboardSettings {
         }
       });
 
+      [].forEach.call(item.getElementsByClassName('preset'), function(item) {
+        if (item.checked) {
+          presetId = item.getAttribute('data-value');
+          return false;
+        }
+      });
+
       let dataArray = {
         'domainId': domainId,
         'locationId': locationId,
-        'typeView': typeView
+        'typeView': typeView,
+        'presetId': presetId
       };
+
       let jsonString = 'data=' + JSON.stringify(dataArray);
       ajaxPost(FILE_GET_DATA_FOR_CHART, jsonString, function(response) {
         if ('response' in response) {
-          console.log(response['response']);
           let jsonDecode = JSON.parse(response['response']);
           let ttfbMainPage = [];
           let ttfbIspringSuite = [];

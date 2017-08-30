@@ -28,7 +28,7 @@
               <button id="sendFormButton" type="submit" class="btn btn-info">Войти</button>
             </form>
           </div>
-          <div class="registration_link_block">
+          <div class="registration_link_block hidden">
             <p>Еще не зарегистрированы?
               <a href="#" title="Создать аккаунт">Создать аккаунт</a>
             </p>

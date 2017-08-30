@@ -90,24 +90,6 @@ class WebPageTestClient
         return $arrayTestResults;
     }
 
-    public function getLocations()
-    {
-        $param = [
-            self::PARAM_FORMAT => self::RESPONSE_FORMAT,
-            self::PARAM_KEY => $this->apiKey
-        ];
-
-        $locationUrl = $this->generateWptUrl(self::LOCATIONS_METHOD_NAME, $param);
-        $decodeJsonResponse = $this->sendRequest(self::HTTP_METHOD, $locationUrl);
-
-        if ($decodeJsonResponse != null && array_key_exists('data', $decodeJsonResponse));
-        {
-            $arrayLocations = $decodeJsonResponse['data'];
-        }
-
-        return $arrayLocations;
-    }
-
     private function generateWptUrl($methodName, $params)
     {
         $wptUrl = self::BASE_URL . $methodName . self::FILE_EXTENSION . $this->generateGetParams($params);

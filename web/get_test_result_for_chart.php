@@ -1,9 +1,19 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
+const DEFAULT_TYPE_VIEW = 1;
+const DAY_PRESET = 1;
+const WEEK_PRESET = 2;
+const DAY_S = 86400;
+const WEEK_S = 604800;
+const MONTH_S = 2629743;
+
 $sessionClient = new SessionClient();
 
 $sessionClient->checkArraySession();
+
+$date = new DateTime();
+$currentTime = $date->getTimestamp();
 
 if (array_key_exists('data', $_POST))
 {
@@ -11,6 +21,10 @@ if (array_key_exists('data', $_POST))
 
     $testResultParam = $_POST['data'];
     $jsonDecode = json_decode($testResultParam, true);
+    $domainId = null;
+    $locationId = null;
+    $typeView = null;
+    $dataArray = null;
 
     if (array_key_exists('domainId', $jsonDecode))
     {
@@ -18,19 +32,37 @@ if (array_key_exists('data', $_POST))
         if (array_key_exists('locationId', $jsonDecode))
         {
             $locationId = $jsonDecode['locationId'];
-
             if (array_key_exists('typeView', $jsonDecode))
             {
                 $typeView = $jsonDecode['typeView'];
-                $dataArray = $databaseDataManager->getTestResult($_SESSION['userId'], $domainId, $locationId, $typeView);
+                if (array_key_exists('presetId', $jsonDecode))
+                {
+                    $presetId = $jsonDecode['presetId'];
+                    if ($presetId == DAY_PRESET)
+                    {
+                        $startTime = $currentTime - DAY_S;
+                    }
+                    elseif ($presetId == WEEK_PRESET)
+                    {
+                        $startTime = $currentTime - WEEK_S;
+                    }
+                    else
+                    {
+                        $startTime = $currentTime - MONTH_S;
+                    }
+
+                    $dataArray = $databaseDataManager->getTestResult($_SESSION['userId'], $domainId, $locationId, $typeView, $currentTime, $startTime);
+                }
             }
         }
     }
     else
     {
-        $dataArray = $databaseDataManager->getTestResult($_SESSION['userId']);
+        $defaultDomainId = $databaseDataManager->getDefaultUserDomain();
+        $defaultLocationId = $databaseDataManager->getDefaultUserDomainLocation();
+        $startTime = $currentTime - WEEK_S;
+        $dataArray = $databaseDataManager->getTestResult($_SESSION['userId'], $defaultDomainId, $defaultLocationId, DEFAULT_TYPE_VIEW, $currentTime, $startTime);
     }
-
     $array = [
         'testResult' => $dataArray
     ];

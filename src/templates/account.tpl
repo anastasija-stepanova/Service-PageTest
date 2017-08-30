@@ -13,7 +13,7 @@ Account
         <h2>
           <small>Домен</small>
           <span class="domain_value">{{ key }}</span></h2>
-        <div class="domain_container horizontal_divider">
+        <div class="domain_container horizontal_divider clear">
           <div></div>
         </div>
         <div class="domain_addition_block">
@@ -22,9 +22,9 @@ Account
           </div>
         </div>
       </div>
-      <div class="block_locations col-xs-12 col-md-6">
+      <div class="block_locations col-xs-12 col-md-7">
         <h2>Местоположения</h2>
-        <ol class="list_locations">
+        <ol class="list_locations rounded">
           {% for location in domain.locations %}
           <li>{{ location.description }}</li>
           {% endfor %}
@@ -40,11 +40,11 @@ Account
             {% endfor %}
           </div>
         </div>
-        <button type="button" class="btn btn-success add_button add_new_location">Добавить местоположения</button>
+        <button type="button" class="btn btn-success add_button add_new_location hidden">Добавить местоположения</button>
       </div>
-      <div class="block_urls col-xs-12 col-md-6">
+      <div class="block_urls col-xs-12 col-md-5">
         <h2>Список URLs</h2>
-        <ol class="list_urls">
+        <ol class="list_urls rounded">
           {% for url in domain.urls %}
           <li>{{url}}</li>
           {% endfor %}
@@ -53,9 +53,10 @@ Account
         <div class="url_addition_block hidden">
           <input class="url_addition_input" placeholder="Введите URL">
         </div>
-        <button type="button" class="btn btn-success add_button add_new_url">Добавить URL</button>
+        <button type="button" class="btn btn-success add_button add_new_url hidden">Добавить URL</button>
       </div>
     </div>
+    <button type="button" class="btn btn-primary edit_settings_button">Редактировать</button>
     <button type="button" class="btn btn-primary save_settings_button">Сохранить</button>
   </div>
   {% endfor %}
@@ -65,12 +66,14 @@ Account
     <div class="block_domains col-xs-12">
       <h2>
         <small>Домен</small>
-        <span class="domain_value domain_container"></span></h2>
-      <div class="domain_container horizontal_divider">
-      </div>
-      <div class="domain_addition_block">
-        <div class="input-group">
-          <input class="input_addition_domain form-control" placeholder="Введите имя домена">
+        <span class="domain_value domain_container"></span>
+      </h2>
+      <div class="domain_container horizontal_divider clear">
+        <div class="domain_addition_block clear">
+          <div class="input-group">
+            <input class="input_addition_domain form-control" placeholder="Введите имя домена">
+          </div>
+          <div class="clear"></div>
         </div>
       </div>
     </div>
@@ -102,6 +105,7 @@ Account
       <button type="button" class="btn btn-success add_button add_new_url">Добавить URL</button>
     </div>
   </div>
+  <button type="button" class="btn btn-primary edit_settings_button hidden">Редактировать</button>
   <button type="button" class="btn btn-primary save_settings_button">Сохранить</button>
 </div>
 {% endautoescape %}

@@ -92,8 +92,6 @@ function buildChartTtfb(time, ttfbMainPage, ttfbIspringSuite, ttfbPricing, ttfbC
         removeAll: true
       }),
       Chartist.plugins.tooltip({
-        anchorToPoint: true,
-        appendToBody: true
       }),
       Chartist.plugins.ctAxisTitle({
         axisX: {

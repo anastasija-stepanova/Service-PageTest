@@ -3,6 +3,24 @@
   padding: 0;
   box-sizing: border-box; }
 
+.clear {
+  clear: both; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0; }
+
+.page-wrapper {
+  min-height: 100%;
+  margin-bottom: -50px; }
+
+* html .page-wrapper {
+  height: 100%; }
+
+.page-buffer {
+  height: 50px; }
+
 .header {
   background: #1b58a7;
   font: 26px "Roboto", sans-serif; }
@@ -57,7 +75,7 @@
 
 .domain_addition_block,
 .url_addition_block {
-  margin-top: 20px; }
+  margin: 20px 0; }
 
 button {
   outline: none; }
@@ -78,7 +96,8 @@ button {
   font: 18px "Roboto", sans-serif;
   color: #ffffff;
   padding: 10px 0 5px 0;
-  text-align: center; }
+  text-align: center;
+  margin-top: 90px; }
   .footer p {
     margin-bottom: 5px; }
 
@@ -124,7 +143,9 @@ html {
   margin-left: 20px; }
 
 .list_locations {
-  margin-left: 20px; }
+  margin-left: 20px;
+  padding: 20px;
+  min-width: 300px; }
 
 .domain_addition_block .input-group {
   float: left;
@@ -134,10 +155,11 @@ html {
 .list_locations_block {
   margin-bottom: 10px; }
 
-.save_settings_button {
+.save_settings_button,
+.edit_settings_button {
   float: right;
-  font: bold 18px "Roboto", sans-serif;
-  margin: 20px 0; }
+  font: 18px "Roboto", sans-serif;
+  margin: 20px 10px; }
 
 .block_domains h2 {
   float: left;
@@ -153,5 +175,49 @@ input {
 
 .save_options_button {
   float: right; }
+
+.btn .caret {
+  margin-left: 20px; }
+
+.rounded {
+  counter-reset: li;
+  list-style: none;
+  font: 14px "Trebuchet MS", "Lucida Sans";
+  padding: 0;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5); }
+
+.rounded li {
+  position: relative;
+  display: block;
+  padding: 10px 20px;
+  margin: 10px 0;
+  background: rgba(27, 88, 167, 0.15);
+  color: #444;
+  text-decoration: none;
+  transition: .3s ease-out;
+  border-radius: 5px; }
+
+.rounded li:hover {
+  background: #e9e4e0; }
+
+.rounded li:hover:before {
+  transform: rotate(360deg); }
+
+.rounded li:before {
+  content: counter(li);
+  counter-increment: li;
+  position: absolute;
+  left: -18px;
+  top: 65%;
+  margin-top: -20px;
+  background: #428bca;
+  height: 30px;
+  width: 30px;
+  line-height: 30px;
+  border: .45px solid white;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 30px;
+  transition: all .3s ease-out; }
 
 /*# sourceMappingURL=main.css.map */

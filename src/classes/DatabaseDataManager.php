@@ -167,7 +167,7 @@ class DatabaseDataManager
                                   WHERE user_id = ?", [$userId]);
     }
 
-    public function getUserDomain($domainName)
+    public function getUserDomain($domainName):array
     {
         $userDomain = DatabaseTable::USER_DOMAIN;
         $domain = DatabaseTable::DOMAIN;
@@ -238,7 +238,7 @@ class DatabaseDataManager
                            WHERE test_id = ?", [$response, TestStatus::COMPLETED, $wptTestId]);
     }
 
-    public function getTestResult($userId, $domainId = 1, $locationId = 27, $typeView = 1)
+    public function getTestResult($userId, $domainId, $locationId, $typeView, $currentTime, $startTime):array
     {
         $averageResult = DatabaseTable::AVERAGE_RESULT;
         $testInfo = DatabaseTable::TEST_INFO;
@@ -247,11 +247,12 @@ class DatabaseDataManager
                                   FROM $averageResult AS ar
                                     LEFT JOIN $testInfo AS ti ON ar.test_id = ti.id
                                     LEFT JOIN user_domain_url AS udu ON udu.id = ti.url_id
-                                  WHERE user_id = ? AND udu.user_domain_id = ? AND location_id = ? AND type_view = ?",
-                                 [$userId, $domainId, $locationId, $typeView]);
+                                  WHERE user_id = ? AND udu.user_domain_id = ? AND location_id = ? AND type_view = ? AND
+                                  ar.completed_time < FROM_UNIXTIME(?) AND ar.completed_time > FROM_UNIXTIME(?)",
+                                 [$userId, $domainId, $locationId, $typeView, $currentTime, $startTime]);
     }
 
-    public function getTestTime($userId)
+    public function getTestTime($userId):array
     {
         $testInfo = DatabaseTable::TEST_INFO;
         return $this->database->executeQuery("
@@ -300,52 +301,34 @@ class DatabaseDataManager
                            VALUES (?, ?)", [$existingLocation, $value]);
     }
 
-    public function getDomainUrls($domainId = 1)
-    {
-        $userDomainUrl = DatabaseTable::USER_DOMAIN_URL;
-        return $this->database->executeQuery("
-                                  SELECT url
-                                  FROM $userDomainUrl
-                                  WHERE user_domain_id = ?", [$domainId], PDO::FETCH_COLUMN);
-    }
 
-    public function inisializeDefaultParam()
-    {
-        $defaultDomain = $this->getDefaultUserDomain();
-        $defaultLocation = $this->getDefaultUserDomainLocation();
-    }
-
-    private function getDefaultUserDomain()
+    public function getDefaultUserDomain():int
     {
         $userDomain = DatabaseTable::USER_DOMAIN;
-        $domain = DatabaseTable::DOMAIN;
-        $domainName = $this->database->selectOneRow("
-                                  SELECT domain_name
-                                  FROM $domain AS d
-                                    LEFT JOIN $userDomain AS ud ON domain_id = d.id");
+        $domainId = $this->database->selectOneRow("
+                                  SELECT domain_id
+                                  FROM $userDomain");
 
-        if (array_key_exists('domain_name', $domainName))
+        if (array_key_exists('domain_id', $domainId))
         {
-            $domainName = $domainName['domain_name'];
+            $domainId = $domainId['domain_id'];
         }
 
-        return $domainName;
+        return $domainId;
     }
 
-    private function getDefaultUserDomainLocation()
+    public function getDefaultUserDomainLocation():int
     {
         $userDomainLocation = DatabaseTable::USER_DOMAIN_LOCATION;
-        $wptLocation = DatabaseTable::WPT_LOCATION;
-        $locationName = $this->database->selectOneRow("
-                                           SELECT location
-                                           FROM $wptLocation AS wl
-                                             LEFT JOIN $userDomainLocation AS udl ON wpt_location_id = wl.id");
+        $locationId = $this->database->selectOneRow("
+                                           SELECT wpt_location_id
+                                           FROM $userDomainLocation");
 
-        if (array_key_exists('domain_name', $locationName))
+        if (array_key_exists('wpt_location_id', $locationId))
         {
-            $locationName = $locationName['domain_name'];
+            $locationId = $locationId['wpt_location_id'];
         }
 
-        return $locationName;
+        return $locationId;
     }
 }
