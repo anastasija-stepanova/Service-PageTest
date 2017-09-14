@@ -1,7 +1,7 @@
 {% extends "layout.tpl" %}
 
 {% block title %}
-Account
+Личный кабинет
 {% endblock %}
 {% block content %}
 {% autoescape false %}

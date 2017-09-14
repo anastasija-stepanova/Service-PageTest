@@ -63,10 +63,21 @@ if (array_key_exists('data', $_POST))
         $startTime = $currentTime - WEEK_S;
         $dataArray = $databaseDataManager->getTestResult($_SESSION['userId'], $defaultDomainId, $defaultLocationId, DEFAULT_TYPE_VIEW, $currentTime, $startTime);
     }
-    $array = [
-        'testResult' => $dataArray
+
+    $finishedData = [];
+    foreach ($dataArray as $item)
+    {
+        $finishedData[$item['user_domain_id']][$item['url']]['ttfb'][] = $item['ttfb'];
+        $finishedData[$item['user_domain_id']][$item['url']]['doc_time'][] = $item['doc_time'];
+        $finishedData[$item['user_domain_id']][$item['url']]['fully_loaded'][] = $item['fully_loaded'];
+        $finishedData[$item['user_domain_id']][$item['url']]['time'][] = $item['DATE_FORMAT(ar.completed_time, \'%e %M\')'];
+    }
+
+
+    $testResult = [
+        'testResult' => $finishedData
     ];
 
-    $json = json_encode($array, true);
+    $json = json_encode($testResult, true);
     echo $json;
 }

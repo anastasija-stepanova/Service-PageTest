@@ -243,7 +243,7 @@ class DatabaseDataManager
         $averageResult = DatabaseTable::AVERAGE_RESULT;
         $testInfo = DatabaseTable::TEST_INFO;
         return $this->database->executeQuery("
-                                  SELECT ttfb, doc_time, fully_loaded, url_id, DATE_FORMAT(ar.completed_time, '%e %M')
+                                  SELECT udu.user_domain_id, udu.url, ar.ttfb, ar.doc_time, ar.fully_loaded, DATE_FORMAT(ar.completed_time, '%e %M')
                                   FROM $averageResult AS ar
                                     LEFT JOIN $testInfo AS ti ON ar.test_id = ti.id
                                     LEFT JOIN user_domain_url AS udu ON udu.id = ti.url_id

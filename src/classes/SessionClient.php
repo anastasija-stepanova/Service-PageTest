@@ -27,7 +27,7 @@ class SessionClient
 
     public function checkRedirect()
     {
-        if (array_key_exists('url', $_GET))
+        if (array_key_exists('url', $_GET) and $_GET['url'] != false)
         {
             $url = $_GET['url'];
             header("Location: $url");

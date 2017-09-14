@@ -5,9 +5,13 @@ class DomainDashboardSettings {
     let locationId = null;
     let typeView = null;
     let presetId = null;
+    let selectedLocation = null;
     showButton.addEventListener('click', function() {
+      [].forEach.call(item.getElementsByClassName('form-control'), function(item) {
+        selectedLocation = item.value;
+      });
       [].forEach.call(item.getElementsByClassName('location'), function(item) {
-        if (item.checked) {
+        if (item.value == selectedLocation) {
           locationId = item.getAttribute('data-value');
           return false;
         }
@@ -37,71 +41,31 @@ class DomainDashboardSettings {
       ajaxPost(FILE_GET_DATA_FOR_CHART, jsonString, function(response) {
         if ('response' in response) {
           let jsonDecode = JSON.parse(response['response']);
-          let ttfbMainPage = [];
-          let ttfbIspringSuite = [];
-          let ttfbPricing = [];
-          let ttfbCompany = [];
-          let docTimeMainPage = [];
-          let docTimeIspringSuite = [];
-          let docTimePricing = [];
-          let docTimeCompany = [];
-          let fullyLoadedMainPage = [];
-          let fullyLoadedIspringSuite = [];
-          let fullyLoadedPricing = [];
-          let fullyLoadedCompany = [];
           let time = [];
+          let ttfb = [];
+          let docTime = [];
+          let domainUrls = [];
+          let fullyLoaded = [];
           if ('testResult' in jsonDecode) {
             let testResult = jsonDecode['testResult'];
 
-            for (let i = 0; i < testResult.length; i++) {
-              time.push(testResult[i]["DATE_FORMAT(ar.completed_time, '%e %M')"]);
+            for (let urls in testResult) {
+              if (testResult.hasOwnProperty(urls)) {
+                domainUrls = Object.keys(testResult[urls]);
 
-              if (testResult[i].url_id == 1) {
-                ttfbMainPage.push(testResult[i].ttfb);
-                docTimeMainPage.push(testResult[i].doc_time);
-                fullyLoadedMainPage.push(testResult[i].fully_loaded);
-              }
-              if (testResult[i].url_id == 2) {
-                ttfbIspringSuite.push(testResult[i].ttfb);
-                docTimeIspringSuite.push(testResult[i].doc_time);
-                fullyLoadedIspringSuite.push(testResult[i].fully_loaded);
-              }
-              if (testResult[i].url_id == 3) {
-                ttfbPricing.push(testResult[i].ttfb);
-                docTimePricing.push(testResult[i].doc_time);
-                fullyLoadedPricing.push(testResult[i].fully_loaded);
-              }
-              if (testResult[i].url_id == 4) {
-                ttfbCompany.push(testResult[i].ttfb);
-                docTimeCompany.push(testResult[i].doc_time);
-                fullyLoadedCompany.push(testResult[i].fully_loaded);
-              }
-              if (testResult[i].url_id == 5) {
-                ttfbMainPage.push(testResult[i].ttfb);
-                docTimeMainPage.push(testResult[i].doc_time);
-                fullyLoadedMainPage.push(testResult[i].fully_loaded);
-              }
-              if (testResult[i].url_id == 6) {
-                ttfbIspringSuite.push(testResult[i].ttfb);
-                docTimeIspringSuite.push(testResult[i].doc_time);
-                fullyLoadedIspringSuite.push(testResult[i].fully_loaded);
-              }
-              if (testResult[i].url_id == 7) {
-                ttfbPricing.push(testResult[i].ttfb);
-                docTimePricing.push(testResult[i].doc_time);
-                fullyLoadedPricing.push(testResult[i].fully_loaded);
-              }
-              if (testResult[i].url_id == 8) {
-                ttfbCompany.push(testResult[i].ttfb);
-                docTimeCompany.push(testResult[i].doc_time);
-                fullyLoadedCompany.push(testResult[i].fully_loaded);
+                for (let i = 0; i < domainUrls.length; i++) {
+                  ttfb.push(testResult[urls][domainUrls[i]].ttfb);
+                  docTime.push(testResult[urls][domainUrls[i]].doc_time);
+                  fullyLoaded.push(testResult[urls][domainUrls[i]].fully_loaded);
+                  time.push(testResult[urls][domainUrls[i]].time)
+                }
               }
             }
           }
 
-          buildChartTtfb(time, ttfbMainPage, ttfbIspringSuite, ttfbPricing, ttfbCompany);
-          buildChartDocTime(time, docTimeMainPage, docTimeIspringSuite, docTimePricing, docTimeCompany);
-          buildChartFullyLoaded(time, fullyLoadedMainPage, fullyLoadedIspringSuite, fullyLoadedPricing, fullyLoadedCompany);
+          buildChartTtfb(time, ttfb, domainUrls);
+          buildChartDocTime(time, docTime, domainUrls);
+          buildChartFullyLoaded(time, fullyLoaded, domainUrls);
           $('#modalSettingDashboard').modal('hide');
         }
       });

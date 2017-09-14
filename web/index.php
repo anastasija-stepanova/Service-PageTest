@@ -28,7 +28,7 @@ $templateLoader = new Twig_Loader_Filesystem('../src/templates/');
 $twig = new Twig_Environment($templateLoader);
 $layout = $twig->load('layout.tpl');
 
-$twig->display('main_page.tpl', array(
+$twig->display('index.tpl', array(
     'layout' => $layout,
     'userSettings' => $userSettings
 ));

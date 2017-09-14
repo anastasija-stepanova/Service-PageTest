@@ -35,11 +35,15 @@ if (array_key_exists('data', $_POST))
             $existingDomainId = $existingLocation['user_domain_id'];
         }
 
+        print_r($oldLocations);
+
         $newLocations = [];
         foreach ($locations as $newLocation)
         {
             $newLocations[] = $newLocation;
         }
+
+        print_r($newLocations);
 
         $removableItems = array_diff($oldLocations, $newLocations);
         foreach ($removableItems as $value)
@@ -47,11 +51,14 @@ if (array_key_exists('data', $_POST))
             $databaseDataManager->deleteUserDomainLocation($existingDomainId, $value);
         }
 
+        print_r($removableItems);
+
         $inlaysItems = array_diff($newLocations, $oldLocations);
         foreach ($inlaysItems as $value)
         {
             $databaseDataManager->saveUserDomainLocation($existingDomainId, $value);
         }
+        print_r($inlaysItems);
     }
     else
     {

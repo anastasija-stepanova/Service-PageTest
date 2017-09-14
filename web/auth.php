@@ -27,11 +27,11 @@ $twig = new Twig_Environment($templateLoader);
 
 if (!array_key_exists('url', $_GET))
 {
-    echo $twig->render('home_page.tpl');
+    echo $twig->render('auth.tpl');
     exit();
 }
 
-echo $twig->render('home_page.tpl', array(
+echo $twig->render('auth.tpl', array(
     'url' => $_GET['url']
 ));
 

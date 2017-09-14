@@ -1,7 +1,7 @@
 {% extends "layout.tpl" %}
 
 {% block title %}
-Index
+Главная
 {% endblock %}
 {% block content %}
 <button type="button" class="btn btn-primary options_button" data-toggle="modal" data-target="#modalSettingDashboard">
@@ -35,23 +35,13 @@ Index
                  aria-labelledby="heading{{ domain.domain_id }}">
               <div class="panel-body">
                 <div class="list_locations_block col-xs-12 col-md-4">
-                  <div class="dropdown">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                      Местоположения
-                      <span class="caret"></span>
-                    </button>
-                    <ul class="list_locations dropdown-menu" aria-labelledby="dropdownMenu">
+                  <div class="form-group">
+                    <label for="selectLocation">Местоположения</label>
+                    <select class="form-control" id="selectLocation">
                       {% for location in domain.locations %}
-                      <li class="radio">
-                        <label>
-                          <input {% if loop.first %} checked {% endif %} class="location"
-                                                     name="location{{ domain.domain_id }}" type='radio'
-                                                     data-value="{{ location.id }}">{{ location.description }}
-                        </label>
-                      </li>
+                        <option class="location" name="location{{ domain.domain_id }}" data-value="{{ location.id }}">{{ location.description }}</option>
                       {% endfor %}
-                    </ul>
+                    </select>
                   </div>
                 </div>
                 <div class="list_type_view col-xs-12 col-md-4">
@@ -114,7 +104,7 @@ Index
 {% endblock %}
 {% block fileJs %}
 <script src="../js/DomainDashboardSettings.js"></script>
-<script src="../js/Dashboard.js"></script>
+<script src="../js/SettingsPanel.js"></script>
 <script src="../js/build_chart.js"></script>
 <script src="../js/main.js"></script>
 {% endblock %}

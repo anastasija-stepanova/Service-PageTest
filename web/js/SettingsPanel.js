@@ -70,8 +70,12 @@ class SettingsPanel {
       'domain': domain,
       'locations': checkedArray
     };
+    // console.log(keyValue);
     let jsonString = 'data=' + JSON.stringify(keyValue);
-    ajaxPost(FILE_SAVE_USER_LOCATIONS, jsonString);
+    console.log(jsonString);
+    ajaxPost(FILE_SAVE_USER_LOCATIONS, jsonString, function(response) {
+      return console.log(response.responseText);
+    });
   }
 
   formDataArray(list) {
