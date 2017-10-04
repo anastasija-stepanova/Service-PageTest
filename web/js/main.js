@@ -19,6 +19,7 @@
         maxTime = new Date(timeRange[maxIndexTimeArray]);
         let defaultMinTime = maxTime.getTime() - MILLISECONDS_IN_WEEK;
         let defaultMaxTime = new Date(timeRange[maxIndexTimeArray]).getTime();
+
         $(".slider_range").bootstrapSlider({
           range: true,
           min: new Date(timeRange[0]).getTime(),
@@ -28,7 +29,7 @@
           triggerChangeEvent: true,
           tooltip: 'always',
           formatter: function(value) {
-            return timeToDM(new Date(parseInt(value[0]))) + ':' + timeToDM(new Date(parseInt(value[1])));
+            return timeToDayMonth(new Date(parseInt(value[0]))) + ':' + timeToDayMonth(new Date(parseInt(value[1])));
           }
         });
       }
@@ -41,6 +42,6 @@
   buildChart();
 })();
 
-function timeToDM(date) {
+function timeToDayMonth(date) {
   return date.getDate() + '.' + parseInt(date.getMonth() + 1);
 }
