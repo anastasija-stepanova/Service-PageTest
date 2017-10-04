@@ -200,6 +200,14 @@ html {
   margin-bottom: 10px;
 }
 
+.list_locations_block
+{
+  & .form-group
+  {
+    padding: 10px;
+  }
+}
+
 .save_settings_button,
 .edit_settings_button {
   float: right;
@@ -274,4 +282,22 @@ input {
   font-weight: bold;
   border-radius: 30px;
   transition: all .3s ease-out;
+}
+
+.chartist-tooltip
+{
+  z-index: 1000;
+}
+
+.slider.slider-horizontal
+{
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.date_range
+{
+  border: 0;
+  font-size: 16px;
+  font-weight: bold;
 }

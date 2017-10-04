@@ -9,14 +9,14 @@ function buildChart() {
   let jsonString = 'data=' + JSON.stringify(keyValue);
   ajaxPost(FILE_GET_DATA_FOR_CHART, jsonString, function(response) {
     if ('response' in response) {
-      let jsonDecode = JSON.parse(response['response']);
+      let jsonDecoded = JSON.parse(response['response']);
       let time = [];
       let ttfb = [];
       let docTime = [];
       let domainUrls = [];
       let fullyLoaded = [];
-      if ('testResult' in jsonDecode) {
-        let testResult = jsonDecode['testResult'];
+      if ('testResult' in jsonDecoded) {
+        let testResult = jsonDecoded['testResult'];
 
         for (let urls in testResult) {
           if (testResult.hasOwnProperty(urls)) {
@@ -43,8 +43,7 @@ function buildChartTtfb(time, ttfb, domainUrls) {
   new Chartist.Line('.ct-chart1', {
     labels: time[0],
     series:
-      ttfb
-
+      ttfb,
   }, {
     chartPadding: {
       top: 60,
@@ -55,9 +54,14 @@ function buildChartTtfb(time, ttfb, domainUrls) {
     plugins: [
       Chartist.plugins.legend({
         legendNames: domainUrls,
-        removeAll: true
+        removeAll: true,
       }),
       Chartist.plugins.tooltip({
+        currencyFormatCallback: function getUnits(value) {
+          value = value + ' ms';
+          return value;
+        },
+        currency: 'ms',
       }),
       Chartist.plugins.ctAxisTitle({
         axisX: {
@@ -99,7 +103,13 @@ function buildChartDocTime(time, docTime, domainUrls) {
         legendNames: domainUrls,
         removeAll: true
       }),
-      Chartist.plugins.tooltip({}),
+      Chartist.plugins.tooltip({
+        currencyFormatCallback: function getUnits(value) {
+          value = value + ' ms';
+          return value;
+        },
+        currency: 'ms',
+      }),
       Chartist.plugins.ctAxisTitle({
         axisX: {
           axisTitle: 'Time (in days)',
@@ -138,7 +148,13 @@ function buildChartFullyLoaded(time, fullyLoaded, domainUrls) {
         legendNames: domainUrls,
         removeAll: true
       }),
-      Chartist.plugins.tooltip({}),
+      Chartist.plugins.tooltip({
+        currencyFormatCallback: function getUnits(value) {
+          value = value + ' ms';
+          return value;
+        },
+        currency: 'ms',
+      }),
       Chartist.plugins.ctAxisTitle({
         axisX: {
           axisTitle: 'Time (in days)',

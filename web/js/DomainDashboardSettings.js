@@ -4,7 +4,8 @@ class DomainDashboardSettings {
     let domainId = item.getElementsByClassName('domain')[0].getAttribute('data-value');
     let locationId = null;
     let typeView = null;
-    let presetId = null;
+    let minTime = null;
+    let maxTime = null;
     let selectedLocation = null;
     showButton.addEventListener('click', function() {
       [].forEach.call(item.getElementsByClassName('form-control'), function(item) {
@@ -23,31 +24,35 @@ class DomainDashboardSettings {
         }
       });
 
-      [].forEach.call(item.getElementsByClassName('preset'), function(item) {
-        if (item.checked) {
-          presetId = item.getAttribute('data-value');
+      [].forEach.call(item.getElementsByClassName('min-slider-handle'), function(item) {
+          minTime = item.getAttribute('aria-valuenow') / 1000;
           return false;
-        }
+      });
+
+      [].forEach.call(item.getElementsByClassName('max-slider-handle'), function(item) {
+          maxTime = item.getAttribute('aria-valuenow') / 1000;
+          return false;
       });
 
       let dataArray = {
         'domainId': domainId,
         'locationId': locationId,
         'typeView': typeView,
-        'presetId': presetId
+        'minTime': minTime,
+        'maxTime': maxTime
       };
 
       let jsonString = 'data=' + JSON.stringify(dataArray);
       ajaxPost(FILE_GET_DATA_FOR_CHART, jsonString, function(response) {
         if ('response' in response) {
-          let jsonDecode = JSON.parse(response['response']);
+          let jsonDecoded = JSON.parse(response['response']);
           let time = [];
           let ttfb = [];
           let docTime = [];
           let domainUrls = [];
           let fullyLoaded = [];
-          if ('testResult' in jsonDecode) {
-            let testResult = jsonDecode['testResult'];
+          if ('testResult' in jsonDecoded) {
+            let testResult = jsonDecoded['testResult'];
 
             for (let urls in testResult) {
               if (testResult.hasOwnProperty(urls)) {

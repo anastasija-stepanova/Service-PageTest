@@ -238,7 +238,7 @@ class DatabaseDataManager
                            WHERE test_id = ?", [$response, TestStatus::COMPLETED, $wptTestId]);
     }
 
-    public function getTestResult($userId, $domainId, $locationId, $typeView, $currentTime, $startTime):array
+    public function getTestResult($userId, $domainId, $locationId, $typeView, $minTime, $maxTime):array
     {
         $averageResult = DatabaseTable::AVERAGE_RESULT;
         $testInfo = DatabaseTable::TEST_INFO;
@@ -248,8 +248,8 @@ class DatabaseDataManager
                                     LEFT JOIN $testInfo AS ti ON ar.test_id = ti.id
                                     LEFT JOIN user_domain_url AS udu ON udu.id = ti.url_id
                                   WHERE user_id = ? AND udu.user_domain_id = ? AND location_id = ? AND type_view = ? AND
-                                  ar.completed_time < FROM_UNIXTIME(?) AND ar.completed_time > FROM_UNIXTIME(?)",
-                                 [$userId, $domainId, $locationId, $typeView, $currentTime, $startTime]);
+                                  ar.completed_time > FROM_UNIXTIME(?) AND ar.completed_time < FROM_UNIXTIME(?)",
+                                 [$userId, $domainId, $locationId, $typeView, $minTime, $maxTime]);
     }
 
     public function getTestTime($userId):array
@@ -330,5 +330,14 @@ class DatabaseDataManager
         }
 
         return $locationId;
+    }
+
+    public function getTimeRange():array
+    {
+        $averageResult = DatabaseTable::AVERAGE_RESULT;
+        $timeRange = $this->database->executeQuery("
+                                        SELECT DISTINCT completed_time
+                                        FROM $averageResult");
+        return $timeRange;
     }
 }

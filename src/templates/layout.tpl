@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../bower_components/chartist-plugin-tooltip/dist/chartist-plugin-tooltip.css">
     <link rel="stylesheet" href="../bower_components/chartist-plugin-legend/css/chartist-plugin-legend.css">
     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css">
     <link rel="stylesheet" href="../css/main.css">
   </head>
   <body>
@@ -58,7 +59,8 @@
           <p>2017</p>
         </div>
       </div>
-      <script src="../js/jquery.min.js"></script>
+      <script src="../js/jquery.js"></script>
+      <script src="../js/jquery-ui.min.js"></script>
       <script src="../js/bootstrap.min.js"></script>
       {% block chartistJs %}{% endblock %}
       <script src="../js/config.js"></script>

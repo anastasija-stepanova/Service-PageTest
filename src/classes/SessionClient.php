@@ -59,4 +59,9 @@ class SessionClient
             header('Location: auth.php');
         }
     }
+
+    public function getUserId()
+    {
+        return $_SESSION['userId'];
+    }
 }
