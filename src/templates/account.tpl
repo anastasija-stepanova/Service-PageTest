@@ -12,7 +12,8 @@
       <div class="block_domains col-xs-12">
         <h2>
           <small>Домен</small>
-          <span class="domain_value">{{ key }}</span></h2>
+          <span class="domain_value">{{ key }}</span>
+        </h2>
         <div class="domain_container horizontal_divider clear">
           <div></div>
         </div>
@@ -22,11 +23,14 @@
           </div>
         </div>
       </div>
+      <span class="delete_settings"></span>
       <div class="block_locations col-xs-12 col-md-7">
         <h2>Местоположения</h2>
         <ol class="list_locations rounded">
+          {% set chosenLocationsId = [] %}
           {% for location in domain.locations %}
-          <li>{{ location.description }}</li>
+            <li value='{{ location.id }}'>{{ location.description }}</li>
+            {% set chosenLocationsId = chosenLocationsId|merge([location.id]) %}
           {% endfor %}
         </ol>
         <div class="available_locations_block hidden">
@@ -34,7 +38,13 @@
             {% for location in locationsData %}
             <div class='checkbox'>
               <label>
-                <input type='checkbox' name='location' value='{{ location.id }}'>{{ location.description }}
+                <input
+                    class='location_checkbox'
+                    type='checkbox'
+                    name='location'
+                    value='{{ location.id }}'
+                    {% if location.id in chosenLocationsId %} checked {% endif %}>
+                {{ location.description }}
               </label>
             </div>
             {% endfor %}
@@ -46,7 +56,7 @@
         <h2>Список URLs</h2>
         <ol class="list_urls rounded">
           {% for url in domain.urls %}
-          <li>{{url}}</li>
+          <li><span class="value_url">{{url}}</span><span class="delete_url hidden"></span></li>
           {% endfor %}
           <li class="new_url hidden"></li>
         </ol>
@@ -77,6 +87,7 @@
         </div>
       </div>
     </div>
+    <span class="delete_settings"></span>
     <div class="block_locations col-xs-12 col-md-6">
       <h2>Местоположения</h2>
       <ol class="list_locations">
@@ -114,6 +125,6 @@
 </div>
 {% endblock %}
 {% block fileJs %}
-<script src="../js/SettingsPanel.js"></script>
+<script src="../js/classes/SettingsPanel.js"></script>
 <script src="../js/account.js"></script>
 {% endblock %}

@@ -295,9 +295,69 @@ input {
   margin-bottom: 20px;
 }
 
-.date_range
+.min_date,
+.max_date
 {
-  border: 0;
   font-size: 16px;
   font-weight: bold;
+}
+
+.delete_settings
+{
+  position: absolute;
+  right: 39px;
+  top: 14px;
+  opacity: 0.3;
+}
+
+.delete_url
+{
+  position: absolute;
+  right: 33px;
+  top: 11px;
+  opacity: 0.3;
+}
+
+.delete_location
+{
+  position: absolute;
+  right: 53px;
+  top: 27px;
+  opacity: 0.3;
+}
+
+.delete_settings:hover,
+.delete_location:hover,
+.delete_url:hover
+{
+  opacity: 1;
+}
+
+.delete_settings:before,
+.delete_settings:after,
+.delete_location:before,
+.delete_location:after,
+.delete_url:before,
+.delete_url:after
+{
+  position: absolute;
+  left: 15px;
+  content: ' ';
+  height: 15px;
+  width: 2px;
+  background-color: #333;
+}
+
+.delete_settings:before,
+.delete_location:before,
+.delete_url:before
+{
+  transform: rotate(45deg);
+}
+
+.delete_settings:after,
+.delete_location:after,
+.delete_url:after
+{
+  transform: rotate(-45deg);
 }

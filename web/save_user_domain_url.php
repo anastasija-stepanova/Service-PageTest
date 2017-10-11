@@ -5,36 +5,69 @@ $sessionClient = new SessionClient();
 
 $sessionClient->checkArraySession();
 
-if (array_key_exists('data', $_POST))
+if (array_key_exists('preservedUrl', $_POST))
 {
     $databaseDataManager = new DatabaseDataManager(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
 
-    $json = $_POST['data'];
-    $jsonDecode = json_decode($json, true);
-    $domain = $jsonDecode['domain'];
-    $newUrl = $jsonDecode['url'];
+    $preservedUrl = $_POST['preservedUrl'];
 
-    $dataValidator = new DataValidator();
-
-    $isUrl = $dataValidator->validateUrl($newUrl);
-    if (!$isUrl)
+    $lastError = json_last_error();
+    if ($lastError === JSON_ERROR_NONE)
     {
-        echo 'Невалидный URL';
-        exit();
+        $jsonDecoded = json_decode($preservedUrl, true);
+        $domain = $jsonDecoded['domain'];
+        $newUrl = $jsonDecoded['url'];
+
+        print_r($newUrl);
+        $dataValidator = new DataValidator();
+
+        $isUrl = $dataValidator->validateUrl($newUrl);
+        if (!$isUrl)
+        {
+            echo 'Невалидный URL';
+            exit();
+        }
+
+        $domainId = $databaseDataManager->getUserDomain($domain);
+
+        if (array_key_exists('id', $domainId))
+        {
+            $domainId = $domainId['id'];
+        }
+
+        $urlExists = $databaseDataManager->doesUserUrlExists($domainId, $newUrl);
+
+        if (!$urlExists)
+        {
+            $databaseDataManager->saveUserDomainUrl($domainId, $newUrl);
+            echo $newUrl;
+        }
     }
+}
+else if (array_key_exists('removableUrls', $_POST))
+{
+    $databaseDataManager = new DatabaseDataManager(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
 
-    $domainId = $databaseDataManager->getUserDomain($domain);
+    $removableUrls = $_POST['removableUrls'];
 
-    if (array_key_exists(0, $domainId))
+    $lastError = json_last_error();
+    if ($lastError === JSON_ERROR_NONE)
     {
-        $domainId = $domainId[0];
-    }
+        $jsonDecoded = json_decode($removableUrls, true);
+        $domain = $jsonDecoded['domain'];
+        $urls = $jsonDecoded['urls'];
 
-    $urlExists = $databaseDataManager->doesUserUrlExists($domainId, $newUrl);
+        $domainId = $databaseDataManager->getUserDomain($domain);
 
-    if (!$urlExists)
-    {
-        $databaseDataManager->saveUserDomainUrl($domainId, $newUrl);
-        echo $newUrl;
+        if (array_key_exists('id', $domainId))
+        {
+            $domainId = $domainId['id'];
+        }
+
+        foreach ($urls as $url)
+        {
+            print_r($url);
+            $databaseDataManager->deleteUrls($domainId, $url);
+        }
     }
 }

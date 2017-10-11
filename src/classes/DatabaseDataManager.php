@@ -171,7 +171,7 @@ class DatabaseDataManager
     {
         $userDomain = DatabaseTable::USER_DOMAIN;
         $domain = DatabaseTable::DOMAIN;
-        return $this->database->executeQuery("
+        return $this->database->selectOneRow("
                                   SELECT ud.id 
                                   FROM $userDomain AS ud
                                     LEFT JOIN $domain AS d ON ud.domain_id = d.id
@@ -339,5 +339,13 @@ class DatabaseDataManager
                                         SELECT DISTINCT completed_time
                                         FROM $averageResult");
         return $timeRange;
+    }
+
+    public function deleteUrls($domainId, $url)
+    {
+        $userDomainUrl = DatabaseTable::USER_DOMAIN_URL;
+        $this->database->executeQuery("
+                           DELETE FROM $userDomainUrl
+                           WHERE user_domain_id = ? AND url = ?", [$domainId, $url]);
     }
 }

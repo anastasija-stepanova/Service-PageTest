@@ -58,7 +58,11 @@
                 </div>
                 <div class="presets_block col-xs-12">
                   <p>
-                    Диапазон:
+                    <span>
+                      Диапазон:
+                      <span data-value="" class="min_date"></span>
+                      <span data-value="" class="max_date"></span>
+                    </span>
                   </p>
                   <input title="Диапазон времени" class="slider_range" id="sliderRange" type="text"/>
                 </div>
@@ -93,8 +97,8 @@
 {% endblock %}
 {% block fileJs %}
 <script src="../bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.js"></script>
-<script src="../js/DomainDashboardSettings.js"></script>
-<script src="../js/SettingsPanel.js"></script>
+<script src="../js/classes/DomainDashboardSettings.js"></script>
+<script src="../js/classes/SettingsPanel.js"></script>
 <script src="../js/build_chart.js"></script>
 <script src="../js/main.js"></script>
 {% endblock %}

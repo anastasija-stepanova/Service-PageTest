@@ -2,8 +2,6 @@
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
 const DEFAULT_TYPE_VIEW = 1;
-const DAY_PRESET = 1;
-const WEEK_PRESET = 2;
 const DATA_KEYS_FOR_CHARTS = ['domainId', 'locationId', 'typeView', 'minTime', 'maxTime'];
 
 $sessionClient = new SessionClient();
@@ -32,7 +30,6 @@ if (array_key_exists('data', $_POST))
             $finishedData[$item['user_domain_id']][$item['url']]['fully_loaded'][] = $item['fully_loaded'];
             $finishedData[$item['user_domain_id']][$item['url']]['time'][] = $item['DATE_FORMAT(ar.completed_time, \'%e %M\')'];
         }
-
 
         $testResult = [
             'testResult' => $finishedData
@@ -69,7 +66,7 @@ function initializeDataArray($sessionClient, $jsonDecoded, $currentTime, $databa
     {
         $defaultDomainId = $databaseDataManager->getDefaultUserDomain();
         $defaultLocationId = $databaseDataManager->getDefaultUserDomainLocation();
-        $startTime = $currentTime - ChartDataProvider::SECONDS_IN_WEEK;
+        $startTime = $currentTime - DateUtility::SECONDS_IN_WEEK;
         $dataArray = $databaseDataManager->getTestResult($userId, $defaultDomainId, $defaultLocationId, DEFAULT_TYPE_VIEW, $startTime, $currentTime);
     }
 

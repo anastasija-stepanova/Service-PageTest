@@ -15,6 +15,9 @@ class SettingsPanel {
     editSettingsPanelButton.addEventListener('click', function(event) {
       event.preventDefault();
       editSettingsPanelButton.classList.add('hidden');
+      [].forEach.call(_this.container.getElementsByClassName('delete_url'), function(item) {
+        item.classList.remove('hidden');
+      });
       let addNewLocationButton = _this.container.getElementsByClassName('add_new_location')[0];
       addNewLocationButton.classList.remove('hidden');
       let addNewUrlButton = _this.container.getElementsByClassName('add_new_url')[0];
@@ -30,7 +33,8 @@ class SettingsPanel {
       });
 
       let availableLocations = _this.container.getElementsByClassName('available_locations')[0];
-      let checkedArray = _this.formDataArray(availableLocations);
+      _this.removeUrls(_this);
+      let checkedArray = _this.formCheckedLocationsArray(availableLocations);
       let saveSettingsButton = _this.container.getElementsByClassName('save_settings_button')[0];
       saveSettingsButton.addEventListener('click', function(event) {
         event.preventDefault();
@@ -49,6 +53,32 @@ class SettingsPanel {
       this.container.getElementsByClassName('domain_addition_input').value = '';
   }
 
+  removeUrls(_this) {
+    let domain = _this.container.getElementsByClassName('domain_value')[0].innerHTML;
+    let removableUrls = _this.formRemovableUrlsArray(_this);
+    let keyValue = {
+      'domain': domain,
+      'urls': removableUrls
+    };
+    let jsonString = 'removableUrls=' + JSON.stringify(keyValue);
+    ajaxPost(FILE_SAVE_USER_DOMAIN_URL, jsonString, function(response) {
+      console.log(response.responseText);
+    });
+  };
+
+  formRemovableUrlsArray(_this) {
+    let removableUrls = [];
+    [].forEach.call(_this.container.getElementsByClassName('delete_url'), function(item) {
+      item.addEventListener('click', function() {
+        let listUrls = item.parentNode.parentNode;
+        let urlContainer = item.parentNode;
+        removableUrls.push(urlContainer.textContent);
+        listUrls.removeChild(urlContainer);
+      })
+    });
+    return removableUrls;
+  }
+
   saveUrl(_this) {
     let domain = _this.container.getElementsByClassName('domain_value')[0].innerHTML;
     let newUrl = _this.container.getElementsByClassName('url_addition_input')[0].value;
@@ -56,10 +86,11 @@ class SettingsPanel {
       'domain': domain,
       'url': newUrl
     };
-    let jsonString = 'data=' + JSON.stringify(keyValue);
+    let jsonString = 'preservedUrl=' + JSON.stringify(keyValue);
     ajaxPost(FILE_SAVE_USER_DOMAIN_URL, jsonString, function(response) {
       let listUrls = document.getElementsByClassName('list_urls')[0];
       let result = document.getElementsByClassName('new_url')[0].innerHTML = response.responseText;
+      console.log(response.responseText);
       return listUrls + result;
     });
   }
@@ -70,19 +101,29 @@ class SettingsPanel {
       'domain': domain,
       'locations': checkedArray
     };
-    // console.log(keyValue);
     let jsonString = 'data=' + JSON.stringify(keyValue);
-    console.log(jsonString);
     ajaxPost(FILE_SAVE_USER_LOCATIONS, jsonString, function(response) {
-      return console.log(response.responseText);
+      return response.responseText;
     });
   }
 
-  formDataArray(list) {
-    let itemsList = list.getElementsByClassName('checkbox');
+  formCheckedLocationsArray(list) {
     let checkedArray = [];
 
+    let items = list.getElementsByClassName('location_checkbox');
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].checked) {
+        checkedArray.push(items[i].value);
+      }
+    }
+
+    let itemsList = list.getElementsByClassName('checkbox');
+
     for (let i = 0; i < itemsList.length; i++) {
+      if (itemsList[i].checked) {
+        checkedArray.push(itemsList[i].value);
+      }
+
       itemsList[i].addEventListener('change', function(event) {
         let element = event.target;
         let value = element.value;
@@ -94,7 +135,7 @@ class SettingsPanel {
             checkedArray.splice(index, 1);
           }
         }
-      })
+      });
     }
 
     return checkedArray;

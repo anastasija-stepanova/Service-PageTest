@@ -4,7 +4,7 @@
   "main": "chartist/dist/chartist.js, chartist/dist/chartist.css",
   "license": "MIT",
   "dependencies": {
-    "chartist-plugin-legend": "https://github.com/Pinacono/chartist-plugin-legend",
+    "chartist-plugin-legend": "https://github.com/anastasija-stepanova/chartist-plugin-legend.git",
     "chartist-plugin-axistitle": "https://github.com/alexstanbury/chartist-plugin-axistitle",
     "chartist-plugin-tooltip": "https://github.com/Globegitter/chartist-plugin-tooltip",
     "chartist-plugin-zoom": "https://github.com/hansmaad/chartist-plugin-zoom"

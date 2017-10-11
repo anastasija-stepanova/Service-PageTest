@@ -11,12 +11,14 @@ class DomainDashboardSettings {
       [].forEach.call(item.getElementsByClassName('form-control'), function(item) {
         selectedLocation = item.value;
       });
+
       [].forEach.call(item.getElementsByClassName('location'), function(item) {
         if (item.value == selectedLocation) {
           locationId = item.getAttribute('data-value');
           return false;
         }
       });
+
       [].forEach.call(item.getElementsByClassName('view'), function(item) {
         if (item.checked) {
           typeView = item.getAttribute('data-value');

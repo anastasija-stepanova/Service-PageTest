@@ -31,9 +31,11 @@ foreach ($domainsData as $domainData)
     }
 }
 
+
 $templateLoader = new Twig_Loader_Filesystem('../src/templates/');
 $twig = new Twig_Environment($templateLoader);
 $layout = $twig->load('layout.tpl');
+
 $twig->display('account.tpl', array(
     'layout' => $layout,
     'userSettings' => $userSettings,
