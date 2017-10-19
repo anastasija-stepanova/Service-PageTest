@@ -1,8 +1,8 @@
 (function() {
-  buildChart();
+  buildCharts();
 })();
 
-function buildChart() {
+function buildCharts() {
   let keyValue = {
     'result': 'testResult'
   };
@@ -32,18 +32,17 @@ function buildChart() {
         }
       }
 
-      buildChartTtfb(time, ttfb, domainUrls);
-      buildChartDocTime(time, docTime, domainUrls);
-      buildChartFullyLoaded(time, fullyLoaded, domainUrls);
+      buildChart(CLASS_TTFB_CHART_CONTAINER, time, ttfb, domainUrls, ASIX_Y_TITLE_TTFB_CHART);
+      buildChart(CLASS_DOC_TIME_CHART_CONTAINER, time, docTime, domainUrls, ASIX_Y_TITLE_DOC_TIME_CHART);
+      buildChart(CLASS_FULLY_LOAD_TIME_CHART_CONTAINER, time, fullyLoaded, domainUrls, ASIX_Y_TITLE_FULLY_LOAD_TIME_CHART);
     }
   });
 }
 
-function buildChartTtfb(time, ttfb, domainUrls) {
-  new Chartist.Line('.ct-chart1', {
+function buildChart(classChartContainer, time, resourceTestingData, domainUrls, axisYTitle) {
+  new Chartist.Line(classChartContainer, {
     labels: time[0],
-    series:
-      ttfb,
+    series: resourceTestingData,
   }, {
     chartPadding: {
       top: 60,
@@ -70,12 +69,12 @@ function buildChartTtfb(time, ttfb, domainUrls) {
           type: Chartist.AutoScaleAxis,
           offset: {
             x: 0,
-            y: 32
+            y: 43
           },
           textAnchor: 'middle'
         },
         axisY: {
-          axisTitle: 'TTFB (ms)',
+          axisTitle: axisYTitle,
           axisClass: 'ct-axis-title',
           type: Chartist.AutoScaleAxis,
           offset: {
@@ -85,95 +84,14 @@ function buildChartTtfb(time, ttfb, domainUrls) {
         }
       }),
     ],
-  });
-}
-
-function buildChartDocTime(time, docTime, domainUrls) {
-  new Chartist.Line('.ct-chart2', {
-    labels: time[0],
-    series: docTime
-  }, {
-    chartPadding: {
-      top: 60,
-      bottom: 20,
-      left: 20
-    },
-    plugins: [
-      Chartist.plugins.legend({
-        legendNames: domainUrls,
-        removeAll: true
-      }),
-      Chartist.plugins.tooltip({
-        currencyFormatCallback: function getUnits(value) {
-          value = value + ' ms';
+    axisX: {
+      labelInterpolationFnc: function skipLabels(value, index, labels) {
+        if (labels.length > 20) {
+          return index % 4 === 0 ? value : null;
+        } else {
           return value;
-        },
-        currency: 'ms',
-      }),
-      Chartist.plugins.ctAxisTitle({
-        axisX: {
-          axisTitle: 'Time (in days)',
-          axisClass: 'ct-axis-title',
-          offset: {
-            x: 0,
-            y: 32
-          },
-          textAnchor: 'middle'
-        },
-        axisY: {
-          axisTitle: 'Document Complete (ms)',
-          axisClass: 'ct-axis-title',
-          offset: {
-            x: -50,
-            y: -3
-          },
         }
-      }),
-    ]
-  })
-}
-
-function buildChartFullyLoaded(time, fullyLoaded, domainUrls) {
-  new Chartist.Line('.ct-chart3', {
-    labels: time[0],
-    series: fullyLoaded
-  }, {
-    chartPadding: {
-      top: 60,
-      bottom: 20,
-      left: 20
+      }
     },
-    plugins: [
-      Chartist.plugins.legend({
-        legendNames: domainUrls,
-        removeAll: true
-      }),
-      Chartist.plugins.tooltip({
-        currencyFormatCallback: function getUnits(value) {
-          value = value + ' ms';
-          return value;
-        },
-        currency: 'ms',
-      }),
-      Chartist.plugins.ctAxisTitle({
-        axisX: {
-          axisTitle: 'Time (in days)',
-          axisClass: 'ct-axis-title',
-          offset: {
-            x: 50,
-            y: 32
-          },
-          textAnchor: 'middle'
-        },
-        axisY: {
-          axisTitle: 'Fully Load Time (ms)',
-          axisClass: 'ct-axis-title',
-          offset: {
-            x: -50,
-            y: -3
-          },
-        }
-      }),
-    ]
   });
 }

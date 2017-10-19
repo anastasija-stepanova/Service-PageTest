@@ -215,9 +215,14 @@ html {
   margin: 20px 10px;
 }
 
-.block_domains h2 {
+.block_domain h2 {
   float: left;
   margin-right: 10px;
+}
+
+.block_domain
+{
+  min-height: 60px;
 }
 
 input {
@@ -260,10 +265,6 @@ input {
 
 .rounded li:hover {
   background: #e9e4e0;
-}
-
-.rounded li:hover:before {
-  transform: rotate(360deg);
 }
 
 .rounded li:before {
@@ -360,4 +361,14 @@ input {
 .delete_url:after
 {
   transform: rotate(-45deg);
+}
+
+.domain_value
+{
+  border: none;
+}
+
+.domain_value:focus
+{
+  border: solid 0.5px #000000;
 }

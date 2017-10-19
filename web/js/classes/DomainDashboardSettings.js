@@ -70,9 +70,9 @@ class DomainDashboardSettings {
             }
           }
 
-          buildChartTtfb(time, ttfb, domainUrls);
-          buildChartDocTime(time, docTime, domainUrls);
-          buildChartFullyLoaded(time, fullyLoaded, domainUrls);
+          buildChart(CLASS_TTFB_CHART_CONTAINER, time, ttfb, domainUrls, ASIX_Y_TITLE_TTFB_CHART);
+          buildChart(CLASS_DOC_TIME_CHART_CONTAINER, time, docTime, domainUrls, ASIX_Y_TITLE_DOC_TIME_CHART);
+          buildChart(CLASS_FULLY_LOAD_TIME_CHART_CONTAINER, time, fullyLoaded, domainUrls, ASIX_Y_TITLE_FULLY_LOAD_TIME_CHART);
           $('#modalSettingDashboard').modal('hide');
         }
       });

@@ -2,18 +2,21 @@
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
 $sessionClient = new SessionClient();
-
 $sessionClient->restoreSession();
 
-if (array_key_exists('userLogin', $_POST))
+$webServerRequest = new WebServerRequest();
+$isExistsUserLogin =  $webServerRequest->postKeyIsExists('userLogin');
+
+if ($isExistsUserLogin)
 {
-    $newUserLogin = $_POST['userLogin'];
+    $newUserLogin = $webServerRequest->getPostKeyValue('userLogin');
+    $isExistsUserPassword =  $webServerRequest->postKeyIsExists('userPassword');
 
-    if (array_key_exists('userPassword', $_POST))
+    if ($isExistsUserPassword)
     {
-        $newUserPassword = $_POST['userPassword'];
+        $newUserPassword = $webServerRequest->getPostKeyValue('userPassword');
 
-        $databaseDataManager = new DatabaseDataManager(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
+        $databaseDataManager = new DatabaseDataManager();
 
         $passwordHash = $sessionClient->passwordToHash($newUserPassword);
         $currentUserData = $databaseDataManager->getUserData($newUserLogin, $passwordHash);
@@ -25,14 +28,16 @@ if (array_key_exists('userLogin', $_POST))
 $templateLoader = new Twig_Loader_Filesystem('../src/templates/');
 $twig = new Twig_Environment($templateLoader);
 
-if (!array_key_exists('url', $_GET))
+$isExistsUrl = $webServerRequest->getKeyIsExists('url');
+
+if (!$isExistsUrl)
 {
     echo $twig->render('auth.tpl');
     exit();
 }
 
 echo $twig->render('auth.tpl', array(
-    'url' => $_GET['url']
+    'url' => $webServerRequest->getGetKeyValue('url')
 ));
 
 function loginUser($sessionClient, $currentUserData, $newUserLogin, $passwordHash)

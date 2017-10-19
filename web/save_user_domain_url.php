@@ -2,14 +2,17 @@
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
 $sessionClient = new SessionClient();
-
 $sessionClient->checkArraySession();
 
-if (array_key_exists('preservedUrl', $_POST))
-{
-    $databaseDataManager = new DatabaseDataManager(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
+$webServerRequest = new WebServerRequest();
+$isExistsPreservedUrl = $webServerRequest->postKeyIsExists('preservedUrl');
+$isExistsRemovableUrls = $webServerRequest->postKeyIsExists('removableUrls');
 
-    $preservedUrl = $_POST['preservedUrl'];
+if ($isExistsPreservedUrl)
+{
+    $databaseDataManager = new DatabaseDataManager();
+
+    $preservedUrl = $webServerRequest->getPostKeyValue('preservedUrl');
 
     $lastError = json_last_error();
     if ($lastError === JSON_ERROR_NONE)
@@ -43,12 +46,16 @@ if (array_key_exists('preservedUrl', $_POST))
             echo $newUrl;
         }
     }
+    else
+    {
+        return $lastError;
+    }
 }
-else if (array_key_exists('removableUrls', $_POST))
+else if ($isExistsRemovableUrls)
 {
-    $databaseDataManager = new DatabaseDataManager(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
+    $databaseDataManager = new DatabaseDataManager();
 
-    $removableUrls = $_POST['removableUrls'];
+    $removableUrls = $webServerRequest->getPostKeyValue('removableUrls');
 
     $lastError = json_last_error();
     if ($lastError === JSON_ERROR_NONE)
@@ -67,7 +74,11 @@ else if (array_key_exists('removableUrls', $_POST))
         foreach ($urls as $url)
         {
             print_r($url);
-            $databaseDataManager->deleteUrls($domainId, $url);
+            $databaseDataManager->deleteUrl($domainId, $url);
         }
+    }
+    else
+    {
+        echo "Ошибка в переданных данных!";
     }
 }

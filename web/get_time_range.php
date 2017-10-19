@@ -2,16 +2,18 @@
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
 $sessionClient = new SessionClient();
-
 $sessionClient->checkArraySession();
 
 $date = new DateTime();
 $currentTime = $date->getTimestamp();
 
-if (array_key_exists('data', $_POST))
+$webServerRequest = new WebServerRequest();
+$isExistsPostData = $webServerRequest->postKeyIsExists('data');
+
+if ($isExistsPostData)
 {
     $databaseDataManager = new DatabaseDataManager();
-    $timeRangeParam = $_POST['data'];
+    $timeRangeParam = $webServerRequest->getPostKeyValue('data');
     $jsonDecoded = json_decode($timeRangeParam, true);
     $lastError = json_last_error();
     $timeRangeFinished = null;
@@ -26,6 +28,10 @@ if (array_key_exists('data', $_POST))
                 $timeRangeFinished[] = $time;
             }
         }
+    }
+    else
+    {
+        return $lastError;
     }
 
     $dataArray = [

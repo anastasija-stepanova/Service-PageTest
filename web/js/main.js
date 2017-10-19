@@ -21,8 +21,8 @@
         let defaultMaxTime = new Date(timeRange[maxIndexTimeArray]).getTime();
 
         $('.panel').each(function() {
-          let _this = $(this);
-          let sliderRange = _this.find('.slider_range');
+          let thisPtr = $(this);
+          let sliderRange = thisPtr.find('.slider_range');
           sliderRange.bootstrapSlider({
             range: true,
             min: new Date(timeRange[0]).getTime(),
@@ -31,18 +31,18 @@
             value: [defaultMinTime, defaultMaxTime],
             triggerChangeEvent: true,
             triggerSlideEvent: true,
-            tooltip: 'always',
+            tooltip: 'hide',
             formatter: function(value) {
               return timeToDayMonth(new Date(parseInt(value[0]))) + ':' + timeToDayMonth(new Date(parseInt(value[1])));
             }
           }).on('slide', function(item) {
-            _this.find('.min_date').text(timeToDayMonth(new Date(item.value[0])) + ' -');
-            _this.find('.max_date').text(timeToDayMonth(new Date(item.value[1])));
+            thisPtr.find('.min_date').text(timeToDayMonth(new Date(item.value[0])) + ' -');
+            thisPtr.find('.max_date').text(timeToDayMonth(new Date(item.value[1])));
           });
 
           let dateRangeValues = sliderRange.val().split(',');
-          _this.find('.min_date').text(timeToDayMonth(new Date(parseInt(dateRangeValues[0]))) + '-');
-          _this.find('.max_date').text(timeToDayMonth(new Date(parseInt(dateRangeValues[1]))));
+          thisPtr.find('.min_date').text(timeToDayMonth(new Date(parseInt(dateRangeValues[0]))) + '-');
+          thisPtr.find('.max_date').text(timeToDayMonth(new Date(parseInt(dateRangeValues[1]))));
         });
       }
     }
@@ -51,7 +51,7 @@
   [].forEach.call(document.getElementsByClassName('panel'), function(item) {
     new DomainDashboardSettings(item);
   });
-  buildChart();
+  buildCharts();
 })();
 
 function timeToDayMonth(date) {

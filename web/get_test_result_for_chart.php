@@ -5,17 +5,19 @@ const DEFAULT_TYPE_VIEW = 1;
 const DATA_KEYS_FOR_CHARTS = ['domainId', 'locationId', 'typeView', 'minTime', 'maxTime'];
 
 $sessionClient = new SessionClient();
-
 $sessionClient->checkArraySession();
 
 $date = new DateTime();
 $currentTime = $date->getTimestamp();
 
-if (array_key_exists('data', $_POST))
+$webServerRequest = new WebServerRequest();
+$isExistsPostData = $webServerRequest->postKeyIsExists('data');
+
+if ($isExistsPostData)
 {
     $databaseDataManager = new DatabaseDataManager();
 
-    $testResultParam = $_POST['data'];
+    $testResultParam = $webServerRequest->getPostKeyValue('data');
     $jsonDecoded = json_decode($testResultParam, true);
     $lastError = json_last_error();
     if ($lastError === JSON_ERROR_NONE)
@@ -37,6 +39,10 @@ if (array_key_exists('data', $_POST))
 
         $json = json_encode($testResult, true);
         echo $json;
+    }
+    else
+    {
+        return $lastError;
     }
 }
 
@@ -66,7 +72,7 @@ function initializeDataArray($sessionClient, $jsonDecoded, $currentTime, $databa
     {
         $defaultDomainId = $databaseDataManager->getDefaultUserDomain();
         $defaultLocationId = $databaseDataManager->getDefaultUserDomainLocation();
-        $startTime = $currentTime - DateUtility::SECONDS_IN_WEEK;
+        $startTime = $currentTime - DateUtils::SECONDS_IN_WEEK;
         $dataArray = $databaseDataManager->getTestResult($userId, $defaultDomainId, $defaultLocationId, DEFAULT_TYPE_VIEW, $startTime, $currentTime);
     }
 

@@ -9,18 +9,13 @@
   {% for key, domain in userSettings %}
   <div class="settings_block col-xs-12 col-sm-6">
     <div class="row">
-      <div class="block_domains col-xs-12">
+      <div class="block_domain col-xs-12">
         <h2>
           <small>Домен</small>
-          <span class="domain_value">{{ key }}</span>
+          <input title="" value="{{ key }}" class="domain_value">
         </h2>
         <div class="domain_container horizontal_divider clear">
           <div></div>
-        </div>
-        <div class="domain_addition_block">
-          <div class="input-group">
-            <input class="domain_addition_input form-control" placeholder="Введите имя домена">
-          </div>
         </div>
       </div>
       <span class="delete_settings"></span>

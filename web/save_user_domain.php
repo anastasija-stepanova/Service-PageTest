@@ -2,37 +2,49 @@
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
 $sessionClient = new SessionClient();
-
 $sessionClient->checkArraySession();
 
-if (array_key_exists('domain', $_POST))
+$webServerRequest = new WebServerRequest();
+$isExistsDomain = $webServerRequest->postKeyIsExists('domain');
+
+if ($isExistsDomain)
 {
-    $databaseDataManager = new DatabaseDataManager(Config::MYSQL_HOST, Config::MYSQL_DATABASE, Config::MYSQL_USERNAME, Config::MYSQL_PASSWORD);
+    $databaseDataManager = new DatabaseDataManager();
 
-    $json = $_POST['domain'];
+    $json = $webServerRequest->getPostKeyValue('domain');
     $jsonDecode = json_decode($json, true);
-    $newDomain = $jsonDecode['value'];
+    $lastError = json_last_error();
 
-    $dataValidator = new DataValidator();
-
-    $isDomain = $dataValidator->validateDomain($newDomain);
-    if (!$isDomain)
+    if ($lastError === JSON_ERROR_NONE)
     {
-        echo 'Невалидное имя домена';
-        exit();
-    }
+        $newDomain = $jsonDecode['value'];
 
-    $domainExists = $databaseDataManager->getDomainId($newDomain);
+        $dataValidator = new DataValidator();
 
-    if (!$domainExists)
-    {
-        $databaseDataManager->saveDomain($newDomain);
-
-        $domainId = $databaseDataManager->getDomainId($newDomain);
-        if (array_key_exists('id', $domainId))
+        $isDomain = $dataValidator->validateDomain($newDomain);
+        if (!$isDomain)
         {
-            $databaseDataManager->saveUserDomain($_SESSION['userId'], $domainId['id']);
-           echo $newDomain;
+            echo 'Невалидное имя домена';
+            exit();
         }
+
+        $domainExists = $databaseDataManager->getDomainId($newDomain);
+
+        if (!$domainExists)
+        {
+            $databaseDataManager->saveDomain($newDomain);
+
+            $domainId = $databaseDataManager->getDomainId($newDomain);
+            if (array_key_exists('id', $domainId))
+            {
+                $userId = $sessionClient->getUserId();
+                $databaseDataManager->saveUserDomain($userId, $domainId['id']);
+                echo $newDomain;
+            }
+        }
+    }
+    else
+    {
+        return $lastError;
     }
 }
