@@ -6,22 +6,22 @@ $sessionClient->checkArraySession();
 
 $webServerRequest = new WebServerRequest();
 $isExistsPreservedUrl = $webServerRequest->postKeyIsExists('preservedUrl');
-$isExistsRemovableUrls = $webServerRequest->postKeyIsExists('removableUrls');
+$isExistsDeletableUrls = $webServerRequest->postKeyIsExists('deletableUrls');
 
 if ($isExistsPreservedUrl)
 {
     $databaseDataManager = new DatabaseDataManager();
 
     $preservedUrl = $webServerRequest->getPostKeyValue('preservedUrl');
-
+    $jsonDecoded = json_decode($preservedUrl, true);
     $lastError = json_last_error();
+
     if ($lastError === JSON_ERROR_NONE)
     {
-        $jsonDecoded = json_decode($preservedUrl, true);
+        print_r($jsonDecoded);
         $domain = $jsonDecoded['domain'];
         $newUrl = $jsonDecoded['url'];
 
-        print_r($newUrl);
         $dataValidator = new DataValidator();
 
         $isUrl = $dataValidator->validateUrl($newUrl);
@@ -32,7 +32,7 @@ if ($isExistsPreservedUrl)
         }
 
         $domainId = $databaseDataManager->getUserDomain($domain);
-
+        print_r($domainId);
         if (array_key_exists('id', $domainId))
         {
             $domainId = $domainId['id'];
@@ -51,11 +51,11 @@ if ($isExistsPreservedUrl)
         return $lastError;
     }
 }
-else if ($isExistsRemovableUrls)
+else if ($isExistsDeletableUrls)
 {
     $databaseDataManager = new DatabaseDataManager();
 
-    $removableUrls = $webServerRequest->getPostKeyValue('removableUrls');
+    $removableUrls = $webServerRequest->getPostKeyValue('deletableUrls');
 
     $lastError = json_last_error();
     if ($lastError === JSON_ERROR_NONE)

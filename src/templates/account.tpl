@@ -12,11 +12,9 @@
       <div class="block_domain col-xs-12">
         <h2>
           <small>Домен</small>
-          <input title="" value="{{ key }}" class="domain_value">
+          <input data-value="{{ key }}" title="" value="{{ key }}" class="domain_value">
         </h2>
-        <div class="domain_container horizontal_divider clear">
-          <div></div>
-        </div>
+        <div class="domain_container horizontal_divider clear"></div>
       </div>
       <span class="delete_settings"></span>
       <div class="block_locations col-xs-12 col-md-7">
@@ -51,12 +49,12 @@
         <h2>Список URLs</h2>
         <ol class="list_urls rounded">
           {% for url in domain.urls %}
-          <li><span class="value_url">{{url}}</span><span class="delete_url hidden"></span></li>
+          <li><span data-value="{{ url }}" class="value_url">{{ url }}</span><span class="delete_url hidden"></span></li>
           {% endfor %}
           <li class="new_url hidden"></li>
         </ol>
         <div class="url_addition_block hidden">
-          <input class="url_addition_input" placeholder="Введите URL">
+          <input type="text" class="url_addition_input" placeholder="Введите URL">
         </div>
         <button type="button" class="btn btn-success add_button add_new_url hidden">Добавить URL</button>
       </div>
@@ -71,13 +69,11 @@
     <div class="block_domains col-xs-12">
       <h2>
         <small>Домен</small>
-        <span class="domain_value domain_container"></span>
+        <span class="domain_value"></span>
       </h2>
       <div class="domain_container horizontal_divider clear">
         <div class="domain_addition_block clear">
-          <div class="input-group">
-            <input class="input_addition_domain form-control" placeholder="Введите имя домена">
-          </div>
+          <input type="text" class="input_addition_domain form-control" placeholder="Введите имя домена">
           <div class="clear"></div>
         </div>
       </div>
@@ -120,6 +116,8 @@
 </div>
 {% endblock %}
 {% block fileJs %}
-<script src="../js/classes/SettingsPanel.js"></script>
+<script src="../js/SettingsPanelModel.js"></script>
+<script src="../js/SettingsPanelView.js"></script>
+<script src="../js/SettingsPanelController.js"></script>
 <script src="../js/account.js"></script>
 {% endblock %}

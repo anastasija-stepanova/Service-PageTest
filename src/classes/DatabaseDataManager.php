@@ -135,13 +135,13 @@ class DatabaseDataManager
                                   WHERE ud.user_id = ? AND udu.user_domain_id = ?", [$userId, $domainId]);
     }
 
-    public function getDomainId($newDomain): array
+    public function getDomainId($domainName): array
     {
         $domain = DatabaseTable::DOMAIN;
         return $this->database->selectOneRow("
                                   SELECT id 
                                   FROM $domain 
-                                  WHERE domain_name = ?", [$newDomain]);
+                                  WHERE domain_name = ?", [$domainName]);
     }
 
     public function getDomainsId(): array
@@ -239,7 +239,7 @@ class DatabaseDataManager
         $averageResult = DatabaseTable::AVERAGE_RESULT;
         $testInfo = DatabaseTable::TEST_INFO;
         return $this->database->executeQuery("
-                                  SELECT udu.user_domain_id, udu.url, ar.ttfb, ar.doc_time, ar.fully_loaded, DATE_FORMAT(ar.completed_time, '%e %M')
+                                  SELECT udu.user_domain_id, udu.url, ar.ttfb, ar.doc_time, ar.fully_loaded, DATE_FORMAT(ar.completed_time, '%e %b')
                                   FROM $averageResult AS ar
                                     LEFT JOIN $testInfo AS ti ON ar.test_id = ti.id
                                     LEFT JOIN user_domain_url AS udu ON udu.id = ti.url_id
@@ -338,5 +338,30 @@ class DatabaseDataManager
         $this->database->executeQuery("
                            DELETE FROM $userDomainUrl
                            WHERE user_domain_id = ? AND url = ?", [$domainId, $url]);
+    }
+
+    public function deleteLocations($domainId, $locationId): void
+    {
+        $userDomainLocation = DatabaseTable::USER_DOMAIN_LOCATION;
+        $this->database->executeQuery("
+                           DELETE FROM $userDomainLocation
+                           WHERE wpt_location_id = ? AND user_domain_id = ?", [$locationId, $domainId]);
+    }
+
+    public function deleteDomain($domainId): void
+    {
+        $userDomain = DatabaseTable::USER_DOMAIN;
+        $this->database->executeQuery("
+                           DELETE FROM $userDomain
+                           WHERE domain_id = ?", [$domainId]);
+    }
+
+    public function editDomain($currentDomainId, $newDomain): void
+    {
+        $domain = DatabaseTable::DOMAIN;
+        $this->database->executeQuery("
+                           UPDATE $domain
+                           SET domain_name = ?
+                           WHERE id = ?", [$newDomain, $currentDomainId]);
     }
 }

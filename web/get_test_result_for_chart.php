@@ -30,7 +30,7 @@ if ($isExistsPostData)
             $finishedData[$item['user_domain_id']][$item['url']]['ttfb'][] = $item['ttfb'];
             $finishedData[$item['user_domain_id']][$item['url']]['doc_time'][] = $item['doc_time'];
             $finishedData[$item['user_domain_id']][$item['url']]['fully_loaded'][] = $item['fully_loaded'];
-            $finishedData[$item['user_domain_id']][$item['url']]['time'][] = $item['DATE_FORMAT(ar.completed_time, \'%e %M\')'];
+            $finishedData[$item['user_domain_id']][$item['url']]['time'][] = $item['DATE_FORMAT(ar.completed_time, \'%e %b\')'];
         }
 
         $testResult = [

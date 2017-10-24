@@ -40,6 +40,8 @@ function buildCharts() {
 }
 
 function buildChart(classChartContainer, time, resourceTestingData, domainUrls, axisYTitle) {
+  const MAX_VISIBLE_LENGTH_WITHOUT_PERIOD = 20;
+  const PERIOD_OUTPUT_POINTS = 4;
   new Chartist.Line(classChartContainer, {
     labels: time[0],
     series: resourceTestingData,
@@ -86,11 +88,10 @@ function buildChart(classChartContainer, time, resourceTestingData, domainUrls, 
     ],
     axisX: {
       labelInterpolationFnc: function skipLabels(value, index, labels) {
-        if (labels.length > 20) {
-          return index % 4 === 0 ? value : null;
-        } else {
-          return value;
+        if (labels.length > MAX_VISIBLE_LENGTH_WITHOUT_PERIOD) {
+          return index % PERIOD_OUTPUT_POINTS === 0 ? value : null;
         }
+        return value;
       }
     },
   });

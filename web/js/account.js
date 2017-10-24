@@ -1,8 +1,9 @@
-const SETTINGS_CLASS = 'settings_block';
-let settingsBlock = document.getElementsByClassName(SETTINGS_CLASS);
+let settingsBlock = document.getElementsByClassName('settings_block');
 
 [].forEach.call(settingsBlock, function(item) {
-  new SettingsPanel(item);
+  let settingsPanelModel = new SettingsPanelModel();
+  let settingsPanelView = new SettingsPanelView(settingsPanelModel, item);
+  new SettingsPanelController(settingsPanelModel, settingsPanelView, item);
 });
 
 let addNewSettingsBlockButton = document.getElementById('addNewSettings');
@@ -13,5 +14,7 @@ addNewSettingsBlockButton.addEventListener('click', function(event) {
   let settingsCopy = settingsTemplate.cloneNode(true);
   settingsCopy.classList.remove('hidden');
   settingsContainer.append(settingsCopy);
-  new SettingsPanel(settingsCopy);
+  let settingsPanelModel = new SettingsPanelModel();
+  let settingsPanelView = new SettingsPanelView(settingsPanelModel, settingsCopy);
+  new SettingsPanelController(settingsPanelModel, settingsPanelView, settingsCopy);
 });

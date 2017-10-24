@@ -5,26 +5,25 @@ $sessionClient = new SessionClient();
 $sessionClient->checkArraySession();
 
 $webServerRequest = new WebServerRequest();
-$isExistsPostData = $webServerRequest->postKeyIsExists('data');
+$isExistsLocations = $webServerRequest->postKeyIsExists('locations');
 
-if ($isExistsPostData)
+if ($isExistsLocations)
 {
     $databaseDataManager = new DatabaseDataManager();
 
-    $json = $webServerRequest->getPostKeyValue('data');
-    $jsonDecode = json_decode($json, true);
+    $json = $webServerRequest->getPostKeyValue('locations');
+    $jsonDecoded = json_decode($json, true);
     $lastError = json_last_error();
 
     if ($lastError === JSON_ERROR_NONE)
     {
-        $domain = $jsonDecode['domain'];
-        $locations = $jsonDecode['locations'];
+        $domain = $jsonDecoded['domain'];
+        $locations = $jsonDecoded['locationIds'];
 
         $domainId = $databaseDataManager->getUserDomain($domain);
-
-        if (array_key_exists(0, $domainId))
+        if (array_key_exists('id', $domainId))
         {
-            $domainId = $domainId[0];
+            $domainId = $domainId['id'];
         }
 
         $userId = $sessionClient->getUserId();
@@ -40,8 +39,6 @@ if ($isExistsPostData)
                 $oldLocations[] = $existingLocation['wpt_location_id'];
                 $existingDomainId = $existingLocation['user_domain_id'];
             }
-
-            print_r($oldLocations);
 
             $newLocations = [];
             foreach ($locations as $newLocation)
