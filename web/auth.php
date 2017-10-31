@@ -40,7 +40,7 @@ echo $twig->render('auth.tpl', array(
     'url' => $webServerRequest->getGetKeyValue('url')
 ));
 
-function loginUser($sessionClient, $currentUserData, $newUserLogin, $passwordHash)
+function loginUser($sessionClient, array $currentUserData, string $newUserLogin, string $passwordHash): void
 {
     if ($currentUserData && array_key_exists(0, $currentUserData))
     {

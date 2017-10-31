@@ -10,7 +10,7 @@ class WebPageTestResponseHandler
         $this->databaseDataManager = new DatabaseDataManager();
     }
 
-    public function handle($response)
+    public function handle(array $response): void
     {
         if ($response && array_key_exists(WptKeys::ID, $response))
         {
@@ -34,7 +34,7 @@ class WebPageTestResponseHandler
         }
     }
 
-    private function saveRawData($response, $testId)
+    private function saveRawData(array $response, int $testId): void
     {
         $recordRawData = $this->databaseDataManager->getTableRowByTestId(DatabaseTable::RAW_DATA, $testId);
 
@@ -46,7 +46,7 @@ class WebPageTestResponseHandler
         }
     }
 
-    private function insertIntoAverageResult($data, $wptTypeView, $testId, $typeView)
+    private function insertIntoAverageResult(array $data, string $wptTypeView, int $testId, int $typeView): void
     {
         if (array_key_exists($wptTypeView, $data[WptKeys::AVERAGE]))
         {

@@ -1,5 +1,14 @@
 (function() {
-  buildCharts();
+  let chartsDataProvider = new ChartsDataProvider();
+  let time = chartsDataProvider.time;
+  let ttfb = chartsDataProvider.ttfb;
+  let docTime = chartsDataProvider.docTime;
+  let domainUrls = chartsDataProvider.domainUrls;
+  let fullyLoaded = chartsDataProvider.fullyLoaded;
+
+  buildChart(CLASS_TTFB_CHART_CONTAINER, time, ttfb, domainUrls, ASIX_Y_TITLE_TTFB_CHART);
+  buildChart(CLASS_DOC_TIME_CHART_CONTAINER, time, docTime, domainUrls, ASIX_Y_TITLE_DOC_TIME_CHART);
+  buildChart(CLASS_FULLY_LOAD_TIME_CHART_CONTAINER, time, fullyLoaded, domainUrls, ASIX_Y_TITLE_FULLY_LOAD_TIME_CHART);
 })();
 
 function buildCharts() {
@@ -32,9 +41,7 @@ function buildCharts() {
         }
       }
 
-      buildChart(CLASS_TTFB_CHART_CONTAINER, time, ttfb, domainUrls, ASIX_Y_TITLE_TTFB_CHART);
-      buildChart(CLASS_DOC_TIME_CHART_CONTAINER, time, docTime, domainUrls, ASIX_Y_TITLE_DOC_TIME_CHART);
-      buildChart(CLASS_FULLY_LOAD_TIME_CHART_CONTAINER, time, fullyLoaded, domainUrls, ASIX_Y_TITLE_FULLY_LOAD_TIME_CHART);
+
     }
   });
 }

@@ -42,21 +42,21 @@ if ($isExistsPostData)
     }
     else
     {
-        return $lastError;
+        echo $lastError;
     }
 }
 
-function checkParamsForChart($array)
+function checkParamsForChart(array $array): bool
 {
     $isExists = null;
     foreach (DATA_KEYS_FOR_CHARTS as $key)
     {
-        $isExists = array_key_exists($key, $array) ? true : null;
+        $isExists = array_key_exists($key, $array) ? true : false;
     }
     return $isExists;
 }
 
-function initializeDataArray($sessionClient, $jsonDecoded, $currentTime, $databaseDataManager)
+function initializeDataArray($sessionClient, array $jsonDecoded, int $currentTime, $databaseDataManager): array
 {
     $userId = $sessionClient->getUserId();
     if (checkParamsForChart($jsonDecoded))

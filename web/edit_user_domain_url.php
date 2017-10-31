@@ -8,7 +8,7 @@ $webServerRequest = new WebServerRequest();
 $isExistsPreservedUrl = $webServerRequest->postKeyIsExists('preservedUrl');
 $isExistsDeletableUrls = $webServerRequest->postKeyIsExists('deletableUrls');
 
-if ($isExistsPreservedUrl)
+if ($isExistsPreservedUrl != null)
 {
     $databaseDataManager = new DatabaseDataManager();
 
@@ -27,12 +27,12 @@ if ($isExistsPreservedUrl)
         $isUrl = $dataValidator->validateUrl($newUrl);
         if (!$isUrl)
         {
-            echo 'Невалидный URL';
-            exit();
+            echo 1;
+            return;
         }
 
         $domainId = $databaseDataManager->getUserDomain($domain);
-        print_r($domainId);
+
         if (array_key_exists('id', $domainId))
         {
             $domainId = $domainId['id'];
@@ -48,7 +48,7 @@ if ($isExistsPreservedUrl)
     }
     else
     {
-        return $lastError;
+        echo $lastError;
     }
 }
 else if ($isExistsDeletableUrls)
@@ -73,12 +73,11 @@ else if ($isExistsDeletableUrls)
 
         foreach ($urls as $url)
         {
-            print_r($url);
             $databaseDataManager->deleteUrl($domainId, $url);
         }
     }
     else
     {
-        echo "Ошибка в переданных данных!";
+        echo 1;
     }
 }

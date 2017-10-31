@@ -8,7 +8,7 @@ $webServerRequest = new WebServerRequest();
 $isExistsDomain = $webServerRequest->postKeyIsExists('domain');
 $isExistsEditableDomain = $webServerRequest->postKeyIsExists('editableDomain');
 
-if ($isExistsDomain)
+if ($isExistsDomain !=  null)
 {
     $databaseDataManager = new DatabaseDataManager();
 
@@ -25,8 +25,8 @@ if ($isExistsDomain)
         $isDomain = $dataValidator->validateDomain($newDomain);
         if (!$isDomain)
         {
-            echo 'Невалидное имя домена';
-            exit();
+            echo 1;
+            return;
         }
 
         $domainExists = $databaseDataManager->getDomainId($newDomain);
@@ -45,7 +45,7 @@ if ($isExistsDomain)
     }
     else
     {
-        return $lastError;
+        echo $lastError;
     }
 }
 elseif ($isExistsEditableDomain)
@@ -66,8 +66,8 @@ elseif ($isExistsEditableDomain)
         $isDomain = $dataValidator->validateDomain($newDomain);
         if (!$isDomain)
         {
-            echo 'Невалидное имя домена';
-            exit();
+            echo 1;
+            return;
         }
 
         $editableDomainId = $databaseDataManager->getDomainId($currentDomain);
@@ -80,6 +80,6 @@ elseif ($isExistsEditableDomain)
     }
     else
     {
-        return $lastError;
+        echo $lastError;
     }
 }

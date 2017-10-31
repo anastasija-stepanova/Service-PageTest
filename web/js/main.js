@@ -51,7 +51,7 @@
   [].forEach.call(document.getElementsByClassName('panel'), function(item) {
     new DomainDashboardSettings(item);
   });
-  buildCharts();
+
 })();
 
 function timeToDayMonth(date) {

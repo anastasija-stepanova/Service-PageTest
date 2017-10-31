@@ -12,7 +12,7 @@ class SessionClient
         session_start();
     }
 
-    public function restoreSession()
+    public function restoreSession(): void
     {
         if (array_key_exists('userId', $_SESSION))
         {
@@ -20,12 +20,12 @@ class SessionClient
         }
     }
 
-    public function initializeArraySession($userId)
+    public function initializeArraySession(int $userId): void
     {
         $_SESSION['userId'] = $userId;
     }
 
-    public function checkRedirect()
+    public function checkRedirect(): void
     {
         if (array_key_exists('url', $_GET) and $_GET['url'] != false)
         {
@@ -38,12 +38,12 @@ class SessionClient
         }
     }
 
-    public function passwordToHash($userPassword)
+    public function passwordToHash(string $userPassword): string
     {
         return md5($userPassword);
     }
 
-    public function checkArraySession($url = '')
+    public function checkArraySession(string $url = ''): void
     {
         if (!array_key_exists('userId', $_SESSION))
         {
@@ -51,7 +51,7 @@ class SessionClient
         }
     }
 
-    public function logout()
+    public function logout(): void
     {
         if (array_key_exists('userId', $_SESSION))
         {
@@ -60,7 +60,7 @@ class SessionClient
         }
     }
 
-    public function getUserId()
+    public function getUserId(): int
     {
         return $_SESSION['userId'];
     }

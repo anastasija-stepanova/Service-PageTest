@@ -7,7 +7,7 @@ $sessionClient->checkArraySession();
 $webServerRequest = new WebServerRequest();
 $isExistsLocations = $webServerRequest->postKeyIsExists('locations');
 
-if ($isExistsLocations)
+if ($isExistsLocations != null)
 {
     $databaseDataManager = new DatabaseDataManager();
 
@@ -68,6 +68,6 @@ if ($isExistsLocations)
     }
     else
     {
-        return $lastError;
+        echo $lastError;
     }
 }

@@ -2,63 +2,28 @@ class SettingsPanelController {
   constructor(model, view, item) {
     let thisPtr = this;
 
-    let deleteUrlsButton = view.deleteUrlsButton;
-    let addLocationButton = view.addLocationButton;
-    let addUrlButton = view.addUrlButton;
-    let editSettingsButton = view.editSettingsButton;
-    let saveSettingButton = view.saveSettingButton;
-    let domain = view.domain;
-    let checkedLocations = view.checkedLocations;
-    let deletableUrls = view.deletableUrls;
-    let newUrlContainer = view.newUrlContainer;
-    let newDomainContainer = view.newDomainContainer;
-    let deleteSettingsBlock = view.deleteSettingsBlock;
-    let domainUrlsContainer = view.domainUrlsContainer;
-    let existingDomain = view.existingDomain;
+    this.domain = item.getElementsByClassName('domain_value')[0].getAttribute('data-domain-value');
+    this.newUrlContainer = item.getElementsByClassName('url_addition_block')[0];
+    this.newDomainContainer = item.getElementsByClassName('domain_container')[0];
+    this.domainUrlsContainer = item.getElementsByClassName('value_url');
+    this.deletableUrls = this.formDeletableUrlsArray(item.getElementsByClassName('delete_url'));
+    this.currentDomain = view.currentDomain;
+    this.checkedLocations = model.checkedLocations;
 
-    editSettingsButton.addEventListener('click', function(event) {
-      event.preventDefault();
-      thisPtr.initializeEditSettingButton(editSettingsButton, deleteUrlsButton, addLocationButton, addUrlButton);
-    });
+    view.saveSettings = function() {
+      model.editLocations(thisPtr.domain, thisPtr.checkedLocations);
+      model.saveDomain(thisPtr.getValueNewDomain(item, thisPtr.newDomainContainer));
+      model.saveUrl(thisPtr.domain, thisPtr.getValueNewUrl(thisPtr.newUrlContainer));
+      model.deleteUrls(thisPtr.domain, thisPtr.deletableUrls);
+    };
 
-    addLocationButton.addEventListener('click', function(event) {
-      event.preventDefault();
-      view.blockAvailableLocations.classList.remove('hidden');
-    });
+    view.deleteSettingsBlock = function() {
+      model.deleteSettings(thisPtr.domain, thisPtr.checkedLocations, thisPtr.getDomainUrls(thisPtr.domainUrlsContainer));
+    };
 
-    addUrlButton.addEventListener('click', function(event) {
-      event.preventDefault();
-      view.blockAdditionUrl.classList.remove('hidden')
-    });
-
-    saveSettingButton.addEventListener('click', function(event) {
-      event.preventDefault();
-      model.editLocations(domain, checkedLocations);
-      model.saveDomain(thisPtr.getValueNewDomain(item, newDomainContainer));
-      model.saveUrl(domain, thisPtr.getValueNewUrl(newUrlContainer));
-      model.deleteUrls(domain, deletableUrls);
-    });
-
-    deleteSettingsBlock.addEventListener('click', function(event) {
-      event.preventDefault();
-      model.deleteSettings(domain, checkedLocations, thisPtr.getDomainUrls(domainUrlsContainer));
-    });
-
-    let currentDomain = existingDomain.value;
-    existingDomain.addEventListener('blur', function() {
-      let newDomain = existingDomain.value;
-      model.editDomain(currentDomain, newDomain);
-    });
-  }
-
-  initializeEditSettingButton(editSettingsButton, deleteUrlsButton, addLocationButton, addUrlButton) {
-    editSettingsButton.classList.add('hidden');
-
-    [].forEach.call(deleteUrlsButton, function(item) {
-      item.classList.remove('hidden');
-    });
-    addLocationButton.classList.remove('hidden');
-    addUrlButton.classList.remove('hidden');
+    view.editDomain = function() {
+      model.editDomain(model.domainName, thisPtr.currentDomain.value);
+    };
   }
 
   getValueNewUrl(newUrlContainer) {
@@ -78,9 +43,23 @@ class SettingsPanelController {
   getDomainUrls(domainUrlsContainer) {
     let urls = [];
     [].forEach.call(domainUrlsContainer, function(item) {
-      urls.push(item.getAttribute('data-value'));
+      urls.push(item.getAttribute('data-url-value'));
     });
 
     return urls;
+  }
+
+  formDeletableUrlsArray(list) {
+    let deletableUrls = [];
+    [].forEach.call(list, function(item) {
+      item.addEventListener('click', function() {
+        let listUrls = item.parentNode.parentNode;
+        let urlContainer = item.parentNode;
+        deletableUrls.push(urlContainer.textContent);
+        listUrls.removeChild(urlContainer);
+      })
+    });
+
+    return deletableUrls;
   }
 }

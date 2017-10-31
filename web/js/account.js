@@ -1,9 +1,7 @@
 let settingsBlock = document.getElementsByClassName('settings_block');
 
 [].forEach.call(settingsBlock, function(item) {
-  let settingsPanelModel = new SettingsPanelModel();
-  let settingsPanelView = new SettingsPanelView(settingsPanelModel, item);
-  new SettingsPanelController(settingsPanelModel, settingsPanelView, item);
+  initializeMVCSettingsPanel(item);
 });
 
 let addNewSettingsBlockButton = document.getElementById('addNewSettings');
@@ -14,7 +12,11 @@ addNewSettingsBlockButton.addEventListener('click', function(event) {
   let settingsCopy = settingsTemplate.cloneNode(true);
   settingsCopy.classList.remove('hidden');
   settingsContainer.append(settingsCopy);
-  let settingsPanelModel = new SettingsPanelModel();
-  let settingsPanelView = new SettingsPanelView(settingsPanelModel, settingsCopy);
-  new SettingsPanelController(settingsPanelModel, settingsPanelView, settingsCopy);
+  initializeMVCSettingsPanel(settingsCopy);
 });
+
+function initializeMVCSettingsPanel(item) {
+  let settingsPanelModel = new SettingsPanelModel();
+  let settingsPanelView = new SettingsPanelView(settingsPanelModel, item);
+  new SettingsPanelController(settingsPanelModel, settingsPanelView, item);
+}

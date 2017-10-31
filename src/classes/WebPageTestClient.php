@@ -28,13 +28,13 @@ class WebPageTestClient
     private $apiKey;
     private $client;
 
-    public function __construct($apiKey)
+    public function __construct(string $apiKey)
     {
         $this->client = new Client();
         $this->apiKey = $apiKey;
     }
 
-    public function runNewTest($siteUrl, $location)
+    public function runNewTest(string $siteUrl, string $location): int
     {
         $testId = null;
 
@@ -60,7 +60,7 @@ class WebPageTestClient
         return $testId;
     }
 
-    public function checkTestState($testId)
+    public function checkTestState(string $testId): string
     {
         $params = [
             self::PARAM_FORMAT => self::RESPONSE_FORMAT,
@@ -71,7 +71,7 @@ class WebPageTestClient
         return $this->sendRequest(self::HTTP_METHOD, $statusTestUrl);
     }
 
-    public function getResult($testId)
+    public function getResult(string $testId): string
     {
         $arrayTestResults = null;
 
@@ -90,14 +90,14 @@ class WebPageTestClient
         return $arrayTestResults;
     }
 
-    private function generateWptUrl($methodName, $params)
+    private function generateWptUrl(string $methodName, array $params): string
     {
         $wptUrl = self::BASE_URL . $methodName . self::FILE_EXTENSION . $this->generateGetParams($params);
 
         return $wptUrl;
     }
 
-    private function generateGetParams($params)
+    private function generateGetParams(array $params): string
     {
         $paramsArray = [];
 
@@ -109,7 +109,7 @@ class WebPageTestClient
         return '?' . implode('&', $paramsArray);
     }
 
-    private function sendRequest($methodName, $url)
+    private function sendRequest(string $methodName, string $url): array
     {
         $response = $this->client->request($methodName, $url);
         $contentResponse = $response->getBody()->getContents();

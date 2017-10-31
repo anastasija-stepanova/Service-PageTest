@@ -3,7 +3,6 @@
 class Autoloader
 {
     const PHP_EXT = 'php';
-
     /** @var string[] */
     private $knownFiles = [];
 
@@ -12,7 +11,7 @@ class Autoloader
      *
      * @param string $basePath
      */
-    public function __construct($basePath = __DIR__)
+    public function __construct(string $basePath = __DIR__)
     {
         $this->findAllFiles($basePath);
     }
@@ -20,7 +19,7 @@ class Autoloader
     /**
      * @param string $fileName
      */
-    public function autoload($fileName)
+    public function autoload(string $fileName): void
     {
         if (array_key_exists($fileName, $this->knownFiles))
         {
@@ -28,17 +27,15 @@ class Autoloader
         }
     }
 
-    private function findAllFiles($basePath)
+    private function findAllFiles(string $basePath): void
     {
         $paths = scandir($basePath);
-
         foreach ($paths as $path)
         {
             if ($path != '.' && $path != '..')
             {
-                $absolutePath = $basePath . DIRECTORY_SEPARATOR .  $path;
+                $absolutePath = $basePath . DIRECTORY_SEPARATOR . $path;
                 $pathInfo = pathinfo($path);
-
                 if (is_dir($absolutePath))
                 {
                     $this->findAllFiles($absolutePath);

@@ -31,7 +31,8 @@ if ($isExistsPostData)
     }
     else
     {
-        return $lastError;
+        echo $lastError;
+        return;
     }
 
     $dataArray = [

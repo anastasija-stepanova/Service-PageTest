@@ -19,7 +19,7 @@ class DatabaseDataManager
                                 FROM $user", [], PDO::FETCH_COLUMN);
     }
 
-    public function getUserDomainsData($userId): array
+    public function getUserDomainsData(int $userId): array
     {
         $domain = DatabaseTable::DOMAIN;
         $userDomain = DatabaseTable::USER_DOMAIN;
@@ -30,7 +30,7 @@ class DatabaseDataManager
                                   WHERE ud.user_id = ?", [$userId]);
     }
 
-    public function getUserLocations($userId, $domainId): array
+    public function getUserLocations(int $userId, int $domainId): array
     {
         $wptLocation = DatabaseTable::WPT_LOCATION;
         $userDomainLocation = DatabaseTable::USER_DOMAIN_LOCATION;
@@ -43,7 +43,7 @@ class DatabaseDataManager
                                   WHERE user_id = ? AND udl.user_domain_id = ?", [$userId, $domainId]);
     }
 
-    public function getUserApiKey($userId): string
+    public function getUserApiKey(int $userId): string
     {
         $user = DatabaseTable::USER;
         $apiKey = $this->database->selectOneRow("
@@ -67,7 +67,7 @@ class DatabaseDataManager
             [TestStatus::NOT_COMPLETED, TestStatus::PROCESSED], PDO::FETCH_COLUMN);
     }
 
-    public function getTableRowByTestId($table, $testId): array
+    public function getTableRowByTestId(string $table, int $testId): array
     {
         return $this->database->selectOneRow("
                                   SELECT * 
@@ -75,7 +75,7 @@ class DatabaseDataManager
                                   WHERE test_id = ?", [$testId]);
     }
 
-    public function getBrowserType($testId): array
+    public function getBrowserType(int $testId): array
     {
         $wptLocation = DatabaseTable::WPT_LOCATION;
         $testInfo = DatabaseTable::TEST_INFO;
@@ -86,7 +86,7 @@ class DatabaseDataManager
                                   WHERE ti.id = ?;", [$testId], PDO::FETCH_COLUMN);
     }
 
-    public function doesTestExists($testId): bool
+    public function doesTestExists(int $testId): bool
     {
         $averageResult = DatabaseTable::AVERAGE_RESULT;
         $testExists = $this->database->executeQuery("
@@ -96,7 +96,7 @@ class DatabaseDataManager
         return count($testExists) < self::TOTAL_NUM_TEST_RECORD ? true : false;
     }
 
-    public function getUserData($userLogin, $userPassword): array
+    public function getUserData(string $userLogin, string $userPassword): array
     {
         $user = DatabaseTable::USER;
         return $this->database->executeQuery("
@@ -113,7 +113,7 @@ class DatabaseDataManager
                                   FROM $wptLocation");
     }
 
-    public function getExistingLocations($userId, $domainId): array
+    public function getExistingLocations(int $userId, int $domainId): array
     {
         $userDomainLocation = DatabaseTable::USER_DOMAIN_LOCATION;
         $userDomain = DatabaseTable::USER_DOMAIN;
@@ -124,7 +124,7 @@ class DatabaseDataManager
                                   WHERE user_id = ? AND user_domain_id = ?", [$userId, $domainId]);
     }
 
-    public function getUserUrlsData($userId, $domainId): array
+    public function getUserUrlsData(int $userId, int $domainId): array
     {
         $userDomainUrl = DatabaseTable::USER_DOMAIN_URL;
         $userDomain = DatabaseTable::USER_DOMAIN;
@@ -135,7 +135,7 @@ class DatabaseDataManager
                                   WHERE ud.user_id = ? AND udu.user_domain_id = ?", [$userId, $domainId]);
     }
 
-    public function getDomainId($domainName): array
+    public function getDomainId(string $domainName): array
     {
         $domain = DatabaseTable::DOMAIN;
         return $this->database->selectOneRow("
@@ -152,7 +152,7 @@ class DatabaseDataManager
                                   FROM $domain", [], PDO::FETCH_COLUMN);
     }
 
-    public function getUserDomains($userId): array
+    public function getUserDomains(int $userId): array
     {
         $domain = DatabaseTable::DOMAIN;
         $userDomain = DatabaseTable::USER_DOMAIN;
@@ -163,7 +163,7 @@ class DatabaseDataManager
                                   WHERE user_id = ?", [$userId]);
     }
 
-    public function getUserDomain($domainName): array
+    public function getUserDomain(string $domainName): array
     {
         $userDomain = DatabaseTable::USER_DOMAIN;
         $domain = DatabaseTable::DOMAIN;
@@ -174,7 +174,7 @@ class DatabaseDataManager
                                   WHERE domain_name = ?", [$domainName], PDO::FETCH_COLUMN);
     }
 
-    public function doesUserUrlExists($domainId, $url): array
+    public function doesUserUrlExists(int $domainId, string $url): array
     {
         $userDomainUrl = DatabaseTable::USER_DOMAIN_URL;
         return $this->database->executeQuery("
@@ -183,7 +183,7 @@ class DatabaseDataManager
                                   WHERE user_domain_id = ? AND url = ?", [$domainId, $url]);
     }
 
-    public function updateTestInfoStatus($wptTestId): void
+    public function updateTestInfoStatus(string $wptTestId): void
     {
         $testInfo = DatabaseTable::TEST_INFO;
         $this->database->executeQuery("
@@ -192,7 +192,7 @@ class DatabaseDataManager
                            WHERE test_id = ?", [TestStatus::PROCESSED, $wptTestId]);
     }
 
-    public function saveTestInfo($userId, $userUrl, $userLocation, $wptTestId): void
+    public function saveTestInfo(int $userId, array $userUrl, array $userLocation, string $wptTestId): void
     {
         $testInfo = DatabaseTable::TEST_INFO;
         $this->database->executeQuery("
@@ -201,7 +201,7 @@ class DatabaseDataManager
             [$userId, $userUrl[self::INDEX_ID], $userLocation[self::INDEX_ID], $wptTestId, TestStatus::NOT_COMPLETED]);
     }
 
-    public function saveAverageResult($averageResult): void
+    public function saveAverageResult(array $averageResult): void
     {
         $averageResultTable = DatabaseTable::AVERAGE_RESULT;
         $this->database->executeQuery("
@@ -217,7 +217,7 @@ class DatabaseDataManager
                             ?, ?, ?, ?, ?, ?, ?, ?, ?, FROM_UNIXTIME(?))", $averageResult);
     }
 
-    public function saveRawData($testId, $jsonData): void
+    public function saveRawData(int $testId, string $jsonData): void
     {
         $rawData = DatabaseTable::RAW_DATA;
         $this->database->executeQuery("
@@ -225,16 +225,16 @@ class DatabaseDataManager
                            VALUES (?, ?)", [$testId, $jsonData]);
     }
 
-    public function updateTestInfoCompletedTime($response, $wptTestId): void
+    public function updateTestInfoCompletedTime(int $completedTime, string $wptTestId): void
     {
         $testInfo = DatabaseTable::TEST_INFO;
         $this->database->executeQuery("
                            UPDATE $testInfo 
                            SET completed_time = FROM_UNIXTIME(?), test_status = ?
-                           WHERE test_id = ?", [$response, TestStatus::COMPLETED, $wptTestId]);
+                           WHERE test_id = ?", [$completedTime, TestStatus::COMPLETED, $wptTestId]);
     }
 
-    public function getTestResult($userId, $domainId, $locationId, $typeView, $minTime, $maxTime): array
+    public function getTestResult(int $userId, int $domainId, int $locationId, int $typeView, int $minTime, int $maxTime): array
     {
         $averageResult = DatabaseTable::AVERAGE_RESULT;
         $testInfo = DatabaseTable::TEST_INFO;
@@ -248,7 +248,7 @@ class DatabaseDataManager
             [$userId, $domainId, $locationId, $typeView, $minTime, $maxTime]);
     }
 
-    public function getTestTime($userId): array
+    public function getTestTime(int $userId): array
     {
         $testInfo = DatabaseTable::TEST_INFO;
         return $this->database->executeQuery("
@@ -257,7 +257,7 @@ class DatabaseDataManager
                                   WHERE user_id = ? AND test_status = ?", [$userId, TestStatus::COMPLETED], PDO::FETCH_COLUMN);
     }
 
-    public function saveDomain($newDomain): void
+    public function saveDomain(string $newDomain): void
     {
         $domain = DatabaseTable::DOMAIN;
         $this->database->executeQuery("
@@ -265,7 +265,7 @@ class DatabaseDataManager
                            VALUES (?)", [$newDomain]);
     }
 
-    public function saveUserDomain($userId, $domainId): void
+    public function saveUserDomain(int $userId, int $domainId): void
     {
         $userDomain = DatabaseTable::USER_DOMAIN;
         $this->database->executeQuery("
@@ -273,7 +273,7 @@ class DatabaseDataManager
                            VALUES (?, ?)", [$userId, $domainId]);
     }
 
-    public function saveUserDomainUrl($domainId, $newUrl): void
+    public function saveUserDomainUrl(int $domainId, string $newUrl): void
     {
         $userDomainUrl = DatabaseTable::USER_DOMAIN_URL;
         $this->database->executeQuery("
@@ -281,7 +281,7 @@ class DatabaseDataManager
                            VALUES (?, ?)", [$domainId, $newUrl]);
     }
 
-    public function deleteUserDomainLocation($existingLocation, $value): void
+    public function deleteUserDomainLocation(int $existingLocation, string $value): void
     {
         $userDomainLocation = DatabaseTable::USER_DOMAIN_LOCATION;
         $this->database->executeQuery("
@@ -289,7 +289,7 @@ class DatabaseDataManager
                            WHERE user_domain_id = ? and wpt_location_id = ?", [$existingLocation, $value]);
     }
 
-    public function saveUserDomainLocation($existingLocation, $value): void
+    public function saveUserDomainLocation(int $existingLocation, string $value): void
     {
         $userDomainLocation = DatabaseTable::USER_DOMAIN_LOCATION;
         $this->database->executeQuery("
@@ -332,7 +332,7 @@ class DatabaseDataManager
         return $timeRange;
     }
 
-    public function deleteUrl($domainId, $url): void
+    public function deleteUrl(int $domainId, string $url): void
     {
         $userDomainUrl = DatabaseTable::USER_DOMAIN_URL;
         $this->database->executeQuery("
@@ -340,7 +340,7 @@ class DatabaseDataManager
                            WHERE user_domain_id = ? AND url = ?", [$domainId, $url]);
     }
 
-    public function deleteLocations($domainId, $locationId): void
+    public function deleteLocations(int $domainId, int $locationId): void
     {
         $userDomainLocation = DatabaseTable::USER_DOMAIN_LOCATION;
         $this->database->executeQuery("
@@ -348,7 +348,7 @@ class DatabaseDataManager
                            WHERE wpt_location_id = ? AND user_domain_id = ?", [$locationId, $domainId]);
     }
 
-    public function deleteDomain($domainId): void
+    public function deleteDomain(int $domainId): void
     {
         $userDomain = DatabaseTable::USER_DOMAIN;
         $this->database->executeQuery("
@@ -356,7 +356,7 @@ class DatabaseDataManager
                            WHERE domain_id = ?", [$domainId]);
     }
 
-    public function editDomain($currentDomainId, $newDomain): void
+    public function editDomain(int $currentDomainId, string $newDomain): void
     {
         $domain = DatabaseTable::DOMAIN;
         $this->database->executeQuery("

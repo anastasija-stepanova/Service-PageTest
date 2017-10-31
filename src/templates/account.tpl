@@ -12,7 +12,7 @@
       <div class="block_domain col-xs-12">
         <h2>
           <small>Домен</small>
-          <input data-value="{{ key }}" title="" value="{{ key }}" class="domain_value">
+          <input data-domain-value="{{ key }}" title="" value="{{ key }}" class="domain_value">
         </h2>
         <div class="domain_container horizontal_divider clear"></div>
       </div>
@@ -49,7 +49,7 @@
         <h2>Список URLs</h2>
         <ol class="list_urls rounded">
           {% for url in domain.urls %}
-          <li><span data-value="{{ url }}" class="value_url">{{ url }}</span><span class="delete_url hidden"></span></li>
+          <li><span data-url-value="{{ url }}" class="value_url">{{ url }}</span><span class="delete_url hidden"></span></li>
           {% endfor %}
           <li class="new_url hidden"></li>
         </ol>
@@ -116,8 +116,8 @@
 </div>
 {% endblock %}
 {% block fileJs %}
-<script src="../js/SettingsPanelModel.js"></script>
-<script src="../js/SettingsPanelView.js"></script>
-<script src="../js/SettingsPanelController.js"></script>
+<script src="../js/classes/SettingsPanelModel.js"></script>
+<script src="../js/classes/SettingsPanelView.js"></script>
+<script src="../js/classes/SettingsPanelController.js"></script>
 <script src="../js/account.js"></script>
 {% endblock %}

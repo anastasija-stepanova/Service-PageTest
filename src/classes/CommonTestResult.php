@@ -28,257 +28,257 @@ class CommonTestResult
     private $domLoading = 0;
     private $visualComplete = 0;
 
-    public function setLoadTime($value)
+    public function setLoadTime(int $value): void
     {
         $this->loadTime = $value;
     }
 
-    public function getLoadTime()
+    public function getLoadTime(): int
     {
         return $this->loadTime;
     }
 
-    public function setTtfb($value)
+    public function setTtfb(int $value): void
     {
         $this->ttfb = $value;
     }
 
-    public function getTtfb()
+    public function getTtfb(): int
     {
         return $this->ttfb;
     }
 
-    public function setBytesOut($value)
+    public function setBytesOut(int $value): void
     {
         $this->bytesOut = $value;
     }
 
-    public function getBytesOut()
+    public function getBytesOut(): int
     {
         return $this->bytesOut;
     }
 
-    public function setBytesOutDoc($value)
+    public function setBytesOutDoc(int $value): void
     {
         $this->bytesOutDoc = $value;
     }
 
-    public function getBytesOutDoc()
+    public function getBytesOutDoc(): int
     {
         return $this->bytesOutDoc;
     }
 
-    public function setBytesIn($value)
+    public function setBytesIn(int $value): void
     {
         $this->bytesIn = $value;
     }
 
-    public function getBytesIn()
+    public function getBytesIn(): int
     {
         return $this->bytesIn;
     }
 
-    public function setBytesInDoc($value)
+    public function setBytesInDoc(int $value): void
     {
         $this->bytesInDoc = $value;
     }
 
-    public function getBytesInDoc()
+    public function getBytesInDoc(): int
     {
         return $this->bytesInDoc;
     }
 
-    public function setConnections($value)
+    public function setConnections(int $value): void
     {
         $this->connections = $value;
     }
 
-    public function getConnections()
+    public function getConnections(): int
     {
         return $this->connections;
     }
 
-    public function setRequests($value)
+    public function setRequests(int $value): void
     {
         $this->requests = $value;
     }
 
-    public function getRequests()
+    public function getRequests(): int
     {
         return $this->requests;
     }
 
-    public function setRequestsDoc($value)
+    public function setRequestsDoc(int $value): void
     {
         $this->requestsDoc = $value;
     }
 
-    public function getRequestsDoc()
+    public function getRequestsDoc(): int
     {
         return $this->requestsDoc;
     }
 
-    public function setResponses200($value)
+    public function setResponses200(int $value): void
     {
         $this->responses200 = $value;
     }
 
-    public function getResponses200()
+    public function getResponses200(): int
     {
         return $this->responses200;
     }
 
-    public function setResponses404($value)
+    public function setResponses404(int $value): void
     {
         $this->responses404 = $value;
     }
 
-    public function getResponses404()
+    public function getResponses404(): int
     {
         return $this->responses404;
     }
 
-    public function setResponsesOther($value)
+    public function setResponsesOther(int $value): void
     {
         $this->responsesOther = $value;
     }
 
-    public function getResponsesOther()
+    public function getResponsesOther(): int
     {
         return $this->responsesOther;
     }
 
-    public function setRenderTime($value)
+    public function setRenderTime(int $value): void
     {
         $this->renderTime = $value;
     }
 
-    public function getRenderTime()
+    public function getRenderTime(): int
     {
         return $this->renderTime;
     }
 
-    public function setFullyLoaded($value)
+    public function setFullyLoaded(int $value): void
     {
         $this->fullyLoaded = $value;
     }
 
-    public function getFullyLoaded()
+    public function getFullyLoaded(): int
     {
         return $this->fullyLoaded;
     }
 
-    public function setDocTime($value)
+    public function setDocTime(int $value): void
     {
         $this->docTime = $value;
     }
 
-    public function getDocTime()
+    public function getDocTime(): int
     {
         return $this->docTime;
     }
 
-    public function setDomElements($value)
+    public function setDomElements(int $value): void
     {
         $this->domElements = $value;
     }
 
-    public function getDomElements()
+    public function getDomElements(): int
     {
         return $this->domElements;
     }
 
-    public function setTitleTime($value)
+    public function setTitleTime(int $value): void
     {
         $this->titleTime = $value;
     }
 
-    public function getTitleTime()
+    public function getTitleTime(): int
     {
         return $this->titleTime;
     }
 
-    public function setLoadEventStart($value)
+    public function setLoadEventStart(int $value): void
     {
         $this->loadEventStart = $value;
     }
 
-    public function getLoadEventStart()
+    public function getLoadEventStart(): int
     {
         return $this->loadEventStart;
     }
 
-    public function setLoadEventEnd($value)
+    public function setLoadEventEnd(int $value): void
     {
         $this->loadEventEnd = $value;
     }
 
-    public function getLoadEventEnd()
+    public function getLoadEventEnd(): int
     {
         return $this->loadEventEnd;
     }
 
-    public function setDomContentLoadedEventStart($value)
+    public function setDomContentLoadedEventStart(int $value): void
     {
         $this->domContentLoadedEventStart = $value;
     }
 
-    public function getDomContentLoadedEventStart()
+    public function getDomContentLoadedEventStart(): int
     {
         return $this->domContentLoadedEventStart;
     }
 
-    public function setDomContentLoadedEventEnd($value)
+    public function setDomContentLoadedEventEnd(int $value): void
     {
         $this->domContentLoadedEventEnd = $value;
     }
 
-    public function getDomContentLoadedEventEnd()
+    public function getDomContentLoadedEventEnd(): int
     {
         return $this->domContentLoadedEventEnd;
     }
 
-    public function setFirstPaint($value)
+    public function setFirstPaint(int $value): void
     {
         $this->firstPaint = $value;
     }
 
-    public function getFirstPaint()
+    public function getFirstPaint(): int
     {
         return $this->firstPaint;
     }
 
-    public function setDomInteractive($value)
+    public function setDomInteractive(int $value): void
     {
         $this->domInteractive = $value;
     }
 
-    public function getDomInteractive()
+    public function getDomInteractive(): int
     {
         return $this->domInteractive;
     }
 
-    public function setDomLoading($value)
+    public function setDomLoading(int $value): void
     {
         $this->domLoading = $value;
     }
 
-    public function getDomLoading()
+    public function getDomLoading(): int
     {
         return $this->domLoading;
     }
 
-    public function setVisualComplete($value)
+    public function setVisualComplete(int $value): void
     {
         $this->visualComplete = $value;
     }
 
-    public function getVisualComplete()
+    public function getVisualComplete(): int
     {
         return $this->visualComplete;
     }
 
-    public function getAsArray()
+    public function getAsArray(): array
     {
         return [
             $this->loadTime,

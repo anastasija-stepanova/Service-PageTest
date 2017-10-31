@@ -36,10 +36,10 @@ if ($isExistsDeletableSettings)
                 $databaseDataManager->deleteUrl($deletableDomainId['id'], $deletableUrl);
             }
         }
-        echo 'Блок настроек успешно удален';
+        echo 0;
     }
     else
     {
-        return $lastError;
+        echo $lastError;
     }
 }
