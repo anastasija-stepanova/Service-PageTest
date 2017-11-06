@@ -1,41 +1,85 @@
 class ChartsDataProvider {
-  constructor() {
-    let thisPtr = this;
-    this.time = [];
+  constructor(domainId, locationId, typeView, minTime, maxTime) {
+    let subArray = this.sendRequest(domainId, locationId, typeView, minTime, maxTime);
     this.ttfb = [];
     this.docTime = [];
-    this.domainUrls = [];
     this.fullyLoaded = [];
-    this.setChartsData(thisPtr);
+    this.time = [];
+    this.domainUrls = [];
   }
 
-  setChartsData(thisPtr) {
-    let keyValue = {
-      'result': 'testResult'
+  sendRequest(domainId, locationId, typeView, minTime, maxTime) {
+    let dataArray = {
+      'domainId': domainId,
+      'locationId': locationId,
+      'typeView': typeView,
+      'minTime': minTime,
+      'maxTime': maxTime
     };
-    let urls = [];
-    let subArrayTime = [];
-    let jsonString = 'data=' + JSON.stringify(keyValue);
-    ajaxPost(FILE_GET_DATA_FOR_CHART, jsonString, function(response) {
-      if ('response' in response) {
-        let jsonDecoded = JSON.parse(response['response']);
-        if ('testResult' in jsonDecoded) {
-          let testResult = jsonDecoded['testResult'];
-          for (let urls in testResult) {
-            if (testResult.hasOwnProperty(urls)) {
-              urls = Object.keys(testResult[urls]);
-              for (let i = 0; i < this.domainUrls.length; i++) {
-                this.ttfb.push(testResult[urls][this.domainUrls[i]].ttfb);
-                this.docTime.push(testResult[urls][this.domainUrls[i]].doc_time);
-                this.fullyLoaded.push(testResult[urls][this.domainUrls[i]].fully_loaded);
-                subArrayTime.push(testResult[urls][this.domainUrls[i]].time);
-              }
+    let jsonString = 'data=' + JSON.stringify(dataArray);
+    ajaxPost(FILE_GET_TEST_RESULT_FOR_CHART, jsonString, this.setChartsData);
+  }
+
+  setChartsData(response) {
+    if ('response' in response) {
+      let jsonDecoded = JSON.parse(response['response']);
+      let time = [];
+      let ttfb = [];
+      let docTime = [];
+      let domainUrls = [];
+      let fullyLoaded = [];
+      let urlInfo = null;
+      let subArray = [];
+      if ('testResult' in jsonDecoded) {
+        let testResult = jsonDecoded['testResult'];
+        for (let urls in testResult) {
+          if (testResult.hasOwnProperty(urls)) {
+            domainUrls = Object.keys(testResult[urls]);
+
+            for (let i = 0; i < domainUrls.length; i++) {
+              urlInfo = testResult[urls][domainUrls[i]];
+              ttfb.push(urlInfo.ttfb);
+              docTime.push(urlInfo.doc_time);
+              fullyLoaded.push(urlInfo.fully_loaded);
+              time.push(urlInfo.time)
             }
           }
         }
       }
-    });
-    thisPtr.domainUrls = urls;
-    thisPtr.time = subArrayTime[0];
+      subArray.push(ttfb);
+      subArray.push(docTime);
+      subArray.push(fullyLoaded);
+      subArray.push(time[0]);
+      subArray.push(domainUrls);
+      console.log(subArray);
+    }
+  }
+
+  generateDataTestResult(testResult) {
+    let time = [];
+    let ttfb = [];
+    let docTime = [];
+    let domainUrls = [];
+    let fullyLoaded = [];
+    let urlInfo = null;
+    let subArray = [];
+    for (let urls in testResult) {
+      if (testResult.hasOwnProperty(urls)) {
+        domainUrls = Object.keys(testResult[urls]);
+
+        for (let i = 0; i < domainUrls.length; i++) {
+          urlInfo = testResult[urls][domainUrls[i]];
+          ttfb.push(urlInfo.ttfb);
+          docTime.push(urlInfo.doc_time);
+          fullyLoaded.push(urlInfo.fully_loaded);
+          time.push(urlInfo.time)
+        }
+      }
+    }
+    subArray.push(ttfb);
+    subArray.push(docTime);
+    subArray.push(fullyLoaded);
+    subArray.push(time[0]);
+    subArray.push(domainUrls);
   }
 }

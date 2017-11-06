@@ -34,7 +34,7 @@ class WebPageTestClient
         $this->apiKey = $apiKey;
     }
 
-    public function runNewTest(string $siteUrl, string $location): int
+    public function runNewTest(string $siteUrl, string $location): string
     {
         $testId = null;
 
@@ -60,7 +60,7 @@ class WebPageTestClient
         return $testId;
     }
 
-    public function checkTestState(string $testId): string
+    public function checkTestState(string $testId): array
     {
         $params = [
             self::PARAM_FORMAT => self::RESPONSE_FORMAT,
@@ -71,7 +71,7 @@ class WebPageTestClient
         return $this->sendRequest(self::HTTP_METHOD, $statusTestUrl);
     }
 
-    public function getResult(string $testId): string
+    public function getResult(string $testId): array
     {
         $arrayTestResults = null;
 

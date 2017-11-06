@@ -8,8 +8,7 @@ let ajaxPost = function(path, param, callbackFunction) {
   xhr.onreadystatechange = function() {
     if (xhr.readyState == doneState) {
       if (xhr.responseText) {
-        if (callbackFunction)
-        {
+        if (callbackFunction) {
           callbackFunction(xhr);
         }
       }

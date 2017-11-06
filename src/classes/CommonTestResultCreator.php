@@ -4,7 +4,7 @@ class CommonTestResultCreator
 {
     private const DEFAULT_VALUE = null;
 
-    public static function createFromMobileBrowser(array $response): object
+    public static function createFromMobileBrowser(array $response)
     {
         $commonTestResult = new CommonTestResult();
 
@@ -37,7 +37,7 @@ class CommonTestResultCreator
         return $commonTestResult;
     }
 
-    public static function createFromDesktopBrowser(array $response): object
+    public static function createFromDesktopBrowser(array $response)
     {
         $commonTestResult = new CommonTestResult();
 
@@ -70,7 +70,7 @@ class CommonTestResultCreator
         return $commonTestResult;
     }
 
-    private static function getArrayValue(array $array, string $key, int $defaultValue = self::DEFAULT_VALUE): int
+    private static function getArrayValue(array $array, string $key, $defaultValue = self::DEFAULT_VALUE)
     {
         return array_key_exists($key, $array) ? $array[$key] : $defaultValue;
     }

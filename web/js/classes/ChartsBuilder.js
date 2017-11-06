@@ -1,4 +1,10 @@
 class ChartsBuilder {
+  constructor(dataProvider){
+    this.buildChart(CLASS_TTFB_CHART_CONTAINER, dataProvider.time, dataProvider.ttfb, dataProvider.domainUrls, ASIX_Y_TITLE_TTFB_CHART);
+    this.buildChart(CLASS_DOC_TIME_CHART_CONTAINER, dataProvider.time, dataProvider.docTime, dataProvider.domainUrls, ASIX_Y_TITLE_DOC_TIME_CHART);
+    this.buildChart(CLASS_FULLY_LOAD_TIME_CHART_CONTAINER, dataProvider.time, dataProvider.fullyLoaded, dataProvider.domainUrls, ASIX_Y_TITLE_FULLY_LOAD_TIME_CHART);
+  }
+
   buildChart(classChartContainer, time, resourceTestingData, domainUrls, axisYTitle){
     let data = this.initializeData(time, resourceTestingData);
     let options = this.initializeOptions();

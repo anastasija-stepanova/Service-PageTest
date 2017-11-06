@@ -51,7 +51,7 @@ function checkParamsForChart(array $array): bool
     $isExists = null;
     foreach (DATA_KEYS_FOR_CHARTS as $key)
     {
-        $isExists = array_key_exists($key, $array) ? true : false;
+        $isExists = array_key_exists($key, $array) && $array[$key] != null ? true : false;
     }
     return $isExists;
 }

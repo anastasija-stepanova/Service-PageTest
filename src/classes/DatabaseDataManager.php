@@ -67,7 +67,7 @@ class DatabaseDataManager
             [TestStatus::NOT_COMPLETED, TestStatus::PROCESSED], PDO::FETCH_COLUMN);
     }
 
-    public function getTableRowByTestId(string $table, int $testId): array
+    public function getTableRowByTestId(string $table, string $testId): array
     {
         return $this->database->selectOneRow("
                                   SELECT * 
@@ -356,7 +356,7 @@ class DatabaseDataManager
                            WHERE domain_id = ?", [$domainId]);
     }
 
-    public function editDomain(int $currentDomainId, string $newDomain): void
+    public function editDomain($currentDomainId, $newDomain): void
     {
         $domain = DatabaseTable::DOMAIN;
         $this->database->executeQuery("
