@@ -36,7 +36,7 @@ if ($isExistsDeletableSettings)
                 $databaseDataManager->deleteUrl($deletableDomainId['id'], $deletableUrl);
             }
         }
-        echo 0;
+        echo RequireStatus::SUCCESS_STATUS;
     }
     else
     {

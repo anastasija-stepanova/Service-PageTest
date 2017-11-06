@@ -27,7 +27,7 @@ if ($isExistsPreservedUrl != null)
         $isUrl = $dataValidator->validateUrl($newUrl);
         if (!$isUrl)
         {
-            echo 1;
+            echo RequireStatus::INVALID_URL;
             return;
         }
 
@@ -78,6 +78,6 @@ else if ($isExistsDeletableUrls)
     }
     else
     {
-        echo 1;
+        echo $lastError;
     }
 }

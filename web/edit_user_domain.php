@@ -25,7 +25,7 @@ if ($isExistsDomain !=  null)
         $isDomain = $dataValidator->validateDomain($newDomain);
         if (!$isDomain)
         {
-            echo 1;
+            echo RequireStatus::INVALID_DOMAIN;
             return;
         }
 
@@ -66,7 +66,7 @@ elseif ($isExistsEditableDomain)
         $isDomain = $dataValidator->validateDomain($newDomain);
         if (!$isDomain)
         {
-            echo 1;
+            echo RequireStatus::INVALID_DOMAIN;
             return;
         }
 

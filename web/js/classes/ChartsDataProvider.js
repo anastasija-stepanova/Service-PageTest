@@ -1,6 +1,7 @@
 class ChartsDataProvider {
   constructor(domainId, locationId, typeView, minTime, maxTime) {
     let subArray = this.sendRequest(domainId, locationId, typeView, minTime, maxTime);
+    console.log(subArray);
     this.ttfb = [];
     this.docTime = [];
     this.fullyLoaded = [];
@@ -32,6 +33,7 @@ class ChartsDataProvider {
       let subArray = [];
       if ('testResult' in jsonDecoded) {
         let testResult = jsonDecoded['testResult'];
+        //this.subArray = this.generateDataTestResult(jsonDecoded['testResult'][1]);
         for (let urls in testResult) {
           if (testResult.hasOwnProperty(urls)) {
             domainUrls = Object.keys(testResult[urls]);
@@ -76,6 +78,7 @@ class ChartsDataProvider {
         }
       }
     }
+    console.log(ttfb);
     subArray.push(ttfb);
     subArray.push(docTime);
     subArray.push(fullyLoaded);

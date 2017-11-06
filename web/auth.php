@@ -33,7 +33,7 @@ $isExistsUrl = $webServerRequest->getKeyIsExists('url');
 if (!$isExistsUrl)
 {
     echo $twig->render('auth.tpl');
-    exit();
+    return;
 }
 
 echo $twig->render('auth.tpl', array(
