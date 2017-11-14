@@ -112,7 +112,8 @@ button {
   border-radius: 5px;
   background: #d4dedf; }
 
-.form_auth {
+.form_auth,
+.form_registration {
   padding: 0 35px 25px 35px; }
 
 .form_title {
@@ -124,7 +125,8 @@ button {
   margin-top: 0;
   border-bottom: solid 1px rgba(0, 0, 0, 0.11); }
 
-.registration_link_block {
+.registration_link_block,
+.auth_link_block {
   text-align: center;
   margin-top: 20px;
   color: rgba(0, 0, 0, 0.5); }

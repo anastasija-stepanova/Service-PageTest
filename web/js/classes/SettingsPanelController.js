@@ -12,8 +12,8 @@ class SettingsPanelController {
 
     view.saveSettings = function() {
       model.editLocations(thisPtr.domain, thisPtr.checkedLocations);
-      model.saveDomain(thisPtr.getValueNewDomain(item, thisPtr.newDomainContainer));
-      model.saveUrl(thisPtr.domain, thisPtr.getValueNewUrl(thisPtr.newUrlContainer));
+      model.saveDomain(thisPtr.constructor.getValueNewDomain(item, thisPtr.newDomainContainer));
+      model.saveUrl(thisPtr.domain, thisPtr.constructor.getValueNewUrl(thisPtr.newUrlContainer));
       model.deleteUrls(thisPtr.domain, thisPtr.deletableUrls);
     };
 
@@ -26,20 +26,29 @@ class SettingsPanelController {
     };
   }
 
-  getValueNewUrl(newUrlContainer) {
+  /**
+   * @private
+   */
+  static getValueNewUrl(newUrlContainer) {
     if (!newUrlContainer.classList.contains('hidden')) {
       return newUrlContainer.getElementsByTagName('input')[0].value;
     }
     return null;
   }
 
-  getValueNewDomain(item, newDomainContainer) {
+  /**
+   * @private
+   */
+  static getValueNewDomain(item, newDomainContainer) {
     if (!item.classList.contains('hidden') && newDomainContainer.hasChildNodes()) {
       return newDomainContainer.getElementsByTagName('input')[0].value;
     }
     return null;
   }
 
+  /**
+   * @private
+   */
   getDomainUrls(domainUrlsContainer) {
     let urls = [];
     [].forEach.call(domainUrlsContainer, function(item) {
@@ -49,6 +58,9 @@ class SettingsPanelController {
     return urls;
   }
 
+  /**
+   * @private
+   */
   formDeletableUrlsArray(list) {
     let deletableUrls = [];
     [].forEach.call(list, function(item) {

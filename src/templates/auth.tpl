@@ -16,21 +16,22 @@
         <div class="row">
           <div class="block_auth">
             <h3 class="form_title">Войти в личный кабинет</h3>
-            <form action="auth.php?url={{url}}" method="post" class="form_auth">
+            <form id="authForm" class="form_auth">
               <div class="form-group">
-                <label for="exampleInputEmail1">Логин</label>
+                <label for="login">Логин</label>
                 <input name="userLogin" type="text" class="form-control" id="login" placeholder="Введите логин">
               </div>
               <div class="form-group">
-                <label for="exampleInputPassword1">Пароль</label>
+                <label for="password">Пароль</label>
                 <input name="userPassword" type="password" class="form-control" id="password" placeholder="Введите пароль">
               </div>
               <button id="sendFormButton" type="submit" class="btn btn-info">Войти</button>
+              <div class="server_response"></div>
             </form>
           </div>
-          <div class="registration_link_block hidden">
+          <div class="registration_link_block">
             <p>Еще не зарегистрированы?
-              <a href="#" title="Создать аккаунт">Создать аккаунт</a>
+              <a href="registration.php" title="Создать аккаунт">Создать аккаунт</a>
             </p>
           </div>
         </div>
@@ -38,5 +39,7 @@
     </main>
     <script src="../js/config.js"></script>
     <script src="../js/ajax.js"></script>
+    <script src="../js/vendor/jquery.js"></script>
+    <script src="../js/auth.js"></script>
   </body>
 </html>

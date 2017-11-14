@@ -356,12 +356,30 @@ class DatabaseDataManager
                            WHERE domain_id = ?", [$domainId]);
     }
 
-    public function editDomain($currentDomainId, $newDomain): void
+    public function editDomain(int $currentDomainId, string $newDomain): void
     {
         $domain = DatabaseTable::DOMAIN;
         $this->database->executeQuery("
                            UPDATE $domain
                            SET domain_name = ?
                            WHERE id = ?", [$newDomain, $currentDomainId]);
+    }
+
+    public function isExistsUser(string $login): bool
+    {
+        $user = DatabaseTable::USER;
+        $userExists = $this->database->executeQuery("
+                           SELECT * 
+                           FROM $user
+                           WHERE BINARY login = ? LIMIT 1", [$login]);
+        return ($userExists) ? true : false;
+    }
+
+    public function saveNewUser(string $login, string $password, string $apiKey): void
+    {
+        $user = DatabaseTable::USER;
+        $this->database->executeQuery("
+                           INSERT INTO $user (login, password, api_key)
+                           VALUES (?, ?, ?)", [$login, $password, $apiKey]);
     }
 }

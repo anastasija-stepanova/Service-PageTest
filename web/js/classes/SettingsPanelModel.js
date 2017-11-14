@@ -7,6 +7,10 @@ class SettingsPanelModel {
     this.idLocations = [];
     this.newDomainName = null;
   }
+
+  /**
+   * @public
+   */
   deleteUrls(domainName, urls) {
     this.domainName = domainName;
     this.urls = urls;
@@ -15,12 +19,15 @@ class SettingsPanelModel {
       'urls': this.urls
     };
 
-    let postParam = 'deletableUrls=' + JSON.stringify(keyValue);
-    ajaxPost(FILE_EDIT_USER_DOMAIN_URL, postParam, function(response) {
+    let requestParam = 'deletableUrls=' + JSON.stringify(keyValue);
+    ajaxPost(FILE_EDIT_USER_DOMAIN_URL, requestParam, function(response) {
       return response.responseText;
     })
   }
 
+  /**
+   * @public
+   */
   saveUrl(domainName, urlName) {
     this.domainName = domainName;
     this.urlName = urlName;
@@ -29,12 +36,15 @@ class SettingsPanelModel {
       'url': this.urlName
     };
 
-    let postParam = 'preservedUrl=' + JSON.stringify(keyValue);
-    ajaxPost(FILE_EDIT_USER_DOMAIN_URL, postParam, function(response) {
+    let requestParam = 'preservedUrl=' + JSON.stringify(keyValue);
+    ajaxPost(FILE_EDIT_USER_DOMAIN_URL, requestParam, function(response) {
       return response.responseText;
     });
   }
 
+  /**
+   * @public
+   */
   editLocations(domainName, checkedLocations) {
     this.domainName = domainName;
     this.checkedLocations = checkedLocations;
@@ -43,24 +53,30 @@ class SettingsPanelModel {
       'locationIds': this.checkedLocations
     };
 
-    let postParam = 'locations=' + JSON.stringify(keyValue);
-    ajaxPost(FILE_EDIT_USER_LOCATIONS, postParam, function(response) {
+    let requestParam = 'locations=' + JSON.stringify(keyValue);
+    ajaxPost(FILE_EDIT_USER_LOCATIONS, requestParam, function(response) {
       return response.responseText;
     });
   }
 
+  /**
+   * @public
+   */
   saveDomain(domainName) {
     this.domainName = domainName;
     let keyValue = {
       'value': this.domainName
     };
 
-    let postParam = 'domain=' + JSON.stringify(keyValue);
-    ajaxPost(FILE_EDIT_USER_DOMAIN, postParam, function(response) {
+    let requestParam = 'domain=' + JSON.stringify(keyValue);
+    ajaxPost(FILE_EDIT_USER_DOMAIN, requestParam, function(response) {
       return response.responseText;
     });
   }
 
+  /**
+   * @public
+   */
   deleteSettings(domainName, idLocations, urls) {
     this.domainName = domainName;
     this.idLocations = idLocations;
@@ -71,12 +87,15 @@ class SettingsPanelModel {
       'urls': this.urls
     };
 
-    let postParam = 'deletableSettings=' + JSON.stringify(keyValue);
-    ajaxPost(FILE_DELETE_SETTINGS_BLOCK, postParam, function(response) {
+    let requestParam = 'deletableSettings=' + JSON.stringify(keyValue);
+    ajaxPost(FILE_DELETE_SETTINGS_BLOCK, requestParam, function(response) {
       return response.responseText;
     });
   }
 
+  /**
+   * @public
+   */
   editDomain(currentDomain, newDomainName){
     this.domainName = currentDomain;
     this.newDomainName = newDomainName;
@@ -85,8 +104,8 @@ class SettingsPanelModel {
       'newDomain': this.newDomainName
     };
 
-    let postParam = 'editableDomain=' + JSON.stringify(keyValue);
-    ajaxPost(FILE_EDIT_USER_DOMAIN, postParam, function(response) {
+    let requestParam = 'editableDomain=' + JSON.stringify(keyValue);
+    ajaxPost(FILE_EDIT_USER_DOMAIN, requestParam, function(response) {
       return response.responseText;
     });
   }

@@ -6,10 +6,10 @@
   let keyValue = {
     'result': 'timeRange'
   };
-  let jsonString = 'data=' + JSON.stringify(keyValue);
+  let requestParam = 'data=' + JSON.stringify(keyValue);
   let minTime = null;
   let maxTime = null;
-  ajaxPost(FILE_GET_TIME_RANGE, jsonString, function(response) {
+  ajaxPost(FILE_GET_TIME_RANGE, requestParam, function(response) {
     if ('response' in response) {
       let jsonDecoded = JSON.parse(response['response']);
       if ('timeRange' in jsonDecoded) {

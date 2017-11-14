@@ -5,7 +5,7 @@ $sessionClient = new SessionClient();
 $sessionClient->checkArraySession();
 
 $webServerRequest = new WebServerRequest();
-$isExistsDeletableSettings = $webServerRequest->postKeyIsExists('deletableSettings');
+$isExistsDeletableSettings = $webServerRequest->postKeyExists('deletableSettings');
 
 if ($isExistsDeletableSettings)
 {

@@ -20,7 +20,7 @@ class SettingsPanelView {
     model.checkedLocations = this.formCheckedLocationsArray(item.getElementsByClassName('available_locations')[0]);
 
     this.editSettingsButton.addEventListener('click', function() {
-      thisPtr.initializeEditSettingButton(thisPtr.editSettingsButton, thisPtr.deleteUrlsButton, thisPtr.addLocationButton, thisPtr.addUrlButton);
+      thisPtr.constructor.initializeEditSettingButton(thisPtr.editSettingsButton, thisPtr.deleteUrlsButton, thisPtr.addLocationButton, thisPtr.addUrlButton);
     });
 
     this.addLocationButton.addEventListener('click', function() {
@@ -44,7 +44,10 @@ class SettingsPanelView {
     });
   }
 
-  initializeEditSettingButton(editSettingsButton, deleteUrlsButton, addLocationButton, addUrlButton) {
+  /**
+   * @private
+   */
+  static initializeEditSettingButton(editSettingsButton, deleteUrlsButton, addLocationButton, addUrlButton) {
     editSettingsButton.classList.add('hidden');
 
     [].forEach.call(deleteUrlsButton, function(item) {
@@ -54,6 +57,9 @@ class SettingsPanelView {
     addUrlButton.classList.remove('hidden');
   }
 
+  /**
+   * @private
+   */
   formCheckedLocationsArray(list) {
     let checkedArray = [];
 

@@ -36,8 +36,7 @@ class DomainDashboardSettings {
           return false;
       });
 
-      let chartsDataProvider = new ChartsDataProvider(domainId, locationId, typeView, minTime, maxTimem);
-      new ChartsBuilder(chartsDataProvider);
+      new ChartsBuilder(domainId, locationId, typeView, minTime, maxTime);
           $('#modalSettingDashboard').modal('hide');
 
     });

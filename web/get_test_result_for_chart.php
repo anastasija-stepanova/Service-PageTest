@@ -11,7 +11,7 @@ $date = new DateTime();
 $currentTime = $date->getTimestamp();
 
 $webServerRequest = new WebServerRequest();
-$isExistsPostData = $webServerRequest->postKeyIsExists('data');
+$isExistsPostData = $webServerRequest->postKeyExists('data');
 
 if ($isExistsPostData)
 {

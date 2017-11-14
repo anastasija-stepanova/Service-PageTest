@@ -2,7 +2,7 @@
 
 class WebServerRequest
 {
-    public function postKeyIsExists(string $key): bool
+    public function postKeyExists(string $key): bool
     {
         return array_key_exists($key, $_POST) ? true : false;
     }
