@@ -4,7 +4,7 @@ require_once __DIR__ . '/../src/autoloader.inc.php';
 const DEFAULT_TYPE_VIEW = 1;
 const DATA_KEYS_FOR_CHARTS = ['domainId', 'locationId', 'typeView', 'minTime', 'maxTime'];
 
-$sessionClient = new SessionClient();
+$sessionClient = new SessionWrapper();
 $sessionClient->checkArraySession();
 
 $date = new DateTime();

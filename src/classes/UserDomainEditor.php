@@ -72,6 +72,6 @@ class UserDomainEditor
     {
         $dataValidator = new DataValidator();
         $isDomain = $dataValidator->validateDomain($newDomain);
-        return $isDomain ? RequireStatus::VALID_DOMAIN : RequireStatus::INVALID_DOMAIN;
+        return $isDomain ? ResponseStatus::VALID_DOMAIN : ResponseStatus::INVALID_DOMAIN;
     }
 }

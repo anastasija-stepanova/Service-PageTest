@@ -28,7 +28,7 @@ class UserDomainUrlEditor
             $isUrl = $dataValidator->validateUrl($newUrl);
             if (!$isUrl)
             {
-                echo RequireStatus::INVALID_URL;
+                echo ResponseStatus::INVALID_URL;
                 return;
             }
 

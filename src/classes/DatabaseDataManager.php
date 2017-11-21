@@ -99,7 +99,7 @@ class DatabaseDataManager
     public function getUserData(string $userLogin, string $userPassword): array
     {
         $user = DatabaseTable::USER;
-        return $this->database->executeQuery("
+        return $this->database->selectOneRow("
                                   SELECT id, login, u.password 
                                   FROM $user AS u
                                   WHERE login = ? AND u.password = ?", [$userLogin, $userPassword]);
@@ -381,5 +381,15 @@ class DatabaseDataManager
         $this->database->executeQuery("
                            INSERT INTO $user (login, password, api_key)
                            VALUES (?, ?, ?)", [$login, $password, $apiKey]);
+    }
+
+    public function isExistsApiKey(string $apiKey): bool
+    {
+        $user = DatabaseTable::USER;
+        $apiKeyExists = $this->database->executeQuery("
+                                         SELECT * 
+                                         FROM $user
+                                         WHERE BINARY api_key = ? LIMIT 1", [$apiKey]);
+        return ($apiKeyExists) ? true : false;
     }
 }

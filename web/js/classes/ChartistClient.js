@@ -2,7 +2,7 @@ class ChartistClient {
   /**
    * @public
    */
-  buildChart(classChartContainer, axisXValues, axisYValues, legends, axisYTitle){
+  buildChart(classChartContainer, axisXValues, axisYValues, legends, axisYTitle) {
     let data = this.constructor.initializeData(axisXValues, axisYValues);
     let options = this.initializeOptions(legends, axisYTitle);
     let responsiveOptions = this.initializeResponsiveOptions();

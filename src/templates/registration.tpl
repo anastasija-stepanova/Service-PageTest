@@ -18,20 +18,28 @@
             <h3 class="form_title">Зарегистрироваться</h3>
             <form class="form_registration" id="registrationForm">
               <div class="form-group">
-                <label>Логин</label>
-                <input name="userLogin" type="text" class="form-control" id="login" placeholder="Введите логин" data-min="5">
+                <label>Логин <span class="demand">(Не менее 5 строчных букв, цифр. Первый символ-буква.)</span></label>
+                <input name="userLogin" type="text" class="form-control login" placeholder="Введите логин" data-min="5">
+                <span class="server_response_login"></span>
               </div>
               <div class="form-group">
-                <label>Пароль</label>
-                <input name="userPassword" type="password" class="form-control" placeholder="Введите пароль" data-min="6">
+                <label>Пароль <span class="demand">(Не менее 6 строчных-заглавных букв, цифр)</span></label>
+                <input name="userPassword" type="password" class="form-control password" placeholder="Введите пароль" data-min="6">
+                <span class="server_response_password"></span>
               </div>
               <div class="form-group">
                 <label>Повторите пароль</label>
-                <input name="userPasswordChecked" type="password" class="form-control" placeholder="Повторите пароль">
+                <input name="userPasswordChecked" type="password" class="form-control password_checked" placeholder="Повторите пароль">
+                <span class="server_response_password_checked"></span>
               </div>
               <div class="form-group">
-                <label>Введите API ключ</label>
-                <input name="apiKey" type="text" class="form-control" placeholder="Введите API ключ">
+                <label>Введите API ключ
+                  <span class="demand">(Получить
+                    <a href="https://www.webpagetest.org/getkey.php" title="Получить API key" target="_blank">здесь</a>)
+                  </span>
+                </label>
+                <input name="apiKey" type="text" class="form-control api_key" placeholder="Введите API ключ">
+                <span class="server_response_api_key"></span>
               </div>
               <button id="sendFormButton" type="submit" class="btn btn-info">Готово</button>
               <div class="server_response"></div>
@@ -44,6 +52,7 @@
       </div>
     </main>
     <script src="../js/config.js"></script>
+    <script src="../js/response_status.js"></script>
     <script src="../js/ajax.js"></script>
     <script src="../js/vendor/jquery.js"></script>
     <script src="../js/registration.js"></script>

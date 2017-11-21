@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
-$sessionClient = new SessionClient();
+$sessionClient = new SessionWrapper();
 $sessionClient->checkArraySession('index.php');
 
 $databaseDataManager = new DatabaseDataManager();
@@ -24,11 +24,14 @@ foreach ($domainsData as $domainData)
     }
 }
 
-$templateLoader = new Twig_Loader_Filesystem('../src/templates/');
-$twig = new Twig_Environment($templateLoader);
-$layout = $twig->load('layout.tpl');
+$pathProvider = new PathProvider();
+$twigWrapper = new TwigWrapper($pathProvider->getPathTemplates());
 
-$twig->display('index.tpl', array(
+$layout = $twigWrapper->getLoadedLayout('layout.tpl');
+
+$paramsArray = [
     'layout' => $layout,
     'userSettings' => $userSettings
-));
+];
+
+$twigWrapper->displayTemplate('index.tpl', $paramsArray);

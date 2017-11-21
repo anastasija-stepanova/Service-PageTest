@@ -2,7 +2,7 @@
   let settingsBlock = document.getElementsByClassName('settings_block');
 
   [].forEach.call(settingsBlock, function(item) {
-    initializeMVCSettingsPanel(item);
+    initializeSettingsPanel(item);
   });
 
   let addNewSettingsBlockButton = document.getElementById('addNewSettings');
@@ -13,10 +13,10 @@
     let settingsCopy = settingsTemplate.cloneNode(true);
     settingsCopy.classList.remove('hidden');
     settingsContainer.append(settingsCopy);
-    initializeMVCSettingsPanel(settingsCopy);
+    initializeSettingsPanel(settingsCopy);
   });
 
-  function initializeMVCSettingsPanel(item) {
+  function initializeSettingsPanel(item) {
     let settingsPanelModel = new SettingsPanelModel();
     let settingsPanelView = new SettingsPanelView(settingsPanelModel, item);
     new SettingsPanelController(settingsPanelModel, settingsPanelView, item);

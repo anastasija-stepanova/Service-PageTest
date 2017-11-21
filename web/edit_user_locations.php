@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
-$sessionClient = new SessionClient();
+$sessionClient = new SessionWrapper();
 $sessionClient->checkArraySession();
 
 $webServerRequest = new WebServerRequest();

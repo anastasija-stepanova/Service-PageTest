@@ -1,6 +1,6 @@
 <?php
 
-class SessionClient
+class SessionWrapper
 {
     private const MAX_LIFE_TIME = 1800;
 
@@ -36,11 +36,6 @@ class SessionClient
         {
             header('Location: index.php');
         }
-    }
-
-    public function passwordToHash(string $userPassword): string
-    {
-        return md5($userPassword);
     }
 
     public function checkArraySession(string $url = ''): void

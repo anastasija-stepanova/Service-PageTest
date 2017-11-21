@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
-$sessionClient = new SessionClient();
+$sessionClient = new SessionWrapper();
 $sessionClient->checkArraySession();
 
 $webServerRequest = new WebServerRequest();
@@ -36,7 +36,7 @@ if ($isExistsDeletableSettings)
                 $databaseDataManager->deleteUrl($deletableDomainId['id'], $deletableUrl);
             }
         }
-        echo RequireStatus::SUCCESS_STATUS;
+        echo ResponseStatus::SUCCESS_STATUS;
     }
     else
     {

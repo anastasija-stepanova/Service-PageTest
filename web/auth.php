@@ -1,28 +1,30 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
-$sessionClient = new SessionClient();
+$sessionClient = new SessionWrapper();
 $sessionClient->restoreSession();
 
 if (empty($_POST))
 {
     $webServerRequest = new WebServerRequest();
-    $templateLoader = new Twig_Loader_Filesystem('../src/templates/');
-    $twig = new Twig_Environment($templateLoader);
+    $pathProvider = new PathProvider();
+    $twigWrapper = new TwigWrapper($pathProvider->getPathTemplates());
 
     $isExistsUrl = $webServerRequest->getKeyIsExists('url');
 
     if (!$isExistsUrl)
     {
-        echo $twig->render('auth.tpl');
+        echo $twigWrapper->renderTemplate('auth.tpl');
         return;
     }
 
-    echo $twig->render('auth.tpl', array(
+    $paramsArray = [
         'url' => $webServerRequest->getGetKeyValue('url')
-    ));
-    return;
+    ];
+    echo $twigWrapper->renderTemplate('auth.tpl', $paramsArray);
 }
-
-$authClient = new AuthClient($sessionClient);
-$authClient->initializeUserData();
+else
+{
+    $userAuth = new UserAuth($sessionClient);
+    echo $userAuth->userAuthorization();
+}
