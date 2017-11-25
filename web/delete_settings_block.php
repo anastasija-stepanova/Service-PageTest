@@ -1,17 +1,15 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
-$sessionClient = new SessionWrapper();
-$sessionClient->checkArraySession();
+$sessionManager = new SessionManager();
+$sessionManager->checkArraySession();
 
-$webServerRequest = new WebServerRequest();
-$isExistsDeletableSettings = $webServerRequest->postKeyExists('deletableSettings');
+$json = WebServerRequest::getPostKeyValue('deletableSettings');
 
-if ($isExistsDeletableSettings)
+if ($json != null)
 {
     $databaseDataManager = new DatabaseDataManager();
 
-    $json = $webServerRequest->getPostKeyValue('deletableSettings');
     $jsonDecoded = json_decode($json, true);
     $lastError = json_last_error();
 

@@ -1,15 +1,14 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
-$sessionClient = new SessionWrapper();
-$sessionClient->checkArraySession();
+$sessionManager = new SessionManager();
+$sessionManager->checkArraySession();
 
 $webServerRequest = new WebServerRequest();
-$isExistsLocations = $webServerRequest->postKeyExists('locations');
+$locations = WebServerRequest::getPostKeyValue('locations');
 
-if ($isExistsLocations != null)
+if ($locations != null)
 {
-    $json = $webServerRequest->getPostKeyValue('locations');
-    $userLocationsEditor = new UserLocationsEditor($sessionClient);
-    $userLocationsEditor->editUserLocations($json);
+    $userLocationsEditor = new UserLocationsEditor($sessionManager);
+    $userLocationsEditor->editUserLocations($locations);
 }

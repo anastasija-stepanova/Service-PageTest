@@ -2,29 +2,23 @@
 
 class UserAuth
 {
-    private $sessionClient;
-    private $webServerRequest;
+    private $sessionManager;
     private $databaseDataManager;
-    private $passwordHasher;
 
-    public function __construct($sessionClient)
+    public function __construct(SessionManager $sessionManager)
     {
-        $this->sessionClient = $sessionClient;
-        $this->webServerRequest = new WebServerRequest();
+        $this->sessionManager = $sessionManager;
         $this->databaseDataManager = new DatabaseDataManager();
-        $this->passwordHasher = new PasswordHasher();
     }
 
     public function userAuthorization(): int
     {
-        $isExistsUserLogin =  $this->webServerRequest->postKeyExists('userLogin');
-        $isExistsUserPassword =  $this->webServerRequest->postKeyExists('userPassword');
+        $newUserLogin =  WebServerRequest::getPostKeyValue('userLogin');
+        $newUserPassword =  WebServerRequest::getPostKeyValue('userPassword');
         $statusCode = ResponseStatus::LOGIN_PASSWORD_INCORRECT;
-        if ($isExistsUserLogin && $isExistsUserPassword)
+        if ($newUserLogin != null && $newUserPassword != null)
         {
-            $newUserLogin = $this->webServerRequest->getPostKeyValue('userLogin');
-            $newUserPassword = $this->webServerRequest->getPostKeyValue('userPassword');
-            $passwordHash = $this->passwordHasher->passwordToHash($newUserPassword);
+            $passwordHash = PasswordHashCreator::passwordToHash($newUserPassword);
             $currentUserData = $this->databaseDataManager->getUserData($newUserLogin, $passwordHash);
             $statusCode = $this->getStatus($currentUserData, $newUserLogin, $passwordHash);
         }
@@ -36,7 +30,7 @@ class UserAuth
         $statusCode = ResponseStatus::LOGIN_PASSWORD_INCORRECT;
         if ($currentUserData)
         {
-            $this->sessionClient->initializeArraySession($currentUserData['id']);
+            $this->sessionManager->initializeArraySession($currentUserData['id']);
             $currentUserLogin = $currentUserData['login'];
             $currentUserPassword = $currentUserData['password'];
             $statusCode = $this->getStatusLogin($currentUserLogin, $currentUserPassword, $newUserLogin, $passwordHash);

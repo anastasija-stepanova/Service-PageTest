@@ -86,6 +86,7 @@
   <div class="ct-chart2 ct-major-tenth"></div>
   <h2>Fully Load Time</h2>
   <div class="ct-chart3 ct-major-tenth"></div>
+  <div class="ct-chart4 ct-major-tenth"></div>
 </div>
 {% endblock %}
 {% block chartistJs %}
@@ -99,7 +100,7 @@
 <script src="../bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.js"></script>
 <script src="../js/classes/DomainDashboardSettings.js"></script>
 <script src="../js/classes/ChartsDataProvider.js"></script>
-<script src="../js/classes/ChartistClient.js"></script>
+<script src="../js/classes/ChartistWrapper.js"></script>
 <script src="../js/classes/ChartsBuilder.js"></script>
 <script src="../js/build_chart.js"></script>
 <script src="../js/main.js"></script>

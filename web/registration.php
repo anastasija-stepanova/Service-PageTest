@@ -1,21 +1,19 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
-$sessionClient = new SessionWrapper();
-$sessionClient->restoreSession();
+$sessionManager = new SessionManager();
+$sessionManager->restoreSession();
 
 if (empty($_POST))
 {
-    $pathProvider = new PathProvider();
-    $twigWrapper = new TwigWrapper($pathProvider->getPathTemplates());
+    $twigWrapper = new TwigWrapper(PathProvider::getPathTemplates());
 
     echo $twigWrapper->renderTemplate('registration.tpl');
     return;
 }
 
 $databaseDataManager = new DatabaseDataManager();
-$userRegistration = new UserRegistration($sessionClient, $databaseDataManager);
-$passwordHasher = new PasswordHasher();
+$userRegistration = new UserRegistration($sessionManager, $databaseDataManager);
 $userLogin = getUserData('userLogin');
 $userPassword = getUserData('userPassword');
 $userPasswordChecked = getUserData('userPasswordChecked');
@@ -40,7 +38,7 @@ if ($userLogin && $userPassword && $userPasswordChecked && $apiKey)
     }
     else if ($statusUserLogin == ResponseStatus::SUCCESS_STATUS && $statusUserPassword == ResponseStatus::SUCCESS_STATUS && $statusApiKey == ResponseStatus::SUCCESS_STATUS)
     {
-        $passwordHash = $passwordHasher->passwordToHash($userPassword);
+        $passwordHash = PasswordHashCreator::passwordToHash($userPassword);
         $databaseDataManager->saveNewUser($userLogin, $passwordHash, $apiKey);
         $statusCode = ResponseStatus::SUCCESS_STATUS;
     }
@@ -53,12 +51,6 @@ if ($userLogin && $userPassword && $userPasswordChecked && $apiKey)
 
 function getUserData(string $arrayParam): string
 {
-    $webServerRequest = new WebServerRequest();
-    $userData = null;
-    if ($webServerRequest->postKeyExists($arrayParam))
-    {
-        $userData = $webServerRequest->getPostKeyValue($arrayParam);
-    }
-
-    return $userData;
+    $userData = WebServerRequest::getPostKeyValue($arrayParam);
+    return $userData != null ? $userData : null;
 }

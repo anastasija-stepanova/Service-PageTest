@@ -1,22 +1,19 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
-$sessionClient = new SessionWrapper();
-$sessionClient->checkArraySession();
+$sessionManager = new SessionManager();
+$sessionManager->checkArraySession();
 
-$webServerRequest = new WebServerRequest();
-$isExistsDomain = $webServerRequest->postKeyExists('domain');
-$isExistsEditableDomain = $webServerRequest->postKeyExists('editableDomain');
+$newDomainJson = WebServerRequest::getPostKeyValue('domain');
+$editableDomainJson = WebServerRequest::getPostKeyValue('editableDomain');
 
-if ($isExistsDomain !=  null)
+if ($newDomainJson !=  null)
 {
-    $json = $webServerRequest->getPostKeyValue('domain');
-    $userDomainEditor = new UserDomainEditor($sessionClient);
-    $userDomainEditor->saveNewDomain($json);
+    $userDomainEditor = new UserDomainEditor($sessionManager);
+    $userDomainEditor->saveNewDomain($newDomainJson);
 }
-elseif ($isExistsEditableDomain)
+elseif ($editableDomainJson != null)
 {
-    $json = $webServerRequest->getPostKeyValue('editableDomain');
-    $userDomainEditor = new UserDomainEditor($sessionClient);
-    $userDomainEditor->editExistingDomain($json);
+    $userDomainEditor = new UserDomainEditor($sessionManager);
+    $userDomainEditor->editExistingDomain($editableDomainJson);
 }

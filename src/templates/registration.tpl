@@ -20,17 +20,17 @@
               <div class="form-group">
                 <label>Логин <span class="demand">(Не менее 5 строчных букв, цифр. Первый символ-буква.)</span></label>
                 <input name="userLogin" type="text" class="form-control login" placeholder="Введите логин" data-min="5">
-                <span class="server_response_login"></span>
+                <span class="server_response_login error_message_container"></span>
               </div>
               <div class="form-group">
                 <label>Пароль <span class="demand">(Не менее 6 строчных-заглавных букв, цифр)</span></label>
                 <input name="userPassword" type="password" class="form-control password" placeholder="Введите пароль" data-min="6">
-                <span class="server_response_password"></span>
+                <span class="server_response_password error_message_container"></span>
               </div>
               <div class="form-group">
                 <label>Повторите пароль</label>
                 <input name="userPasswordChecked" type="password" class="form-control password_checked" placeholder="Повторите пароль">
-                <span class="server_response_password_checked"></span>
+                <span class="server_response_password_checked error_message_container"></span>
               </div>
               <div class="form-group">
                 <label>Введите API ключ
@@ -39,9 +39,9 @@
                   </span>
                 </label>
                 <input name="apiKey" type="text" class="form-control api_key" placeholder="Введите API ключ">
-                <span class="server_response_api_key"></span>
+                <span class="server_response_api_key error_message_container"></span>
               </div>
-              <button id="sendFormButton" type="submit" class="btn btn-info">Готово</button>
+              <button id="sendFormButton" type="submit" class="btn btn-info">Отправить</button>
               <div class="server_response"></div>
             </form>
           </div>
@@ -54,7 +54,8 @@
     <script src="../js/config.js"></script>
     <script src="../js/response_status.js"></script>
     <script src="../js/ajax.js"></script>
-    <script src="../js/vendor/jquery.js"></script>
+    <script src="../js/classes/RegistrationFormModel.js"></script>
+    <script src="../js/classes/RegistrationFormView.js"></script>
     <script src="../js/registration.js"></script>
   </body>
 </html>

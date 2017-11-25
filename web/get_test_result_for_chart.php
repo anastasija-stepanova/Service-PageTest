@@ -4,25 +4,23 @@ require_once __DIR__ . '/../src/autoloader.inc.php';
 const DEFAULT_TYPE_VIEW = 1;
 const DATA_KEYS_FOR_CHARTS = ['domainId', 'locationId', 'typeView', 'minTime', 'maxTime'];
 
-$sessionClient = new SessionWrapper();
-$sessionClient->checkArraySession();
+$sessionManager = new SessionManager();
+$sessionManager->checkArraySession();
 
 $date = new DateTime();
 $currentTime = $date->getTimestamp();
 
-$webServerRequest = new WebServerRequest();
-$isExistsPostData = $webServerRequest->postKeyExists('data');
+$testResultParam = WebServerRequest::getPostKeyValue('data');
 
-if ($isExistsPostData)
+if ($testResultParam != null)
 {
     $databaseDataManager = new DatabaseDataManager();
 
-    $testResultParam = $webServerRequest->getPostKeyValue('data');
     $jsonDecoded = json_decode($testResultParam, true);
     $lastError = json_last_error();
     if ($lastError === JSON_ERROR_NONE)
     {
-        $dataArray = initializeDataArray($sessionClient, $jsonDecoded, $currentTime, $databaseDataManager);
+        $dataArray = initializeDataArray($sessionManager, $jsonDecoded, $currentTime, $databaseDataManager);
 
         $finishedData = [];
         foreach ($dataArray as $item)
@@ -56,9 +54,9 @@ function checkParamsForChart(array $array): bool
     return $isExists;
 }
 
-function initializeDataArray($sessionClient, array $jsonDecoded, int $currentTime, $databaseDataManager): array
+function initializeDataArray(SessionManager $sessionManager, array $jsonDecoded, int $currentTime, DatabaseDataManager $databaseDataManager): array
 {
-    $userId = $sessionClient->getUserId();
+    $userId = $sessionManager->getUserId();
     if (checkParamsForChart($jsonDecoded))
     {
         $domainId = $jsonDecoded['domainId'];

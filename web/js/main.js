@@ -1,21 +1,24 @@
 (function() {
   const MILLISECONDS_IN_DAY = 86400000;
   const MILLISECONDS_IN_WEEK = 604800000;
+
+  function timeToDayMonth(date) {
+    return date.getDate() + '.' + parseInt(date.getMonth() + 1);
+  }
+
   $('.collapse').collapse();
 
   let keyValue = {
     'result': 'timeRange'
   };
   let requestParam = 'data=' + JSON.stringify(keyValue);
-  let minTime = null;
   let maxTime = null;
   ajaxPost(FILE_GET_TIME_RANGE, requestParam, function(response) {
     if ('response' in response) {
-      let jsonDecoded = JSON.parse(response['response']);
+      let jsonDecoded = JSON.parse(response.response);
       if ('timeRange' in jsonDecoded) {
-        let timeRange = jsonDecoded['timeRange'];
+        let timeRange = jsonDecoded.timeRange;
         let maxIndexTimeArray = timeRange.length - 1;
-        minTime = new Date(timeRange[0]);
         maxTime = new Date(timeRange[maxIndexTimeArray]);
         let defaultMinTime = maxTime.getTime() - MILLISECONDS_IN_WEEK;
         let defaultMaxTime = new Date(timeRange[maxIndexTimeArray]).getTime();
@@ -53,7 +56,3 @@
   });
 
 })();
-
-function timeToDayMonth(date) {
-  return date.getDate() + '.' + parseInt(date.getMonth() + 1);
-}

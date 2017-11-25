@@ -3,15 +3,15 @@
 class UserDomainEditor
 {
     private $databaseDataManager;
-    private $sessionClient;
+    private $sessionManager;
 
-    public function __construct($sessionClient)
+    public function __construct(SessionManager $sessionManager)
     {
-        $this->sessionClient = $sessionClient;
+        $this->sessionManager = $sessionManager;
         $this->databaseDataManager = new DatabaseDataManager();
     }
 
-    public function saveNewDomain(string $json)
+    public function saveNewDomain(string $json): void
     {
         $jsonDecoded = json_decode($json, true);
         $lastError = json_last_error();
@@ -30,7 +30,7 @@ class UserDomainEditor
 
                 if (array_key_exists('id', $domainExists))
                 {
-                    $userId = $this->sessionClient->getUserId();
+                    $userId = $this->sessionManager->getUserId();
                     $this->databaseDataManager->saveUserDomain($userId, $domainExists['id']);
                     echo $newDomain;
                 }
@@ -42,7 +42,7 @@ class UserDomainEditor
         }
     }
 
-    public function editExistingDomain(string $json)
+    public function editExistingDomain(string $json): void
     {
         $jsonDecoded = json_decode($json, true);
         $lastError = json_last_error();
@@ -70,8 +70,7 @@ class UserDomainEditor
 
     private function validateDomain(string $newDomain): int
     {
-        $dataValidator = new DataValidator();
-        $isDomain = $dataValidator->validateDomain($newDomain);
+        $isDomain = DataValidator::validateDomain($newDomain);
         return $isDomain ? ResponseStatus::VALID_DOMAIN : ResponseStatus::INVALID_DOMAIN;
     }
 }

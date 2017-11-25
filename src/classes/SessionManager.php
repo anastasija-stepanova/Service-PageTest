@@ -1,6 +1,6 @@
 <?php
 
-class SessionWrapper
+class SessionManager
 {
     private const MAX_LIFE_TIME = 1800;
 

@@ -1,4 +1,9 @@
 (function() {
+  function initializeSettingsPanel(item) {
+    let settingsPanelModel = new SettingsPanelModel();
+    let settingsPanelView = new SettingsPanelView(settingsPanelModel, item);
+    new SettingsPanelController(settingsPanelModel, settingsPanelView, item);
+  }
   let settingsBlock = document.getElementsByClassName('settings_block');
 
   [].forEach.call(settingsBlock, function(item) {
@@ -15,10 +20,4 @@
     settingsContainer.append(settingsCopy);
     initializeSettingsPanel(settingsCopy);
   });
-
-  function initializeSettingsPanel(item) {
-    let settingsPanelModel = new SettingsPanelModel();
-    let settingsPanelView = new SettingsPanelView(settingsPanelModel, item);
-    new SettingsPanelController(settingsPanelModel, settingsPanelView, item);
-  }
 });

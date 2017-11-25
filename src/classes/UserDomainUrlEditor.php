@@ -4,28 +4,25 @@
 class UserDomainUrlEditor
 {
     private $databaseDataManager;
-    private $sessionClient;
+    private $sessionManager;
 
-    public function __construct($sessionClient)
+    public function __construct(SessionManager $sessionManager)
     {
-        $this->sessionClient = $sessionClient;
+        $this->sessionManager = $sessionManager;
         $this->databaseDataManager = new DatabaseDataManager();
     }
 
-    public function saveNewUrl(string $json)
+    public function saveNewUrl(string $json): void
     {
         $jsonDecoded = json_decode($json, true);
         $lastError = json_last_error();
 
         if ($lastError === JSON_ERROR_NONE)
         {
-            print_r($jsonDecoded);
             $domain = $jsonDecoded['domain'];
             $newUrl = $jsonDecoded['url'];
 
-            $dataValidator = new DataValidator();
-
-            $isUrl = $dataValidator->validateUrl($newUrl);
+            $isUrl = DataValidator::validateUrl($newUrl);
             if (!$isUrl)
             {
                 echo ResponseStatus::INVALID_URL;
@@ -53,7 +50,7 @@ class UserDomainUrlEditor
         }
     }
 
-    public function deleteUrl(string $json)
+    public function deleteUrl(string $json): void
     {
         $jsonDecoded = json_decode($json, true);
         $lastError = json_last_error();

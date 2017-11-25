@@ -2,15 +2,13 @@
 
 class UserRegistration
 {
-    private $dataValidator;
     private $databaseDataManager;
-    private $sessionClient;
+    private $sessionManager;
 
-    public function __construct($sessionClient, $databaseDataManager)
+    public function __construct(SessionManager $sessionManager, DatabaseDataManager $databaseDataManager)
     {
-        $this->sessionClient = $sessionClient;
+        $this->sessionManager = $sessionManager;
         $this->databaseDataManager = $databaseDataManager;
-        $this->dataValidator = new DataValidator();
     }
 
     public function getStatusLogin(string $userLogin): int
@@ -52,8 +50,8 @@ class UserRegistration
         }
     }
 
-    private function checkValidationError(string $userInfo, $methodName): bool
+    private function checkValidationError(string $userInfo, string $methodName): bool
     {
-        return $this->dataValidator->$methodName($userInfo) ? true : false;
+        return DataValidator::$methodName($userInfo) ? true : false;
     }
 }

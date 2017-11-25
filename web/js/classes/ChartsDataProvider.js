@@ -54,6 +54,7 @@ class ChartsDataProvider {
       return null;
     }
     let testResult = jsonDecoded['testResult'];
+
     return this.constructor.generateDataTestResult(jsonDecoded['testResult']);
   }
 

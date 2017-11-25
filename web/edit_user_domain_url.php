@@ -1,22 +1,19 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
-$sessionClient = new SessionWrapper();
-$sessionClient->checkArraySession();
+$sessionManager = new SessionManager();
+$sessionManager->checkArraySession();
 
-$webServerRequest = new WebServerRequest();
-$isExistsPreservedUrl = $webServerRequest->postKeyExists('preservedUrl');
-$isExistsDeletableUrls = $webServerRequest->postKeyExists('deletableUrls');
+$preservedUrl = WebServerRequest::getGetKeyValue('preservedUrl');
+$removableUrls = WebServerRequest::getPostKeyValue('deletableUrls');
 
-if ($isExistsPreservedUrl != null)
+if ($preservedUrl != null)
 {
-    $preservedUrl = $webServerRequest->getPostKeyValue('preservedUrl');
-    $userDomainUrlEditor = new UserDomainUrlEditor($sessionClient);
+    $userDomainUrlEditor = new UserDomainUrlEditor($sessionManager);
     $userDomainUrlEditor->saveNewUrl($preservedUrl);
 }
-else if ($isExistsDeletableUrls)
+else if ($removableUrls != null)
 {
-    $removableUrls = $webServerRequest->getPostKeyValue('deletableUrls');
-    $userDomainUrlEditor = new UserDomainUrlEditor($sessionClient);
+    $userDomainUrlEditor = new UserDomainUrlEditor($sessionManager);
     $userDomainUrlEditor->deleteUrl($removableUrls);
 }

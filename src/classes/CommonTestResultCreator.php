@@ -4,7 +4,7 @@ class CommonTestResultCreator
 {
     private const DEFAULT_VALUE = null;
 
-    public static function createFromMobileBrowser(array $response)
+    public static function createFromMobileBrowser(array $response): CommonTestResult
     {
         $commonTestResult = new CommonTestResult();
 
@@ -37,7 +37,7 @@ class CommonTestResultCreator
         return $commonTestResult;
     }
 
-    public static function createFromDesktopBrowser(array $response)
+    public static function createFromDesktopBrowser(array $response): CommonTestResult
     {
         $commonTestResult = new CommonTestResult();
 

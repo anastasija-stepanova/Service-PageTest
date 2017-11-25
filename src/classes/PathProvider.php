@@ -2,7 +2,7 @@
 
 class PathProvider
 {
-    public function getPathTemplates(): string
+    public static function getPathTemplates(): string
     {
         return realpath('../src/templates/');
     }

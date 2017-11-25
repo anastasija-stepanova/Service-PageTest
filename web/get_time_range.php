@@ -1,19 +1,17 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
-$sessionClient = new SessionWrapper();
-$sessionClient->checkArraySession();
+$sessionManager = new SessionManager();
+$sessionManager->checkArraySession();
 
 $date = new DateTime();
 $currentTime = $date->getTimestamp();
 
-$webServerRequest = new WebServerRequest();
-$isExistsPostData = $webServerRequest->postKeyExists('data');
+$timeRangeParam = WebServerRequest::getPostKeyValue('data');
 
-if ($isExistsPostData)
+if ($timeRangeParam != null)
 {
     $databaseDataManager = new DatabaseDataManager();
-    $timeRangeParam = $webServerRequest->getPostKeyValue('data');
     $jsonDecoded = json_decode($timeRangeParam, true);
     $lastError = json_last_error();
     $timeRangeFinished = null;

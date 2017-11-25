@@ -1,12 +1,21 @@
-class ChartistClient {
+class ChartistWrapper {
+  constructor() {
+    this.PADDING_TOP = 60;
+    this.PADDING_BOTTOM = 20;
+    this.PADDING_LEFT = 20;
+    this.AREA_BASE = 50;
+    this.AXIS_X_OFFSET_X = 0;
+    this.AXIS_X_OFFSET_Y = 43;
+    this.AXIS_Y_OFFSET_X = -50;
+    this.AXIS_Y_OFFSET_Y = -3;
+  }
   /**
    * @public
    */
   buildChart(classChartContainer, axisXValues, axisYValues, legends, axisYTitle) {
     let data = this.constructor.initializeData(axisXValues, axisYValues);
     let options = this.initializeOptions(legends, axisYTitle);
-    let responsiveOptions = this.initializeResponsiveOptions();
-    new Chartist.Line(classChartContainer, data, options, responsiveOptions)
+    new Chartist.Line(classChartContainer, data, options);
   }
 
   /**
@@ -23,12 +32,22 @@ class ChartistClient {
    * @private
    */
   initializeOptions(legends, axisYTitle) {
+    const MAX_VISIBLE_LENGTH_WITHOUT_PERIOD = 20;
+    const PERIOD_OUTPUT_POINTS = 4 ;
     return {
       chartPadding: {
-        top: PADDING_TOP,
-        bottom: PADDING_BOTTOM,
-        left: PADDING_LEFT,
-        areaBase: AREA_BASE,
+        top: this.PADDING_TOP,
+        bottom: this.PADDING_BOTTOM,
+        left: this.PADDING_LEFT,
+        areaBase: this.AREA_BASE,
+      },
+      axisX: {
+        labelInterpolationFnc: function skipLabels(value, index, labels) {
+          if (labels.length > MAX_VISIBLE_LENGTH_WITHOUT_PERIOD) {
+            return index % PERIOD_OUTPUT_POINTS === 0 ? value : null;
+          }
+          return value;
+        }
       },
       plugins: [
         Chartist.plugins.legend({
@@ -48,8 +67,8 @@ class ChartistClient {
             axisClass: 'ct-axis-title',
             type: Chartist.AutoScaleAxis,
             offset: {
-              x: AXIS_X_OFFSET_X,
-              y: AXIS_X_OFFSET_Y
+              x: this.AXIS_X_OFFSET_X,
+              y: this.AXIS_X_OFFSET_Y
             },
             textAnchor: 'middle'
           },
@@ -58,39 +77,12 @@ class ChartistClient {
             axisClass: 'ct-axis-title',
             type: Chartist.AutoScaleAxis,
             offset: {
-              x: AXIS_Y_OFFSET_X,
-              y: AXIS_Y_OFFSET_Y
+              x: this.AXIS_Y_OFFSET_X,
+              y: this.AXIS_Y_OFFSET_Y
             }
           }
         })
       ]
     };
   };
-
-  /**
-   * @private
-   */
-  initializeResponsiveOptions() {
-    const MAX_VISIBLE_LENGTH_WITHOUT_PERIOD = 20;
-    const PERIOD_OUTPUT_POINTS = 4;
-    return {
-      axisX: {
-        labelInterpolationFnc: function skipLabels(value, index, labels) {
-          if (labels.length > MAX_VISIBLE_LENGTH_WITHOUT_PERIOD) {
-            return index % PERIOD_OUTPUT_POINTS === 0 ? value : null;
-          }
-          return value;
-        }
-      }
-    };
-  };
 }
-
-const PADDING_TOP = 60;
-const PADDING_BOTTOM = 20;
-const PADDING_LEFT = 20;
-const AREA_BASE = 50;
-const AXIS_X_OFFSET_X = 0;
-const AXIS_X_OFFSET_Y = 43;
-const AXIS_Y_OFFSET_X = -50;
-const AXIS_Y_OFFSET_Y = -3;

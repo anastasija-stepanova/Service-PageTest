@@ -3,15 +3,15 @@
 class UserLocationsEditor
 {
     private $databaseDataManager;
-    private $sessionClient;
+    private $sessionManager;
 
-    public function __construct($sessionClient)
+    public function __construct(SessionManager $sessionManager)
     {
-        $this->sessionClient = $sessionClient;
+        $this->sessionManager = $sessionManager;
         $this->databaseDataManager = new DatabaseDataManager();
     }
 
-    public function editUserLocations(string $json)
+    public function editUserLocations(string $json): void
     {
         $jsonDecoded = json_decode($json, true);
         $lastError = json_last_error();
@@ -22,7 +22,7 @@ class UserLocationsEditor
             $locations = $jsonDecoded['locationIds'];
 
             $domainId = $this->getDomainId($domain);
-            $userId = $this->sessionClient->getUserId();
+            $userId = $this->sessionManager->getUserId();
             $existingLocations = $this->databaseDataManager->getExistingLocations($userId, $domainId);
 
             if ($existingLocations)

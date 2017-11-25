@@ -1,12 +1,12 @@
 <?php
 require_once __DIR__ . '/../src/autoloader.inc.php';
 
-$sessionClient = new SessionWrapper();
-$sessionClient->checkArraySession('index.php');
+$sessionManager = new SessionManager();
+$sessionManager->checkArraySession('index.php');
 
 $databaseDataManager = new DatabaseDataManager();
 
-$userId = $sessionClient->getUserId();
+$userId = $sessionManager->getUserId();
 $domainsData = $databaseDataManager->getUserDomainsData($userId);
 
 $userSettings = [];
@@ -24,8 +24,7 @@ foreach ($domainsData as $domainData)
     }
 }
 
-$pathProvider = new PathProvider();
-$twigWrapper = new TwigWrapper($pathProvider->getPathTemplates());
+$twigWrapper = new TwigWrapper(PathProvider::getPathTemplates());
 
 $layout = $twigWrapper->getLoadedLayout('layout.tpl');
 
