@@ -22,17 +22,29 @@ if ($testResultParam != null)
     {
         $dataArray = initializeDataArray($sessionManager, $jsonDecoded, $currentTime, $databaseDataManager);
 
+        $finishedDataccc = [];
         $finishedData = [];
+        $ttfbArray = [];
+        $docTimeArray = [];
+        $fullyLoadedArray = [];
         foreach ($dataArray as $item)
         {
-            $finishedData[$item['user_domain_id']][$item['url']]['ttfb'][] = $item['ttfb'];
-            $finishedData[$item['user_domain_id']][$item['url']]['doc_time'][] = $item['doc_time'];
-            $finishedData[$item['user_domain_id']][$item['url']]['fully_loaded'][] = $item['fully_loaded'];
-            $finishedData[$item['user_domain_id']][$item['url']]['time'][] = $item['DATE_FORMAT(ar.completed_time, \'%e %b\')'];
+            $ttfbArray[] = $item['completed_time'];
+            $ttfbArray[] = $item['ttfb'];
+            $docTimeArray[] = $item['completed_time'];
+            $docTimeArray[] = $item['doc_time'];
+            $fullyLoadedArray[] = $item['completed_time'];
+            $fullyLoadedArray[] = $item['fully_loaded'];
+            $finishedData[$item['user_domain_id']][$item['url']]['ttfb'][] = $ttfbArray;
+            $finishedData[$item['user_domain_id']][$item['url']]['doc_time'][] = $docTimeArray;
+            $finishedData[$item['user_domain_id']][$item['url']]['fully_loaded'][] = $fullyLoadedArray;
+            $ttfbArray = [];
+            $docTimeArray = [];
+            $fullyLoadedArray = [];
         }
 
         $testResult = [
-            'testResult' => $finishedData
+            'testResult' => $finishedData,
         ];
 
         $json = json_encode($testResult, true);

@@ -1,3 +1,4 @@
+const ASYN_RESPONSE_WAITING_TIME = 10;
 class AuthFormView {
   constructor(model) {
     this.sendFormButton = document.getElementById('sendFormButton');
@@ -17,8 +18,13 @@ class AuthFormView {
       event.preventDefault();
       let formData = new FormData(thisPtr.authForm);
       model.sendRequest(formData);
-      thisPtr.printResponse(model.statusCode);
-      thisPtr.removeErrorClass();
+      let ajaxTimeout = setInterval(function() {
+        if (model.statusCode !== null) {
+          thisPtr.printResponse(model.statusCode);
+          thisPtr.removeErrorClass();
+          clearInterval(ajaxTimeout);
+        }
+      }, ASYN_RESPONSE_WAITING_TIME);
     });
   }
 
@@ -33,8 +39,8 @@ class AuthFormView {
         break;
       case LOGIN_PASSWORD_INCORRECT:
         thisPtr.serverResponse.innerHTML = 'Пароль или логин неверн';
-        thisPtr.constructor.addElementClassError(thisPtr.userLogin);
-        thisPtr.constructor.addElementClassError(thisPtr.password);
+        AuthFormView.addElementClassError(thisPtr.userLogin);
+        AuthFormView.addElementClassError(thisPtr.password);
         break;
     }
   }

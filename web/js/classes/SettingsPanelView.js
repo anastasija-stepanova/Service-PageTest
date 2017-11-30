@@ -20,7 +20,7 @@ class SettingsPanelView {
     model.checkedLocations = this.formCheckedLocationsArray(item.getElementsByClassName('available_locations')[0]);
 
     this.editSettingsButton.addEventListener('click', function() {
-      thisPtr.constructor.initializeEditSettingButton(thisPtr.editSettingsButton, thisPtr.deleteUrlsButton, thisPtr.addLocationButton, thisPtr.addUrlButton);
+      SettingsPanelView.initializeEditSettingButton(thisPtr.editSettingsButton, thisPtr.deleteUrlsButton, thisPtr.addLocationButton, thisPtr.addUrlButton);
     });
 
     this.addLocationButton.addEventListener('click', function() {

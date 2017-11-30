@@ -258,7 +258,7 @@ class CommonTestResult
         return $this->domInteractive;
     }
 
-    public function setDomLoading(int $value): void
+    public function setDomLoading(mixed $value): void
     {
         $this->domLoading = $value;
     }
@@ -268,7 +268,7 @@ class CommonTestResult
         return $this->domLoading;
     }
 
-    public function setVisualComplete(int $value): void
+    public function setVisualComplete(mixed $value): void
     {
         $this->visualComplete = $value;
     }

@@ -12,8 +12,8 @@ class SettingsPanelController {
 
     view.saveSettings = function() {
       model.editLocations(thisPtr.domain, thisPtr.checkedLocations);
-      model.saveDomain(thisPtr.constructor.getValueNewDomain(item, thisPtr.newDomainContainer));
-      model.saveUrl(thisPtr.domain, thisPtr.constructor.getValueNewUrl(thisPtr.newUrlContainer));
+      model.saveDomain(SettingsPanelController.getValueNewDomain(item, thisPtr.newDomainContainer));
+      model.saveUrl(thisPtr.domain, SettingsPanelController.getValueNewUrl(thisPtr.newUrlContainer));
       model.deleteUrls(thisPtr.domain, thisPtr.deletableUrls);
     };
 

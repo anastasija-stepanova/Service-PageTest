@@ -7,7 +7,7 @@ class AuthFormModel {
    * @public
    */
   sendRequest(formData) {
-    ajaxPost(FILE_AUTH, this.constructor.getQueryString(formData), this.constructor.getStatus.bind(this));
+    ajaxPost(FILE_AUTH, AuthFormModel.getQueryString(formData), AuthFormModel.getStatus.bind(this));
   }
 
   /**

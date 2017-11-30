@@ -1,19 +1,43 @@
 class ChartsDataProvider {
   constructor(domainId = null, locationId = null, typeView = null, minTime = null, maxTime = null) {
     this.initializeRequest(domainId, locationId, typeView, minTime, maxTime);
-
     let thisPtr = this;
     let callbackInterval = setInterval(function() {
       if (thisPtr.subArray) {
-        thisPtr.subArray = thisPtr.setChartsData(thisPtr.subArray);
-        thisPtr.ttfb = thisPtr.subArray[0];
-        thisPtr.docTime = thisPtr.subArray[1];
-        thisPtr.fullyLoaded = thisPtr.subArray[2];
-        thisPtr.time = thisPtr.subArray[3];
-        thisPtr.domainUrls = thisPtr.subArray[4];
+        thisPtr.subArray = ChartsDataProvider.setChartsData(thisPtr.subArray);
+        thisPtr.ttfbSubArray = thisPtr.subArray[0];
+        thisPtr.docTimeSubArray = thisPtr.subArray[1];
+        thisPtr.fullyLoadedSubArray = thisPtr.subArray[2];
+        thisPtr.domainUrls = thisPtr.subArray[3];
+        thisPtr.time = thisPtr.subArray[4];
+        thisPtr.ttfb = [];
+        thisPtr.docTime = [];
+        thisPtr.fullyLoaded = [];
+        thisPtr.ttfb = [];
+        ChartsDataProvider.initializeArrayForCharts(thisPtr.ttfbSubArray, thisPtr.ttfb);
+        ChartsDataProvider.initializeArrayForCharts(thisPtr.docTimeSubArray, thisPtr.docTime);
+        ChartsDataProvider.initializeArrayForCharts(thisPtr.fullyLoadedSubArray, thisPtr.fullyLoaded);
         clearInterval(callbackInterval);
       }
     }, 200);
+  }
+
+  /**
+   * @private
+   */
+  static initializeArrayForCharts(subArr, finalArr) {
+    for (let i = 0; i < subArr.length; i++) {
+      let objectDocTime = [];
+      let objectArray = [];
+      for (let j = 0; j < subArr[i].length; j++) {
+        objectDocTime = {
+          x: new Date(subArr[i][j][0]),
+          y: subArr[i][j][1]
+        };
+        objectArray.push(objectDocTime);
+      }
+      finalArr.push(objectArray);
+    }
   }
 
   /**
@@ -45,7 +69,7 @@ class ChartsDataProvider {
   /**
    * @private
    */
-  setChartsData(response) {
+  static setChartsData(response) {
     if (!'response' in response) {
       return null;
     }
@@ -55,37 +79,53 @@ class ChartsDataProvider {
     }
     let testResult = jsonDecoded['testResult'];
 
-    return this.constructor.generateDataTestResult(jsonDecoded['testResult']);
+    return ChartsDataProvider.generateDataTestResult(jsonDecoded['testResult']);
   }
 
   /**
    * @private
    */
   static generateDataTestResult(testResult) {
-    let time = [];
     let ttfb = [];
     let docTime = [];
     let domainUrls = [];
     let fullyLoaded = [];
     let urlInfo = null;
     let subArray = [];
+    let subTtfb = [];
+    let subDocTime = [];
+    let subFullyLoaded = [];
     for (let urls in testResult) {
       if (testResult.hasOwnProperty(urls)) {
         domainUrls = Object.keys(testResult[urls]);
 
         for (let i = 0; i < domainUrls.length; i++) {
           urlInfo = testResult[urls][domainUrls[i]];
-          ttfb.push(urlInfo.ttfb);
-          docTime.push(urlInfo.doc_time);
-          fullyLoaded.push(urlInfo.fully_loaded);
-          time.push(urlInfo.time)
+
+          for (let j = 0; j < urlInfo.ttfb.length; j++) {
+            ttfb.push(urlInfo.ttfb[j]);
+          }
+
+          for (let k = 0; k < urlInfo.doc_time.length; k++) {
+            docTime.push(urlInfo.doc_time[k]);
+          }
+          for (let n = 0; n < urlInfo.fully_loaded.length; n++) {
+            fullyLoaded.push(urlInfo.fully_loaded[n]);
+          }
+
+          subTtfb.push(ttfb);
+          subDocTime.push(docTime);
+          subFullyLoaded.push(fullyLoaded);
+          ttfb = [];
+          docTime = [];
+          fullyLoaded = [];
         }
       }
     }
-    subArray.push(ttfb);
-    subArray.push(docTime);
-    subArray.push(fullyLoaded);
-    subArray.push(time[0]);
+
+    subArray.push(subTtfb);
+    subArray.push(subDocTime);
+    subArray.push(subFullyLoaded);
     subArray.push(domainUrls);
 
     return subArray;

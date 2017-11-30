@@ -1,3 +1,4 @@
+const ASYN_RESPONSE_WAITING_TIME = 10;
 class RegistrationFormView {
   constructor(model) {
     this.sendFormButton = document.getElementById('sendFormButton');
@@ -28,7 +29,13 @@ class RegistrationFormView {
       thisPtr.removeErrorClass();
       let formData = new FormData(thisPtr.registrationForm);
       model.sendRequest(formData);
-      thisPtr.printResponse(model.statusCode);
+      let ajaxTimeout = setInterval(function() {
+        if (model.statusCode !== null) {
+          thisPtr.printResponse(model.statusCode);
+          thisPtr.removeErrorClass();
+          clearInterval(ajaxTimeout);
+        }
+      }, ASYN_RESPONSE_WAITING_TIME);
     });
   }
 
@@ -46,28 +53,28 @@ class RegistrationFormView {
         break;
       case USER_EXISTS:
         thisPtr.serverResponseLogin.innerHTML = 'Пользователь с таким логин уже существует.';
-        thisPtr.constructor.addElementClassError(thisPtr.userLogin);
+        RegistrationFormView.addElementClassError(thisPtr.userLogin);
         break;
       case PASSWORDS_NOT_MATCH:
         thisPtr.serverResponsePasswordChecked.innerHTML = 'Пароли не совпадают.';
-        thisPtr.constructor.addElementClassError(thisPtr.password);
-        thisPtr.constructor.addElementClassError(thisPtr.passwordChecked);
+        RegistrationFormView.addElementClassError(thisPtr.password);
+        RegistrationFormView.addElementClassError(thisPtr.passwordChecked);
         break;
       case API_KEY_EXISTS:
         thisPtr.serverResponseApiKey.innerHTML = 'API key уже занят.';
-        thisPtr.constructor.addElementClassError(thisPtr.apiKey);
+        RegistrationFormView.addElementClassError(thisPtr.apiKey);
         break;
       case INVALID_LOGIN:
         thisPtr.serverResponseLogin.innerHTML = 'Невалидный логин.';
-        thisPtr.constructor.addElementClassError(thisPtr.userLogin);
+        RegistrationFormView.addElementClassError(thisPtr.userLogin);
         break;
       case INVALID_PASSWORD:
         thisPtr.serverResponsePassword.innerHTML = 'Невалидный пароль.';
-        thisPtr.constructor.addElementClassError(thisPtr.password);
+        RegistrationFormView.addElementClassError(thisPtr.password);
         break;
       case INVALID_API_KEY:
         thisPtr.serverResponseApiKey.innerHTML = 'Невалидный API key.';
-        thisPtr.constructor.addElementClassError(thisPtr.apiKey);
+        RegistrationFormView.addElementClassError(thisPtr.apiKey);
         break;
     }
   }
@@ -80,7 +87,7 @@ class RegistrationFormView {
     let minLengthLogin = this.userLogin.getAttribute('data-min');
     if (this.userLogin.value.length < minLengthLogin) {
       thisPtr.serverResponseLogin.innerHTML = 'Длина логина должна быть более ' + minLengthLogin + ' символов.';
-      thisPtr.constructor.addElementClassError(this.userLogin);
+      RegistrationFormView.addElementClassError(this.userLogin);
       thisPtr.validationError = true;
     }
   }
@@ -92,8 +99,8 @@ class RegistrationFormView {
     let thisPtr = this;
     if (this.password.value != this.passwordChecked.value) {
       thisPtr.serverResponsePasswordChecked.innerHTML = 'Пароли не совпадают, повторите ввод.';
-      thisPtr.constructor.addElementClassError(this.password);
-      thisPtr.constructor.addElementClassError(this.passwordChecked);
+      RegistrationFormView.addElementClassError(this.password);
+      RegistrationFormView.addElementClassError(this.passwordChecked);
       thisPtr.validationError = true;
     }
   }
@@ -106,7 +113,7 @@ class RegistrationFormView {
     let minLengthPassword = this.password.getAttribute('data-min');
     if (this.password.value.length < minLengthPassword) {
       thisPtr.serverResponsePassword.innerHTML = 'Длина пароля должна быть более ' + minLengthPassword + ' символов';
-      thisPtr.constructor.addElementClassError(this.password);
+      RegistrationFormView.addElementClassError(this.password);
       thisPtr.validationError = true;
     }
   }
@@ -118,7 +125,7 @@ class RegistrationFormView {
     let thisPtr = this;
     if (this.apiKey.value.length == '') {
       thisPtr.serverResponseApiKey.innerHTML = 'Введите API key';
-      thisPtr.constructor.addElementClassError(this.apiKey);
+      RegistrationFormView.addElementClassError(this.apiKey);
       thisPtr.validationError = true;
     }
   }

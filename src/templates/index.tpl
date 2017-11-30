@@ -86,7 +86,6 @@
   <div class="ct-chart2 ct-major-tenth"></div>
   <h2>Fully Load Time</h2>
   <div class="ct-chart3 ct-major-tenth"></div>
-  <div class="ct-chart4 ct-major-tenth"></div>
 </div>
 {% endblock %}
 {% block chartistJs %}
