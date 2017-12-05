@@ -1,7 +1,7 @@
 {
-  "name": "chartist.js",
-  "description": "Library for build charts",
-  "main": "chartist/dist/chartist.js, chartist/dist/chartist.css",
+  "name": "Service-PageLoad",
+  "description": "",
+  "main": "auth.js",
   "license": "MIT",
   "dependencies": {
     "chartist-plugin-legend": "https://github.com/anastasija-stepanova/chartist-plugin-legend.git",
@@ -12,11 +12,7 @@
     "seiyria-bootstrap-slider": "^10.0.0",
     "chartist": "^0.11.0"
   },
-  "keywords": [
-    "chart",
-    "graph"
-  ],
-  "homepage": "https://github.com/gionkunz/chartist-js",
+  "homepage": "http://service-pagetest.herokuapp.com/web/auth.php",
   "ignore": [
     "**/.*",
     "node_modules",
