@@ -35,7 +35,7 @@
                 <div class="collapse navbar-collapse" id="mobileMenu">
                   <ul class="nav navbar-nav">
                     <li><a class="menu_item" title="Главная" href="index.php">Главная</a></li>
-                    <li><a class="menu_item" title="Личный кабинет" href="account.php">Личный кабинет</a></li>
+                    <li><a class="menu_item" title="Личный кабинет" href="account.php">Настройки</a></li>
                     <li><a class="menu_item" title="Выход" href="logout.php">Выход</a></li>
                   </ul>
                 </div>

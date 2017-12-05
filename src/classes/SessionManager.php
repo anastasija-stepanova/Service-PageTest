@@ -31,10 +31,12 @@ class SessionManager
         {
             $url = $_GET['url'];
             header("Location: $url");
+            exit();
         }
         else
         {
             header('Location: index.php');
+            exit();
         }
     }
 
@@ -43,6 +45,7 @@ class SessionManager
         if (!array_key_exists('userId', $_SESSION))
         {
             header("Location: auth.php?url=$url");
+            exit();
         }
     }
 
@@ -52,6 +55,7 @@ class SessionManager
         {
             session_unset();
             header('Location: auth.php');
+            exit();
         }
     }
 

@@ -20,4 +20,4 @@
     settingsContainer.append(settingsCopy);
     initializeSettingsPanel(settingsCopy);
   });
-});
+})();

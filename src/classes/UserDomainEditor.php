@@ -11,7 +11,7 @@ class UserDomainEditor
         $this->databaseDataManager = new DatabaseDataManager();
     }
 
-    public function saveNewDomain(string $json): void
+    public function saveNewDomain(string $json)
     {
         $jsonDecoded = json_decode($json, true);
         $lastError = json_last_error();
@@ -20,11 +20,9 @@ class UserDomainEditor
         {
             $newDomain = $jsonDecoded['value'];
 
-            echo $this->validateDomain($newDomain);
-
             $domainExists = $this->databaseDataManager->getDomainId($newDomain);
 
-            if (!$domainExists)
+            if (!$domainExists && $this->validateDomain($newDomain) == ResponseStatus::VALID_DOMAIN)
             {
                 $this->databaseDataManager->saveDomain($newDomain);
 
@@ -32,17 +30,14 @@ class UserDomainEditor
                 {
                     $userId = $this->sessionManager->getUserId();
                     $this->databaseDataManager->saveUserDomain($userId, $domainExists['id']);
-                    echo $newDomain;
+                    return $newDomain;
                 }
             }
         }
-        else
-        {
-            echo $lastError;
-        }
+        return $lastError;
     }
 
-    public function editExistingDomain(string $json): void
+    public function editExistingDomain(string $json)
     {
         $jsonDecoded = json_decode($json, true);
         $lastError = json_last_error();
@@ -52,20 +47,14 @@ class UserDomainEditor
             $currentDomain = $jsonDecoded['currentDomain'];
             $newDomain = $jsonDecoded['newDomain'];
 
-            $this->validateDomain($newDomain);
-
             $editableDomainId = $this->databaseDataManager->getDomainId($currentDomain);
 
-
-            if (array_key_exists('id', $editableDomainId))
+            if (array_key_exists('id', $editableDomainId) && $this->validateDomain($newDomain) == ResponseStatus::VALID_DOMAIN)
             {
                 $this->databaseDataManager->editDomain($editableDomainId['id'], $newDomain);
             }
         }
-        else
-        {
-            echo $lastError;
-        }
+        return $lastError;
     }
 
     private function validateDomain(string $newDomain): int

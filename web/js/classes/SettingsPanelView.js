@@ -16,6 +16,7 @@ class SettingsPanelView {
     this.deleteSettingsBlock = item.getElementsByClassName('delete_settings')[0];
     this.currentDomain = item.getElementsByClassName('domain_value')[0];
 
+    console.log(this.currentDomain);
     model.domainName = item.getElementsByClassName('domain_value')[0].getAttribute('data-domain-value');
     model.checkedLocations = this.formCheckedLocationsArray(item.getElementsByClassName('available_locations')[0]);
 

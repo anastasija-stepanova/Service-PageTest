@@ -37,6 +37,7 @@ class SettingsPanelModel {
     };
 
     let requestParam = 'preservedUrl=' + JSON.stringify(keyValue);
+    console.log(requestParam);
     ajaxPost(FILE_EDIT_USER_DOMAIN_URL, requestParam, function(response) {
       return response.responseText;
     });
@@ -54,6 +55,7 @@ class SettingsPanelModel {
     };
 
     let requestParam = 'locations=' + JSON.stringify(keyValue);
+    console.log(requestParam);
     ajaxPost(FILE_EDIT_USER_LOCATIONS, requestParam, function(response) {
       return response.responseText;
     });
@@ -68,6 +70,7 @@ class SettingsPanelModel {
       'value': this.domainName
     };
 
+    console.log(keyValue);
     let requestParam = 'domain=' + JSON.stringify(keyValue);
     ajaxPost(FILE_EDIT_USER_DOMAIN, requestParam, function(response) {
       return response.responseText;

@@ -11,7 +11,7 @@ class UserLocationsEditor
         $this->databaseDataManager = new DatabaseDataManager();
     }
 
-    public function editUserLocations(string $json): void
+    public function editUserLocations(string $json)
     {
         $jsonDecoded = json_decode($json, true);
         $lastError = json_last_error();
@@ -53,10 +53,7 @@ class UserLocationsEditor
                 $this->saveNewLocations($locations, $domainId);
             }
         }
-        else
-        {
-            echo $lastError;
-        }
+        return $lastError;
     }
 
     private function saveNewLocations(array $locations, int $domainId): void

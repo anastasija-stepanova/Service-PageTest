@@ -11,6 +11,9 @@ class SettingsPanelController {
     this.checkedLocations = model.checkedLocations;
 
     view.saveSettings = function() {
+      if (thisPtr.domain == null) {
+        thisPtr.domain = SettingsPanelController.getValueNewDomain(item, thisPtr.newDomainContainer);
+      }
       model.editLocations(thisPtr.domain, thisPtr.checkedLocations);
       model.saveDomain(SettingsPanelController.getValueNewDomain(item, thisPtr.newDomainContainer));
       model.saveUrl(thisPtr.domain, SettingsPanelController.getValueNewUrl(thisPtr.newUrlContainer));

@@ -12,7 +12,7 @@ class UserDomainUrlEditor
         $this->databaseDataManager = new DatabaseDataManager();
     }
 
-    public function saveNewUrl(string $json): void
+    public function saveNewUrl(string $json)
     {
         $jsonDecoded = json_decode($json, true);
         $lastError = json_last_error();
@@ -25,8 +25,7 @@ class UserDomainUrlEditor
             $isUrl = DataValidator::validateUrl($newUrl);
             if (!$isUrl)
             {
-                echo ResponseStatus::INVALID_URL;
-                return;
+                return ResponseStatus::INVALID_URL;
             }
 
             $domainId = $this->databaseDataManager->getUserDomain($domain);
@@ -41,40 +40,31 @@ class UserDomainUrlEditor
             if (!$urlExists)
             {
                 $this->databaseDataManager->saveUserDomainUrl($domainId, $newUrl);
-                echo $newUrl;
+                return $newUrl;
             }
         }
-        else
-        {
-            echo $lastError;
-        }
+        return $lastError;
     }
 
-    public function deleteUrl(string $json): void
+    public function deleteUrl(string $json)
     {
         $jsonDecoded = json_decode($json, true);
         $lastError = json_last_error();
-
         if ($lastError === JSON_ERROR_NONE)
         {
             $domain = $jsonDecoded['domain'];
             $urls = $jsonDecoded['urls'];
-
             $domainId = $this->databaseDataManager->getUserDomain($domain);
-
             if (array_key_exists('id', $domainId))
             {
                 $domainId = $domainId['id'];
             }
-
             foreach ($urls as $url)
             {
                 $this->databaseDataManager->deleteUrl($domainId, $url);
             }
         }
-        else
-        {
-            echo $lastError;
-        }
+
+        return $lastError;
     }
 }

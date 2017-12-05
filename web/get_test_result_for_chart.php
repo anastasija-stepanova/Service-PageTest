@@ -22,7 +22,6 @@ if ($testResultParam != null)
     {
         $dataArray = initializeDataArray($sessionManager, $jsonDecoded, $currentTime, $databaseDataManager);
 
-        $finishedDataccc = [];
         $finishedData = [];
         $ttfbArray = [];
         $docTimeArray = [];
