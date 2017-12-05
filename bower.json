@@ -3,13 +3,13 @@
   "description": "",
   "license": "MIT",
   "dependencies": {
-    "bootstrap": "^3.3.7",
-    "jquery": "^3.2.1",
-    "chartist": "^0.11.0",
-    "chartist-plugin-axistitle": "^0.1.0",
     "chartist-plugin-legend": "https://github.com/anastasija-stepanova/chartist-plugin-legend.git",
-    "chartist-plugin-tooltip": "^0.0.18",
-    "seiyria-bootstrap-slider": "^10.0.0"
+    "chartist-plugin-axistitle": "https://github.com/alexstanbury/chartist-plugin-axistitle",
+    "chartist-plugin-tooltip": "https://github.com/Globegitter/chartist-plugin-tooltip",
+    "chartist-plugin-zoom": "https://github.com/hansmaad/chartist-plugin-zoom",
+    "bootstrap": "^3.3.7",
+    "seiyria-bootstrap-slider": "^10.0.0",
+    "chartist": "^0.11.0"
   },
   "ignore": [
     "**/.*",
