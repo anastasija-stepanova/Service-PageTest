@@ -1,5 +1,5 @@
 .idea
 .git
 vendor
-web/bower_components
+bower_components
 composer.phar

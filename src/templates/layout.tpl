@@ -59,8 +59,8 @@
           <p>2017</p>
         </div>
       </div>
-      <script src="../js/vendor/jquery.js"></script>
-      <script src="../js/vendor/bootstrap.min.js"></script>
+      <script src="../bower_components/jquery/dist/jquery.js"></script>
+      <script src="../bower_components/bootstrap/dist/css/bootstrap.css"></script>
       {% block chartistJs %}{% endblock %}
       <script src="../js/config.js"></script>
       <script src="../js/ajax.js"></script>
