@@ -2,16 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <base href="http://service-pagetest.herokuapp.com">
     <title>{% block title %}{% endblock %}</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400" rel="stylesheet">
-    <link rel="stylesheet" href="../bower_components/chartist/dist/chartist.css">
-    <link rel="stylesheet" href="../bower_components/chartist-plugin-tooltip/dist/chartist-plugin-tooltip.css">
-    <link rel="stylesheet" href="../bower_components/chartist-plugin-legend/css/chartist-plugin-legend.css">
-    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="../bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css">
-    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="/bower_components/chartist/dist/chartist.css">
+    <link rel="stylesheet" href="/bower_components/chartist-plugin-tooltip/dist/chartist-plugin-tooltip.css">
+    <link rel="stylesheet" href="/bower_components/chartist-plugin-legend/css/chartist-plugin-legend.css">
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css">
+    <link rel="stylesheet" href="/css/main.css">
   </head>
   <body>
     <div class="page-wrapper">
@@ -59,11 +60,10 @@
           <p>2017</p>
         </div>
       </div>
-      <script src="../bower_components/jquery/dist/jquery.js"></script>
-      <script src="../bower_components/bootstrap/dist/css/bootstrap.css"></script>
+      <script src="/bower_components/jquery/dist/jquery.js"></script>
       {% block chartistJs %}{% endblock %}
-      <script src="../js/config.js"></script>
-      <script src="../js/ajax.js"></script>
+      <script src="/js/config.js"></script>
+      <script src="/js/ajax.js"></script>
       {% block fileJs %}{% endblock %}
     </footer>
   </body>

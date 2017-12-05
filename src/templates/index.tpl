@@ -89,18 +89,18 @@
 </div>
 {% endblock %}
 {% block chartistJs %}
-<script src="../bower_components/chartist/dist/chartist.js"></script>
-<script src="../bower_components/chartist-plugin-tooltip/dist/chartist-plugin-tooltip.js"></script>
-<script src="../bower_components/chartist-plugin-zoom/dist/chartist-plugin-zoom.js"></script>
-<script src="../bower_components/chartist-plugin-axistitle/dist/chartist-plugin-axistitle.js"></script>
-<script src="../bower_components/chartist-plugin-legend/dist/chartist-plugin-legend.js"></script>
+<script src="/bower_components/chartist/dist/chartist.js"></script>
+<script src="/bower_components/chartist-plugin-tooltip/dist/chartist-plugin-tooltip.js"></script>
+<script src="/bower_components/chartist-plugin-zoom/dist/chartist-plugin-zoom.js"></script>
+<script src="/bower_components/chartist-plugin-axistitle/dist/chartist-plugin-axistitle.js"></script>
+<script src="/bower_components/chartist-plugin-legend/dist/chartist-plugin-legend.js"></script>
 {% endblock %}
 {% block fileJs %}
-<script src="../bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.js"></script>
-<script src="../js/classes/DomainDashboardSettings.js"></script>
-<script src="../js/classes/ChartsDataProvider.js"></script>
-<script src="../js/classes/ChartistWrapper.js"></script>
-<script src="../js/classes/ChartsBuilder.js"></script>
-<script src="../js/build_chart.js"></script>
-<script src="../js/main.js"></script>
+<script src="/bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.js"></script>
+<script src="/js/classes/DomainDashboardSettings.js"></script>
+<script src="/js/classes/ChartsDataProvider.js"></script>
+<script src="/js/classes/ChartistWrapper.js"></script>
+<script src="/js/classes/ChartsBuilder.js"></script>
+<script src="/js/build_chart.js"></script>
+<script src="/js/main.js"></script>
 {% endblock %}

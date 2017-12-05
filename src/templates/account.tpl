@@ -116,8 +116,8 @@
 </div>
 {% endblock %}
 {% block fileJs %}
-<script src="../js/classes/SettingsPanelModel.js"></script>
-<script src="../js/classes/SettingsPanelView.js"></script>
-<script src="../js/classes/SettingsPanelController.js"></script>
-<script src="../js/account.js"></script>
+<script src="/js/classes/SettingsPanelModel.js"></script>
+<script src="/js/classes/SettingsPanelView.js"></script>
+<script src="/js/classes/SettingsPanelController.js"></script>
+<script src="/js/account.js"></script>
 {% endblock %}

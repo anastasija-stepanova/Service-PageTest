@@ -2,13 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <base href="http://service-pagetest.herokuapp.com">
     <title>Service PageLoad</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400" rel="stylesheet">
-    <link rel="stylesheet" href="../bower_components/chartist/dist/chartist.css">
-    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="/bower_components/chartist/dist/chartist.css">
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/main.css">
   </head>
   <body>
     <main class="home_page container-fluid">
@@ -38,11 +39,11 @@
         </div>
       </div>
     </main>
-    <script src="../js/config.js"></script>
-    <script src="../js/ajax.js"></script>
-    <script src="../js/response_status.js"></script>
-    <script src="../js/classes/AuthFormModel.js"></script>
-    <script src="../js/classes/AuthFormView.js"></script>
-    <script src="../js/auth.js"></script>
+    <script src="/js/config.js"></script>
+    <script src="/js/ajax.js"></script>
+    <script src="/js/response_status.js"></script>
+    <script src="/js/classes/AuthFormModel.js"></script>
+    <script src="/js/classes/AuthFormView.js"></script>
+    <script src="/js/auth.js"></script>
   </body>
 </html>
