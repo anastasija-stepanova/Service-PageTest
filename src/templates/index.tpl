@@ -97,10 +97,10 @@
 {% endblock %}
 {% block fileJs %}
 <script src="/bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.js"></script>
-<script src="/js/classes/DomainDashboardSettings.js"></script>
-<script src="/js/classes/ChartsDataProvider.js"></script>
-<script src="/js/classes/ChartistWrapper.js"></script>
-<script src="/js/classes/ChartsBuilder.js"></script>
-<script src="/js/build_chart.js"></script>
-<script src="/js/main.js"></script>
+<script src="../js/classes/DomainDashboardSettings.js"></script>
+<script src="../js/classes/ChartsDataProvider.js"></script>
+<script src="../js/classes/ChartistWrapper.js"></script>
+<script src="../js/classes/ChartsBuilder.js"></script>
+<script src="../js/build_chart.js"></script>
+<script src="../js/main.js"></script>
 {% endblock %}

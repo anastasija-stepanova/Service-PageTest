@@ -62,8 +62,8 @@
       </div>
       <script src="/bower_components/jquery/dist/jquery.js"></script>
       {% block chartistJs %}{% endblock %}
-      <script src="/js/config.js"></script>
-      <script src="/js/ajax.js"></script>
+      <script src="../js/config.js"></script>
+      <script src="../js/ajax.js"></script>
       {% block fileJs %}{% endblock %}
     </footer>
   </body>

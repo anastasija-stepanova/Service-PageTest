@@ -52,11 +52,11 @@
         </div>
       </div>
     </main>
-    <script src="/js/config.js"></script>
-    <script src="/js/response_status.js"></script>
-    <script src="/js/ajax.js"></script>
-    <script src="/js/classes/RegistrationFormModel.js"></script>
-    <script src="/js/classes/RegistrationFormView.js"></script>
-    <script src="/js/registration.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/response_status.js"></script>
+    <script src="../js/ajax.js"></script>
+    <script src="../js/classes/RegistrationFormModel.js"></script>
+    <script src="../js/classes/RegistrationFormView.js"></script>
+    <script src="../js/registration.js"></script>
   </body>
 </html>

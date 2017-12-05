@@ -39,11 +39,11 @@
         </div>
       </div>
     </main>
-    <script src="/js/config.js"></script>
-    <script src="/js/ajax.js"></script>
-    <script src="/js/response_status.js"></script>
-    <script src="/js/classes/AuthFormModel.js"></script>
-    <script src="/js/classes/AuthFormView.js"></script>
-    <script src="/js/auth.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/ajax.js"></script>
+    <script src="../js/response_status.js"></script>
+    <script src="../js/classes/AuthFormModel.js"></script>
+    <script src="../js/classes/AuthFormView.js"></script>
+    <script src="../js/auth.js"></script>
   </body>
 </html>
