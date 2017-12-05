@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../bower_components/chartist/dist/chartist.css">
     <link rel="stylesheet" href="../bower_components/chartist-plugin-tooltip/dist/chartist-plugin-tooltip.css">
     <link rel="stylesheet" href="../bower_components/chartist-plugin-legend/css/chartist-plugin-legend.css">
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
     <link rel="stylesheet" href="../bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css">
     <link rel="stylesheet" href="../css/main.css">
   </head>
