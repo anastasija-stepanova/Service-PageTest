@@ -4,8 +4,8 @@
   "license": "MIT",
   "dependencies": {
     "chartist-plugin-legend": "https://github.com/anastasija-stepanova/chartist-plugin-legend.git",
-    "chartist-plugin-axistitle": "https://github.com/alexstanbury/chartist-plugin-axistitle",
-    "chartist-plugin-tooltip": "https://github.com/Globegitter/chartist-plugin-tooltip",
+    "chartist-plugin-axistitle": "https://github.com/alexstanbury/chartist-plugin-axistitle.git",
+    "chartist-plugin-tooltip": "https://github.com/Globegitter/chartist-plugin-tooltip.git",
     "bootstrap": "^3.3.7",
     "seiyria-bootstrap-slider": "^10.0.0",
     "chartist": "^0.11.0"

@@ -91,7 +91,6 @@
 {% block chartistJs %}
 <script src="../bower_components/chartist/dist/chartist.js"></script>
 <script src="../bower_components/chartist-plugin-tooltip/dist/chartist-plugin-tooltip.js"></script>
-<script src="../bower_components/chartist-plugin-zoom/dist/chartist-plugin-zoom.js"></script>
 <script src="../bower_components/chartist-plugin-axistitle/dist/chartist-plugin-axistitle.js"></script>
 <script src="../bower_components/chartist-plugin-legend/dist/chartist-plugin-legend.js"></script>
 {% endblock %}
