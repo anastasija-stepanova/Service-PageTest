@@ -8,7 +8,7 @@
     "chartist-plugin-tooltip": "https://github.com/Globegitter/chartist-plugin-tooltip.git",
     "bootstrap": "^3.3.7",
     "seiyria-bootstrap-slider": "^10.0.0",
-    "chartist": "^0.11.0"
+    "chartist": "^0.9.0"
   },
   "ignore": [
     "**/.*",
