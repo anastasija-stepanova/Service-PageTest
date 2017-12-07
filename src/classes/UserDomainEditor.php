@@ -20,17 +20,30 @@ class UserDomainEditor
         {
             $newDomain = $jsonDecoded['value'];
 
-            $domainExists = $this->databaseDataManager->getDomainId($newDomain);
-
-            if (!$domainExists && $this->validateDomain($newDomain) == ResponseStatus::VALID_DOMAIN)
+            if (DataValidator::validateDomain($newDomain))
             {
-                $this->databaseDataManager->saveDomain($newDomain);
+                $domainExists = $this->databaseDataManager->getDomainId($newDomain);
 
-                if (array_key_exists('id', $domainExists))
+                if (!$domainExists)
                 {
-                    $userId = $this->sessionManager->getUserId();
-                    $this->databaseDataManager->saveUserDomain($userId, $domainExists['id']);
-                    return $newDomain;
+                    $this->databaseDataManager->saveDomain($newDomain);
+                    $newDomainId = $this->databaseDataManager->getDomainId($newDomain);
+
+                    if (array_key_exists('id', $newDomainId))
+                    {
+                        $userId = $this->sessionManager->getUserId();
+                        $this->databaseDataManager->saveUserDomain($userId, $newDomainId['id']);
+                        return $newDomain;
+                    }
+                }
+                else
+                {
+                    if (array_key_exists('id', $domainExists))
+                    {
+                        $userId = $this->sessionManager->getUserId();
+                        $this->databaseDataManager->saveUserDomain($userId, $domainExists['id']);
+                        return $newDomain;
+                    }
                 }
             }
         }
@@ -55,11 +68,5 @@ class UserDomainEditor
             }
         }
         return $lastError;
-    }
-
-    private function validateDomain(string $newDomain): int
-    {
-        $isDomain = DataValidator::validateDomain($newDomain);
-        return $isDomain ? ResponseStatus::VALID_DOMAIN : ResponseStatus::INVALID_DOMAIN;
     }
 }

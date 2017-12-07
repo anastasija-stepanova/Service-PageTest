@@ -113,7 +113,7 @@ class DatabaseDataManager
                                   FROM $wptLocation");
     }
 
-    public function getExistingLocations(int $userId, int $domainId): array
+    public function getExistingLocations(int $userId, $domainId): array
     {
         $userDomainLocation = DatabaseTable::USER_DOMAIN_LOCATION;
         $userDomain = DatabaseTable::USER_DOMAIN;
@@ -289,12 +289,12 @@ class DatabaseDataManager
                            WHERE user_domain_id = ? and wpt_location_id = ?", [$existingLocation, $value]);
     }
 
-    public function saveUserDomainLocation(int $existingLocation, string $value): void
+    public function saveUserDomainLocation($domainId, int $locationId): void
     {
         $userDomainLocation = DatabaseTable::USER_DOMAIN_LOCATION;
         $this->database->executeQuery("
                            INSERT INTO $userDomainLocation (user_domain_id, wpt_location_id) 
-                           VALUES (?, ?)", [$existingLocation, $value]);
+                           VALUES (?, ?)", [$domainId, $locationId]);
     }
 
     public function getDefaultUserDomain(): int

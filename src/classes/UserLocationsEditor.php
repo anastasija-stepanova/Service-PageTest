@@ -56,11 +56,11 @@ class UserLocationsEditor
         return $lastError;
     }
 
-    private function saveNewLocations(array $locations, int $domainId): void
+    private function saveNewLocations($locations, $domainId): void
     {
-        foreach ($locations as $location)
+        foreach ($locations as $locationId)
         {
-            $this->databaseDataManager->saveUserDomainLocation($domainId, $location);
+            $this->databaseDataManager->saveUserDomainLocation($domainId, $locationId);
         }
     }
 
@@ -72,7 +72,7 @@ class UserLocationsEditor
         }
     }
 
-    private function getDomainId(string $domain): int
+    private function getDomainId(string $domain)
     {
         $domainId = $this->databaseDataManager->getUserDomain($domain);
         if (array_key_exists('id', $domainId))
