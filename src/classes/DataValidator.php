@@ -3,7 +3,7 @@
 class DataValidator
 {
     const REGULAR_EXPRESSION_DOMAIN = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
-    const REGULAR_EXPRESSION_URL = '/^\/[a-z0-9-]+$/';
+    const REGULAR_EXPRESSION_URL = '/\/|^\/[a-z0-9-]+$/';
     const REGULAR_EXPRESSION_LOGIN = '/[a-z][a-z0-9-_\.]{5,20}$/';
     const REGULAR_EXPRESSION_PASSWORD = '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/';
     const REGULAR_EXPRESSION_API_KEY = '/^[A-Z].[a-zA-Z0-9]+$/';

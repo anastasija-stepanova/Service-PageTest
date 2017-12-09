@@ -79,6 +79,7 @@ class UserLocationsEditor
         {
             $domainId = $domainId['id'];
         }
+        print_r($domainId);
         return $domainId;
     }
 }

@@ -2,9 +2,10 @@ class ChartsDataProvider {
   constructor(domainId = null, locationId = null, typeView = null, minTime = null, maxTime = null) {
     this.initializeRequest(domainId, locationId, typeView, minTime, maxTime);
     let thisPtr = this;
-    let callbackInterval = setInterval(function() {
+    document.addEventListener('hasAnswer', function() {
+      let event = new CustomEvent('buildCharts');
+      thisPtr.subArray = ChartsDataProvider.setChartsData(thisPtr.subArray);
       if (thisPtr.subArray) {
-        thisPtr.subArray = ChartsDataProvider.setChartsData(thisPtr.subArray);
         thisPtr.ttfbSubArray = thisPtr.subArray[0];
         thisPtr.docTimeSubArray = thisPtr.subArray[1];
         thisPtr.fullyLoadedSubArray = thisPtr.subArray[2];
@@ -17,9 +18,9 @@ class ChartsDataProvider {
         ChartsDataProvider.initializeArrayForCharts(thisPtr.ttfbSubArray, thisPtr.ttfb);
         ChartsDataProvider.initializeArrayForCharts(thisPtr.docTimeSubArray, thisPtr.docTime);
         ChartsDataProvider.initializeArrayForCharts(thisPtr.fullyLoadedSubArray, thisPtr.fullyLoaded);
-        clearInterval(callbackInterval);
+        document.dispatchEvent(event)
       }
-    }, 200);
+    });
   }
 
   /**
@@ -63,6 +64,8 @@ class ChartsDataProvider {
     let thisPtr = this;
     ajaxPost(FILE_GET_TEST_RESULT_FOR_CHART, requestParam, function(response) {
       thisPtr.subArray = response;
+      let event = new CustomEvent('hasAnswer');
+      document.dispatchEvent(event);
     });
   }
 
@@ -73,13 +76,13 @@ class ChartsDataProvider {
     if (!'response' in response) {
       return null;
     }
-    let jsonDecoded = JSON.parse(response['response']);
-    if (!'testResult' in jsonDecoded) {
-      return null;
+    if (response.response != undefined) {
+      let jsonDecoded = JSON.parse(response['response']);
+      if (!'testResult' in jsonDecoded) {
+        return null;
+      }
+      return ChartsDataProvider.generateDataTestResult(jsonDecoded['testResult']);
     }
-    let testResult = jsonDecoded['testResult'];
-
-    return ChartsDataProvider.generateDataTestResult(jsonDecoded['testResult']);
   }
 
   /**

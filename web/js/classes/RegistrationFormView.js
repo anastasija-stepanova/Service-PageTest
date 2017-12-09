@@ -1,4 +1,3 @@
-const ASYN_RESPONSE_WAITING_TIME = 10;
 class RegistrationFormView {
   constructor(model) {
     this.sendFormButton = document.getElementById('sendFormButton');
@@ -29,13 +28,10 @@ class RegistrationFormView {
       thisPtr.removeErrorClass();
       let formData = new FormData(thisPtr.registrationForm);
       model.sendRequest(formData);
-      let ajaxTimeout = setInterval(function() {
-        if (model.statusCode !== null) {
-          thisPtr.printResponse(model.statusCode);
-          thisPtr.removeErrorClass();
-          clearInterval(ajaxTimeout);
-        }
-      }, ASYN_RESPONSE_WAITING_TIME);
+      document.addEventListener('hasAnswer', function() {
+        thisPtr.printResponse(model.statusCode);
+        thisPtr.removeErrorClass();
+      });
     });
   }
 

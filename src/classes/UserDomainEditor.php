@@ -50,7 +50,7 @@ class UserDomainEditor
         return $lastError;
     }
 
-    public function editExistingDomain(string $json)
+    public function editExistingDomain(string $json): int
     {
         $jsonDecoded = json_decode($json, true);
         $lastError = json_last_error();

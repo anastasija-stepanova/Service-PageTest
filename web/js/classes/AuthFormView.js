@@ -1,4 +1,3 @@
-const ASYN_RESPONSE_WAITING_TIME = 10;
 class AuthFormView {
   constructor(model) {
     this.sendFormButton = document.getElementById('sendFormButton');
@@ -14,17 +13,14 @@ class AuthFormView {
    */
   initializeSendFormButton(model) {
     let thisPtr = this;
-    this.sendFormButton.addEventListener('click', function(event) {
-      event.preventDefault();
+    this.sendFormButton.addEventListener('click', function(e) {
+      e.preventDefault();
       let formData = new FormData(thisPtr.authForm);
       model.sendRequest(formData);
-      let ajaxTimeout = setInterval(function() {
-        if (model.statusCode !== null) {
-          thisPtr.printResponse(model.statusCode);
-          thisPtr.removeErrorClass();
-          clearInterval(ajaxTimeout);
-        }
-      }, ASYN_RESPONSE_WAITING_TIME);
+      document.addEventListener('hasAnswer', function() {
+        thisPtr.printResponse(model.statusCode);
+        thisPtr.removeErrorClass();
+      });
     });
   }
 

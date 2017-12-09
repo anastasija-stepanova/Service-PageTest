@@ -30,13 +30,11 @@ class SessionManager
         if (array_key_exists('url', $_GET) and $_GET['url'] != false)
         {
             $url = $_GET['url'];
-            header("Location: $url");
-            exit();
+            $this->initializeHeader($url);
         }
         else
         {
-            header('Location: index.php');
-            exit();
+            $this->initializeHeader('index.php');
         }
     }
 
@@ -44,8 +42,7 @@ class SessionManager
     {
         if (!array_key_exists('userId', $_SESSION))
         {
-            header("Location: auth.php?url=$url");
-            exit();
+            $this->initializeHeader("auth.php?url=$url");
         }
     }
 
@@ -54,13 +51,18 @@ class SessionManager
         if (array_key_exists('userId', $_SESSION))
         {
             session_unset();
-            header('Location: auth.php');
-            exit();
+            $this->initializeHeader('auth.php');
         }
     }
 
     public function getUserId(): int
     {
         return $_SESSION['userId'];
+    }
+
+    private function initializeHeader($url)
+    {
+        header("Location: $url");
+        exit();
     }
 }
