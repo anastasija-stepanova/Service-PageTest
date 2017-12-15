@@ -34,7 +34,6 @@ foreach ($domainsData as $domainData)
 $twigWrapper = new TwigWrapper(PathProvider::getPathTemplates());
 
 $layout = $twigWrapper->getLoadedLayout('layout.tpl');
-
 $paramsArray = [
     'layout' => $layout,
     'userSettings' => $userSettings,

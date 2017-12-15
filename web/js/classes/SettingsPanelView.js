@@ -2,6 +2,8 @@ class SettingsPanelView {
   constructor(model, item) {
     let thisPtr = this;
 
+    this.responseModal = $('#responseModal');
+
     this.saveSettings = new Event(this);
     this.deleteSettingsBlock = new Event(this);
     this.editDomain = new Event(this);
@@ -42,6 +44,34 @@ class SettingsPanelView {
    this.currentDomain.addEventListener('blur', function() {
       thisPtr.editDomain();
     });
+  }
+
+  /**
+   * @public
+   */
+   printResponse(statusCode) {
+    switch (statusCode) {
+      case INVALID_URL:
+        this.responseModal.modal('show');
+        document.getElementsByClassName('modal-content')[0].innerHTML = 'Невалидный URL';
+        break;
+      case SUCCESS_STATUS:
+        this.responseModal.modal('show');
+        document.getElementsByClassName('modal-content')[0].innerHTML = 'Настройки успешно изменены!';
+        break;
+      case INVALID_DOMAIN:
+        this.responseModal.modal('show');
+        document.getElementsByClassName('modal-content')[0].innerHTML = 'Невалидный домен!';
+        break;
+      case JSON_ERROR:
+        this.responseModal.modal('show');
+        document.getElementsByClassName('modal-content')[0].innerHTML = 'Ошибка JSON!';
+        break;
+      case URL_EXISTS:
+        this.responseModal.modal('show');
+        document.getElementsByClassName('modal-content')[0].innerHTML = 'Такой URL уже существует!';
+        break;
+    }
   }
 
   /**

@@ -4,6 +4,7 @@ class UserDomainEditor
 {
     private $databaseDataManager;
     private $sessionManager;
+    private const DEFAULT_VALUE = -1;
 
     public function __construct(SessionManager $sessionManager)
     {
@@ -11,62 +12,47 @@ class UserDomainEditor
         $this->databaseDataManager = new DatabaseDataManager();
     }
 
-    public function saveNewDomain(string $json)
+    public function saveNewDomain(string $newDomain): int
     {
-        $jsonDecoded = json_decode($json, true);
-        $lastError = json_last_error();
-
-        if ($lastError === JSON_ERROR_NONE)
+        if (DataValidator::validateDomain($newDomain))
         {
-            $newDomain = $jsonDecoded['value'];
-
-            if (DataValidator::validateDomain($newDomain))
-            {
-                $domainExists = $this->databaseDataManager->getDomainId($newDomain);
-
-                if (!$domainExists)
-                {
-                    $this->databaseDataManager->saveDomain($newDomain);
-                    $newDomainId = $this->databaseDataManager->getDomainId($newDomain);
-
-                    if (array_key_exists('id', $newDomainId))
-                    {
-                        $userId = $this->sessionManager->getUserId();
-                        $this->databaseDataManager->saveUserDomain($userId, $newDomainId['id']);
-                        return $newDomain;
-                    }
-                }
-                else
-                {
-                    if (array_key_exists('id', $domainExists))
-                    {
-                        $userId = $this->sessionManager->getUserId();
-                        $this->databaseDataManager->saveUserDomain($userId, $domainExists['id']);
-                        return $newDomain;
-                    }
-                }
-            }
+            $this->saveValidDomain($newDomain);
+            return ResponseStatus::SUCCESS_STATUS;
         }
-        return $lastError;
+        else
+        {
+            return ResponseStatus::INVALID_DOMAIN;
+        }
     }
 
-    public function editExistingDomain(string $json): int
+    public function editExistingDomain(string $currentDomain, string $newDomain): int
     {
-        $jsonDecoded = json_decode($json, true);
-        $lastError = json_last_error();
-
-        if ($lastError === JSON_ERROR_NONE)
+        $editableDomainId = $this->databaseDataManager->getDomainId($currentDomain);
+        if (DataValidator::validateDomain($newDomain))
         {
-            $currentDomain = $jsonDecoded['currentDomain'];
-            $newDomain = $jsonDecoded['newDomain'];
-
-            $editableDomainId = $this->databaseDataManager->getDomainId($currentDomain);
-
-            if (array_key_exists('id', $editableDomainId) && $this->validateDomain($newDomain) == ResponseStatus::VALID_DOMAIN)
-            {
-                $this->databaseDataManager->editDomain($editableDomainId['id'], $newDomain);
-            }
+            $this->databaseDataManager->editDomain($editableDomainId, $newDomain);
+            return ResponseStatus::SUCCESS_STATUS;
         }
-        return $lastError;
+        else
+        {
+            return ResponseStatus::INVALID_DOMAIN;
+        }
+    }
+
+    private function saveValidDomain(string $newDomain): void
+    {
+        $domainId = $this->databaseDataManager->getDomainId($newDomain);
+        if ($domainId == self::DEFAULT_VALUE)
+        {
+            $this->databaseDataManager->saveDomain($newDomain);
+            $newDomainId = $this->databaseDataManager->getDomainId($newDomain);
+            $userId = $this->sessionManager->getUserId();
+            $this->databaseDataManager->saveUserDomain($userId, $newDomainId);
+        }
+        else
+        {
+            $userId = $this->sessionManager->getUserId();
+            $this->databaseDataManager->saveUserDomain($userId, $domainId);
+        }
     }
 }

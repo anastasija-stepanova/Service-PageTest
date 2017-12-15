@@ -7,13 +7,31 @@ $sessionManager->checkArraySession();
 $newDomainJson = WebServerRequest::getPostKeyValue('domain');
 $editableDomainJson = WebServerRequest::getPostKeyValue('editableDomain');
 
-if ($newDomainJson !=  null)
+$newDomainJsonDecoded = json_decode($newDomainJson, true);
+$newDomainLastError = json_last_error();
+$editableDomainJsonDecoded = json_decode($editableDomainJson, true);
+$editableDomainLastError = json_last_error();
+
+if ($newDomainLastError === JSON_ERROR_NONE)
 {
-    $userDomainEditor = new UserDomainEditor($sessionManager);
-    $userDomainEditor->saveNewDomain($newDomainJson);
+    $newDomain = $newDomainJsonDecoded['value'];
+    if ($newDomain != null)
+    {
+        $userDomainEditor = new UserDomainEditor($sessionManager);
+        echo $userDomainEditor->saveNewDomain($newDomain);
+    }
 }
-elseif ($editableDomainJson != null)
+else if ($editableDomainLastError === JSON_ERROR_NONE)
 {
-    $userDomainEditor = new UserDomainEditor($sessionManager);
-    $userDomainEditor->editExistingDomain($editableDomainJson);
+    $currentDomain = $editableDomainJsonDecoded['currentDomain'];
+    $newDomain = $editableDomainJsonDecoded['newDomain'];
+    if ($currentDomain != null && $newDomain != null)
+    {
+        $userDomainEditor = new UserDomainEditor($sessionManager);
+        echo $userDomainEditor->editExistingDomain($currentDomain, $newDomain);
+    }
+}
+else
+{
+    echo ResponseStatus::JSON_ERROR;
 }

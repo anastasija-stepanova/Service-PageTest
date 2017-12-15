@@ -11,50 +11,36 @@ class UserDomainUrlEditor
         $this->databaseDataManager = new DatabaseDataManager();
     }
 
-    public function saveNewUrl(array $jsonDecoded)
+    public function saveNewUrl(string $domain, string $url): int
     {
-        $domain = $jsonDecoded['domain'];
-        $newUrl = $jsonDecoded['url'];
+        if (DataValidator::validateUrl($url))
+        {
+            $domainId = $this->databaseDataManager->getUserDomain($domain);
 
-        $isUrl = DataValidator::validateUrl($newUrl);
-
-        if (!$isUrl)
+            if (!$this->databaseDataManager->doesUserUrlExists($domainId, $url))
+            {
+                $this->databaseDataManager->saveUserDomainUrl($domainId, $url);
+                return ResponseStatus::SUCCESS_STATUS;
+            }
+            else
+            {
+                return ResponseStatus::URL_EXISTS;
+            }
+        }
+        else
         {
             return ResponseStatus::INVALID_URL;
         }
-
-        $domainId = $this->databaseDataManager->getUserDomain($domain);
-
-        if (array_key_exists('id', $domainId))
-        {
-            $domainId = $domainId['id'];
-        }
-
-        $urlExists = $this->databaseDataManager->doesUserUrlExists($domainId, $newUrl);
-
-        if (!$urlExists)
-        {
-            $this->databaseDataManager->saveUserDomainUrl($domainId, $newUrl);
-            return $newUrl;
-        }
-        return null;
     }
 
-    public function deleteUrl(array $jsonDecoded): void
+    public function deleteUrl(string $domain, array $urls): int
     {
-        $domain = $jsonDecoded['domain'];
-        $urls = $jsonDecoded['urls'];
-
         $domainId = $this->databaseDataManager->getUserDomain($domain);
-
-        if (array_key_exists('id', $domainId))
-        {
-            $domainId = $domainId['id'];
-        }
 
         foreach ($urls as $url)
         {
             $this->databaseDataManager->deleteUrl($domainId, $url);
         }
+        return ResponseStatus::SUCCESS_STATUS;
     }
 }

@@ -51,7 +51,7 @@ if ($testResultParam != null)
     }
     else
     {
-        echo $lastError;
+        echo ResponseStatus::JSON_ERROR;
     }
 }
 

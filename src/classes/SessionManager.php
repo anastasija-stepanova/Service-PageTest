@@ -30,11 +30,11 @@ class SessionManager
         if (array_key_exists('url', $_GET) and $_GET['url'] != false)
         {
             $url = $_GET['url'];
-            $this->initializeHeader($url);
+            $this->redirectTo($url);
         }
         else
         {
-            $this->initializeHeader('index.php');
+            $this->redirectTo('index.php');
         }
     }
 
@@ -42,7 +42,7 @@ class SessionManager
     {
         if (!array_key_exists('userId', $_SESSION))
         {
-            $this->initializeHeader("auth.php?url=$url");
+            $this->redirectTo("auth.php?url=$url");
         }
     }
 
@@ -51,7 +51,7 @@ class SessionManager
         if (array_key_exists('userId', $_SESSION))
         {
             session_unset();
-            $this->initializeHeader('auth.php');
+            $this->redirectTo('auth.php');
         }
     }
 
@@ -60,7 +60,7 @@ class SessionManager
         return $_SESSION['userId'];
     }
 
-    private function initializeHeader($url)
+    private function redirectTo($url)
     {
         header("Location: $url");
         exit();

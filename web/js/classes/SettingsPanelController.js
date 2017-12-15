@@ -18,14 +18,23 @@ class SettingsPanelController {
       model.saveDomain(SettingsPanelController.getValueNewDomain(item, thisPtr.newDomainContainer));
       model.saveUrl(thisPtr.domain, SettingsPanelController.getValueNewUrl(thisPtr.newUrlContainer));
       model.deleteUrls(thisPtr.domain, thisPtr.deletableUrls);
+      document.addEventListener('hasAnswer', function() {
+        view.printResponse(model.statusCode);
+      });
     };
 
     view.deleteSettingsBlock = function() {
       model.deleteSettings(thisPtr.domain, thisPtr.checkedLocations, thisPtr.getDomainUrls(thisPtr.domainUrlsContainer));
+      document.addEventListener('hasAnswer', function() {
+        view.printResponse(model.statusCode);
+      });
     };
 
     view.editDomain = function() {
       model.editDomain(model.domainName, thisPtr.currentDomain.value);
+      document.addEventListener('hasAnswer', function() {
+        view.printResponse(model.statusCode);
+      });
     };
   }
 

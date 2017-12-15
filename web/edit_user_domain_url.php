@@ -7,18 +7,20 @@ $sessionManager->checkArraySession();
 $preservedUrlJson = WebServerRequest::getPostKeyValue('preservedUrl');
 $removableUrlsJson = WebServerRequest::getPostKeyValue('deletableUrls');
 
-$preservedUrlDecoded = json_decode($preservedUrlJson, true);
+$preservedUrlJsonDecoded = json_decode($preservedUrlJson, true);
 $preservedUrlLastError = json_last_error();
 $removableUrlsJsonDecoded = json_decode($removableUrlsJson, true);
 $removableUrlsLastError = json_last_error();
 
 if ($preservedUrlLastError === JSON_ERROR_NONE)
 {
-    $newUrl = $preservedUrlDecoded['url'];
+    $newUrl = $preservedUrlJsonDecoded['url'];
     if ($newUrl != null)
     {
+        $domain = $preservedUrlJsonDecoded['domain'];
+        $newUrl = $preservedUrlJsonDecoded['url'];
         $userDomainUrlEditor = new UserDomainUrlEditor($sessionManager);
-        echo $userDomainUrlEditor->saveNewUrl($preservedUrlDecoded);
+        echo $userDomainUrlEditor->saveNewUrl($domain, $newUrl);
     }
 }
 else if ($removableUrlsLastError === JSON_ERROR_NONE)
@@ -26,12 +28,13 @@ else if ($removableUrlsLastError === JSON_ERROR_NONE)
     $urls = $removableUrlsJsonDecoded['urls'];
     if ($urls != null)
     {
+        $domain = $removableUrlsJsonDecoded['domain'];
+        $urls = $removableUrlsJsonDecoded['urls'];
         $userDomainUrlEditor = new UserDomainUrlEditor($sessionManager);
-        $userDomainUrlEditor->deleteUrl($removableUrlsJsonDecoded);
+        echo $userDomainUrlEditor->deleteUrl($domain, $urls);
     }
 }
 else
 {
-    echo $preservedUrlLastError;
-    echo $removableUrlsLastError;
+    echo ResponseStatus::JSON_ERROR;
 }

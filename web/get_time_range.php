@@ -11,25 +11,18 @@ $timeRangeParam = WebServerRequest::getPostKeyValue('data');
 
 if ($timeRangeParam != null)
 {
-    $databaseDataManager = new DatabaseDataManager();
     $jsonDecoded = json_decode($timeRangeParam, true);
     $lastError = json_last_error();
-    $timeRangeFinished = null;
+    $timeRangeFinished = [];
 
     if ($lastError === JSON_ERROR_NONE)
     {
-        $timeRange = $databaseDataManager->getTimeRange();
-        foreach ($timeRange as $value)
-        {
-            foreach ($value as $time)
-            {
-                $timeRangeFinished[] = $time;
-            }
-        }
+        $timeRangeCreator = new TimeRangeCreator();
+        $timeRangeFinished = $timeRangeCreator->createTimeRange();
     }
     else
     {
-        echo $lastError;
+        echo ResponseStatus::JSON_ERROR;
         return;
     }
 

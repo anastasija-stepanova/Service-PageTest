@@ -21,23 +21,20 @@ if ($json != null)
 
         $deletableDomainId = $databaseDataManager->getDomainId($deletableDomain);
 
-        if (array_key_exists('id', $deletableDomainId))
+        $databaseDataManager->deleteDomain($deletableDomainId);
+        foreach ($deletableLocationIds as $deletableLocationId)
         {
-            $databaseDataManager->deleteDomain($deletableDomainId['id']);
-            foreach ($deletableLocationIds as $deletableLocationId)
-            {
-                $databaseDataManager->deleteLocations($deletableDomainId['id'], $deletableLocationId);
-            }
+            $databaseDataManager->deleteLocations($deletableDomainId, $deletableLocationId);
+        }
 
-            foreach ($deletableUrls as $deletableUrl)
-            {
-                $databaseDataManager->deleteUrl($deletableDomainId['id'], $deletableUrl);
-            }
+        foreach ($deletableUrls as $deletableUrl)
+        {
+            $databaseDataManager->deleteUrl($deletableDomainId, $deletableUrl);
         }
         echo ResponseStatus::SUCCESS_STATUS;
     }
     else
     {
-        echo $lastError;
+        echo ResponseStatus::JSON_ERROR;
     }
 }

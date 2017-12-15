@@ -64,6 +64,13 @@
   </div>
   {% endfor %}
 </div>
+<div class="modal fade bs-example-modal-sm response_modal" id="responseModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+
+    </div>
+  </div>
+</div>
 <div id="settingsTemplate" class="settings_block hidden col-xs-12 col-sm-6">
   <div class="row">
     <div class="block_domains col-xs-12">
@@ -111,11 +118,12 @@
   <button type="button" class="btn btn-primary save_settings_button">Сохранить</button>
 </div>
 {% endautoescape %}
-<div>
+<div class="col-xs-12">
   <button id="addNewSettings" type="button" class="btn btn-success add_button">Добавить блок настроек</button>
 </div>
 {% endblock %}
 {% block fileJs %}
+<script src="../js/response_status.js"></script>
 <script src="../js/classes/SettingsPanelModel.js"></script>
 <script src="../js/classes/SettingsPanelView.js"></script>
 <script src="../js/classes/SettingsPanelController.js"></script>

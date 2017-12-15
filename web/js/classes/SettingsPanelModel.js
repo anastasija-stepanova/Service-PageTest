@@ -6,6 +6,8 @@ class SettingsPanelModel {
     this.checkedLocations = [];
     this.idLocations = [];
     this.newDomainName = null;
+    this.statusCode = null;
+    this.event = new CustomEvent('hasAnswer');
   }
 
   /**
@@ -20,9 +22,7 @@ class SettingsPanelModel {
     };
 
     let requestParam = 'deletableUrls=' + JSON.stringify(keyValue);
-    ajaxPost(FILE_EDIT_USER_DOMAIN_URL, requestParam, function(response) {
-      return response.responseText;
-    })
+    ajaxPost(FILE_EDIT_USER_DOMAIN_URL, requestParam, SettingsPanelModel.getResponseStatus.bind(this))
   }
 
   /**
@@ -37,9 +37,7 @@ class SettingsPanelModel {
     };
 
     let requestParam = 'preservedUrl=' + JSON.stringify(keyValue);
-    ajaxPost(FILE_EDIT_USER_DOMAIN_URL, requestParam, function(response) {
-      return response.responseText;
-    });
+    ajaxPost(FILE_EDIT_USER_DOMAIN_URL, requestParam, SettingsPanelModel.getResponseStatus.bind(this));
   }
 
   /**
@@ -54,9 +52,7 @@ class SettingsPanelModel {
     };
 
     let requestParam = 'locations=' + JSON.stringify(keyValue);
-    ajaxPost(FILE_EDIT_USER_LOCATIONS, requestParam, function(response) {
-      return response.responseText;
-    });
+    ajaxPost(FILE_EDIT_USER_LOCATIONS, requestParam, SettingsPanelModel.getResponseStatus.bind(this));
   }
 
   /**
@@ -69,9 +65,7 @@ class SettingsPanelModel {
     };
 
     let requestParam = 'domain=' + JSON.stringify(keyValue);
-    ajaxPost(FILE_EDIT_USER_DOMAIN, requestParam, function(response) {
-      return response.responseText;
-    });
+    ajaxPost(FILE_EDIT_USER_DOMAIN, requestParam, SettingsPanelModel.getResponseStatus.bind(this));
   }
 
   /**
@@ -88,9 +82,7 @@ class SettingsPanelModel {
     };
 
     let requestParam = 'deletableSettings=' + JSON.stringify(keyValue);
-    ajaxPost(FILE_DELETE_SETTINGS_BLOCK, requestParam, function(response) {
-      return response.responseText;
-    });
+    ajaxPost(FILE_DELETE_SETTINGS_BLOCK, requestParam, SettingsPanelModel.getResponseStatus.bind(this));
   }
 
   /**
@@ -105,8 +97,36 @@ class SettingsPanelModel {
     };
 
     let requestParam = 'editableDomain=' + JSON.stringify(keyValue);
-    ajaxPost(FILE_EDIT_USER_DOMAIN, requestParam, function(response) {
-      return response.responseText;
-    });
+    ajaxPost(FILE_EDIT_USER_DOMAIN, requestParam, SettingsPanelModel.getResponseStatus.bind(this));
+  }
+
+  /**
+   * @private
+   */
+  static getResponseStatus(response) {
+    if ('response' in response) {
+      switch (parseInt(response.response)) {
+        case INVALID_URL:
+          this.statusCode = INVALID_URL;
+          document.dispatchEvent(this.event);
+          break;
+        case SUCCESS_STATUS:
+          this.statusCode = SUCCESS_STATUS;
+          document.dispatchEvent(this.event);
+          break;
+        case INVALID_DOMAIN:
+          this.statusCode = INVALID_DOMAIN;
+          document.dispatchEvent(this.event);
+          break;
+        case JSON_ERROR:
+          this.statusCode = JSON_ERROR;
+          document.dispatchEvent(this.event);
+          break;
+        case URL_EXISTS:
+          this.statusCode = URL_EXISTS;
+          document.dispatchEvent(this.event);
+          break;
+      }
+    }
   }
 }

@@ -1,6 +1,7 @@
 class AuthFormModel {
   constructor() {
     this.statusCode = null;
+    this.event = new CustomEvent('hasAnswer');
   }
 
   /**
@@ -8,23 +9,22 @@ class AuthFormModel {
    *
    */
   sendRequest(formData) {
-    ajaxPost(FILE_AUTH, AuthFormModel.getQueryString(formData), AuthFormModel.getStatus.bind(this));
+    ajaxPost(FILE_AUTH, AuthFormModel.getQueryString(formData), AuthFormModel.getResponseStatus.bind(this));
   }
 
   /**
    * @private
    */
-  static getStatus(response) {
+  static getResponseStatus(response) {
     if ('response' in response) {
-      let event = new CustomEvent('hasAnswer');
       switch (parseInt(response.response)) {
         case SUCCESS_STATUS:
           this.statusCode = SUCCESS_STATUS;
-          document.dispatchEvent(event);
+          document.dispatchEvent(this.event);
           break;
         case LOGIN_PASSWORD_INCORRECT:
           this.statusCode = LOGIN_PASSWORD_INCORRECT;
-          document.dispatchEvent(event);
+          document.dispatchEvent(this.event);
           break;
       }
     }

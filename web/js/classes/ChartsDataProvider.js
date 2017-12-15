@@ -4,13 +4,13 @@ class ChartsDataProvider {
     let thisPtr = this;
     document.addEventListener('hasAnswer', function() {
       let event = new CustomEvent('buildCharts');
-      thisPtr.subArray = ChartsDataProvider.setChartsData(thisPtr.subArray);
-      if (thisPtr.subArray) {
-        thisPtr.ttfbSubArray = thisPtr.subArray[0];
-        thisPtr.docTimeSubArray = thisPtr.subArray[1];
-        thisPtr.fullyLoadedSubArray = thisPtr.subArray[2];
-        thisPtr.domainUrls = thisPtr.subArray[3];
-        thisPtr.time = thisPtr.subArray[4];
+      thisPtr.response = ChartsDataProvider.setChartsData(thisPtr.response);
+      if (thisPtr.response) {
+        thisPtr.ttfbSubArray = thisPtr.response[0];
+        thisPtr.docTimeSubArray = thisPtr.response[1];
+        thisPtr.fullyLoadedSubArray = thisPtr.response[2];
+        thisPtr.domainUrls = thisPtr.response[3];
+        thisPtr.time = thisPtr.response[4];
         thisPtr.ttfb = [];
         thisPtr.docTime = [];
         thisPtr.fullyLoaded = [];
@@ -18,7 +18,7 @@ class ChartsDataProvider {
         ChartsDataProvider.initializeArrayForCharts(thisPtr.ttfbSubArray, thisPtr.ttfb);
         ChartsDataProvider.initializeArrayForCharts(thisPtr.docTimeSubArray, thisPtr.docTime);
         ChartsDataProvider.initializeArrayForCharts(thisPtr.fullyLoadedSubArray, thisPtr.fullyLoaded);
-        document.dispatchEvent(event)
+        document.dispatchEvent(event);
       }
     });
   }
@@ -63,7 +63,7 @@ class ChartsDataProvider {
 
     let thisPtr = this;
     ajaxPost(FILE_GET_TEST_RESULT_FOR_CHART, requestParam, function(response) {
-      thisPtr.subArray = response;
+      thisPtr.response = response;
       let event = new CustomEvent('hasAnswer');
       document.dispatchEvent(event);
     });
@@ -83,6 +83,7 @@ class ChartsDataProvider {
       }
       return ChartsDataProvider.generateDataTestResult(jsonDecoded['testResult']);
     }
+
   }
 
   /**

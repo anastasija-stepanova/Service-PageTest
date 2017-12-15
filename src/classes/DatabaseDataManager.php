@@ -5,6 +5,7 @@ class DatabaseDataManager
     private $database;
     private const TOTAL_NUM_TEST_RECORD = 2;
     private const INDEX_ID = 'id';
+    private const DEFAULT_VALUE = -1;
 
     public function __construct()
     {
@@ -39,7 +40,7 @@ class DatabaseDataManager
                                   SELECT wl.id, wl.location, wl.description 
                                   FROM $wptLocation AS wl 
                                     LEFT JOIN $userDomainLocation AS udl ON udl.wpt_location_id = wl.id 
-                                    LEFT JOIN $userDomain AS ud ON udl.user_domain_id = ud.domain_id 
+                                    LEFT JOIN $userDomain AS ud ON udl.user_domain_id = ud.id 
                                   WHERE user_id = ? AND udl.user_domain_id = ?", [$userId, $domainId]);
     }
 
@@ -113,14 +114,14 @@ class DatabaseDataManager
                                   FROM $wptLocation");
     }
 
-    public function getExistingLocations(int $userId, $domainId): array
+    public function getExistingLocations(int $userId, int $domainId): array
     {
         $userDomainLocation = DatabaseTable::USER_DOMAIN_LOCATION;
         $userDomain = DatabaseTable::USER_DOMAIN;
         return $this->database->executeQuery("
                                   SELECT user_domain_id, wpt_location_id 
                                   FROM $userDomainLocation AS udl 
-                                    LEFT JOIN $userDomain AS ud ON udl.user_domain_id = ud.domain_id 
+                                    LEFT JOIN $userDomain AS ud ON udl.user_domain_id = ud.id 
                                   WHERE user_id = ? AND user_domain_id = ?", [$userId, $domainId]);
     }
 
@@ -131,17 +132,18 @@ class DatabaseDataManager
         return $this->database->executeQuery("
                                   SELECT udu.id, url 
                                   FROM $userDomainUrl AS udu 
-                                    LEFT JOIN $userDomain AS ud ON udu.user_domain_id = ud.domain_id 
+                                    LEFT JOIN $userDomain AS ud ON udu.user_domain_id = ud.id 
                                   WHERE ud.user_id = ? AND udu.user_domain_id = ?", [$userId, $domainId]);
     }
 
-    public function getDomainId(string $domainName): array
+    public function getDomainId(string $domainName)
     {
         $domain = DatabaseTable::DOMAIN;
-        return $this->database->selectOneRow("
+        $domainData = $this->database->selectOneRow("
                                   SELECT id 
                                   FROM $domain 
                                   WHERE domain_name = ?", [$domainName]);
+        return array_key_exists('id', $domainData) ? $domainData['id'] : self::DEFAULT_VALUE;
     }
 
     public function getDomainsId(): array
@@ -163,24 +165,26 @@ class DatabaseDataManager
                                   WHERE user_id = ?", [$userId]);
     }
 
-    public function getUserDomain(string $domainName): array
+    public function getUserDomain(string $domainName): int
     {
         $userDomain = DatabaseTable::USER_DOMAIN;
         $domain = DatabaseTable::DOMAIN;
-        return $this->database->selectOneRow("
+        $domainData = $this->database->selectOneRow("
                                   SELECT ud.id 
                                   FROM $userDomain AS ud
                                     LEFT JOIN $domain AS d ON ud.domain_id = d.id
                                   WHERE domain_name = ?", [$domainName], PDO::FETCH_COLUMN);
+        return array_key_exists('id', $domainData) ? $domainData['id'] : self::DEFAULT_VALUE;
     }
 
-    public function doesUserUrlExists(int $domainId, string $url): array
+    public function doesUserUrlExists(int $domainId, string $url): bool
     {
         $userDomainUrl = DatabaseTable::USER_DOMAIN_URL;
-        return $this->database->executeQuery("
+        $urlData = $this->database->executeQuery("
                                   SELECT user_domain_id, url 
                                   FROM $userDomainUrl
                                   WHERE user_domain_id = ? AND url = ?", [$domainId, $url]);
+        return $urlData ? true : false;
     }
 
     public function updateTestInfoStatus(string $wptTestId): void
@@ -289,7 +293,7 @@ class DatabaseDataManager
                            WHERE user_domain_id = ? and wpt_location_id = ?", [$existingLocation, $value]);
     }
 
-    public function saveUserDomainLocation($domainId, int $locationId): void
+    public function saveUserDomainLocation(int $domainId, int $locationId): void
     {
         $userDomainLocation = DatabaseTable::USER_DOMAIN_LOCATION;
         $this->database->executeQuery("

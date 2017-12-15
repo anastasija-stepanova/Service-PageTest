@@ -5,10 +5,23 @@ $sessionManager = new SessionManager();
 $sessionManager->checkArraySession();
 
 $webServerRequest = new WebServerRequest();
-$locations = WebServerRequest::getPostKeyValue('locations');
+$locationsJson = WebServerRequest::getPostKeyValue('locations');
 
-if ($locations != null)
+$jsonDecoded = json_decode($locationsJson, true);
+$lastError = json_last_error();
+
+if ($lastError === JSON_ERROR_NONE)
 {
-    $userLocationsEditor = new UserLocationsEditor($sessionManager);
-    $userLocationsEditor->editUserLocations($locations);
+    $domain = $jsonDecoded['domain'];
+    $locations = $jsonDecoded['locationIds'];
+
+    if ($locations != null)
+    {
+        $userLocationsEditor = new UserLocationsEditor($sessionManager);
+        echo $userLocationsEditor->editUserLocations($domain, $locations);
+    }
+}
+else
+{
+    echo ResponseStatus::JSON_ERROR;
 }
