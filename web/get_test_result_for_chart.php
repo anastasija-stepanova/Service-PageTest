@@ -3,6 +3,8 @@ require_once __DIR__ . '/../src/autoloader.inc.php';
 
 const DEFAULT_TYPE_VIEW = 1;
 const DATA_KEYS_FOR_CHARTS = ['domainId', 'locationId', 'typeView', 'minTime', 'maxTime'];
+const AXIS_Y_NAMES = ['TTFB (ms)', 'Document Complete (ms)', 'Fully Load Time (ms)'];
+const CHART_CONTAINER_NAME = '.ct-chart';
 
 $sessionManager = new SessionManager();
 $sessionManager->checkArraySession();
@@ -44,6 +46,8 @@ if ($testResultParam != null)
 
         $testResult = [
             'testResult' => $finishedData,
+            'axisYName' => AXIS_Y_NAMES,
+            'chartContainerName' => CHART_CONTAINER_NAME,
         ];
 
         $json = json_encode($testResult, true);

@@ -4,6 +4,8 @@ class ChartsDataProvider {
     let thisPtr = this;
     document.addEventListener('hasAnswer', function() {
       let event = new CustomEvent('buildCharts');
+      thisPtr.axisYNames = ChartsDataProvider.getAxisName(thisPtr.response);
+      thisPtr.chartContainerName = ChartsDataProvider.getChartContainerName(thisPtr.response);
       thisPtr.response = ChartsDataProvider.setChartsData(thisPtr.response);
       if (thisPtr.response) {
         thisPtr.ttfbSubArray = thisPtr.response[0];
@@ -83,7 +85,38 @@ class ChartsDataProvider {
       }
       return ChartsDataProvider.generateDataTestResult(jsonDecoded['testResult']);
     }
+  }
 
+  /**
+   * @private
+   */
+  static getAxisName(response) {
+    if (!'response' in response) {
+      return null;
+    }
+    if (response.response != undefined) {
+      let jsonDecoded = JSON.parse(response['response']);
+      if (!'axisYName' in jsonDecoded) {
+        return null;
+      }
+      return jsonDecoded['axisYName'];
+    }
+  }
+
+  /**
+   * @private
+   */
+  static getChartContainerName(response) {
+    if (!'response' in response) {
+      return null;
+    }
+    if (response.response != undefined) {
+      let jsonDecoded = JSON.parse(response['response']);
+      if (!'chartContainerName' in jsonDecoded) {
+        return null;
+      }
+      return jsonDecoded['chartContainerName'];
+    }
   }
 
   /**
